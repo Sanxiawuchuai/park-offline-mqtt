@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.VwParkCarIsuseMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.VwParkCarIsuse">
+		<result column="id" jdbcType="INTEGER" property="id" />
+		<result column="cuid" jdbcType="VARCHAR" property="cuid" />
+		<result column="card_id" jdbcType="VARCHAR" property="cardId" />
+		<result column="c_flag" jdbcType="INTEGER" property="cFlag" />
+		<result column="p_id" jdbcType="INTEGER" property="pId" />
+		<result column="foregift" jdbcType="REAL" property="foregift" />
+		<result column="balance_money" jdbcType="REAL" property="balanceMoney" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="place_num" jdbcType="VARCHAR" property="placeNum" />
+		<result column="sys_right" jdbcType="VARCHAR" property="sysRight" />
+		<result column="is_share" jdbcType="INTEGER" property="isShare" />
+		<result column="memo" jdbcType="VARCHAR" property="memo" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		<result column="ykt_id" jdbcType="INTEGER" property="yktId" />
+		<result column="car_no" jdbcType="VARCHAR" property="carNo" />
+		<result column="card_type" jdbcType="INTEGER" property="cardType" />
+		<result column="s_type" jdbcType="INTEGER" property="sType" />
+		<result column="car_no_type" jdbcType="INTEGER" property="carNoType" />
+		<result column="car_colour" jdbcType="VARCHAR" property="carColour" />
+		<result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
+		<result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+		<result column="plan_id" jdbcType="INTEGER" property="planId" />
+		<result column="per_name" jdbcType="VARCHAR" property="perName" />
+		<result column="per_tel" jdbcType="VARCHAR" property="perTel" />
+		<result column="per_id_code" jdbcType="VARCHAR" property="perIdCode" />
+		<result column="wechat_no" jdbcType="VARCHAR" property="wechatNo" />
+		<result column="land_line_num" jdbcType="VARCHAR" property="landLineNum" />
+		<result column="per_id_no" jdbcType="VARCHAR" property="perIdNo" />
+		<result column="sex" jdbcType="VARCHAR" property="sex" />
+		<result column="birthday" jdbcType="DATE" property="birthday" />
+		<result column="per_nation" jdbcType="VARCHAR" property="perNation" />
+		<result column="per_place" jdbcType="VARCHAR" property="perPlace" />
+		<result column="per_zip_code" jdbcType="VARCHAR" property="perZipCode" />
+		<result column="marry" jdbcType="VARCHAR" property="marry" />
+		<result column="per_email" jdbcType="VARCHAR" property="perEmail" />
+		<result column="per_type" jdbcType="INTEGER" property="perType" />
+		<result column="enter_date" jdbcType="DATE" property="enterDate" />
+		<result column="format_date" jdbcType="DATE" property="formatDate" />
+		<result column="edu_level" jdbcType="VARCHAR" property="eduLevel" />
+		<result column="political_status" jdbcType="VARCHAR" property="politicalStatus" />
+		<result column="positions" jdbcType="VARCHAR" property="positions" />
+		<result column="is_leave" jdbcType="INTEGER" property="isLeave" />
+		<result column="leave_date" jdbcType="DATE" property="leaveDate" />
+		<result column="leave_cause" jdbcType="VARCHAR" property="leaveCause" />
+		<result column="place_id" jdbcType="INTEGER" property="placeId" />
+		<result column="p_num" jdbcType="INTEGER" property="pNum" />
+		<result column="place_name" jdbcType="VARCHAR" property="placeName" />
+		<result column="dept_name" jdbcType="VARCHAR" property="deptName" />
+		<result column="p_type" jdbcType="INTEGER" property="pType" />
+		<result column="is_load" jdbcType="INTEGER" property="isLoad" />
+		<result column="delay_type" jdbcType="INTEGER" property="delayType" />
+		<result column="puid" jdbcType="VARCHAR" property="puid" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,cuid, card_id, c_flag,
+		p_id, foregift, balance_money,
+		status,
+		place_num, sys_right,
+		is_share, memo, create_date,
+		create_user_name,
+		ykt_id, car_no,
+		card_type, s_type, car_no_type,
+		car_colour, start_date,
+		end_date,
+		plan_id, per_name, per_tel,
+		per_id_code, wechat_no,
+		land_line_num,
+		per_id_no, sex, birthday,
+		per_nation, per_place,
+		per_zip_code,
+		marry, per_email, per_type,
+		enter_date, format_date,
+		edu_level,
+		political_status, positions, is_leave,
+		leave_date,
+		leave_cause, place_id,p_num,
+		place_name,dept_name,p_type,is_load,delay_type,puid
+	</sql>
+	<insert id="insert" parameterType="com.drzk.vo.VwParkCarIsuse">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into vw_park_car_isuse (id, card_id, c_flag,
+		p_id, foregift, balance_money,
+		status, place_num, sys_right,
+		is_share, memo, create_date,
+		create_user_name, ykt_id, car_no,
+		card_type, s_type, car_no_type,
+		car_colour, start_date, end_date,
+		plan_id, per_name, per_tel,
+		per_id_code, wechat_no, land_line_num,
+		per_id_no, sex, birthday,
+		per_nation, per_place, per_zip_code,
+		marry, per_email, per_type,
+		enter_date, format_date, edu_level,
+		political_status, positions, is_leave,
+		leave_date, leave_cause, place_id,
+		p_num, place_name, dept_name,
+		p_type)
+		values (#{id,jdbcType=INTEGER}, #{cardId,jdbcType=VARCHAR},
+		#{cFlag,jdbcType=INTEGER},
+		#{pId,jdbcType=INTEGER}, #{foregift,jdbcType=REAL}, #{balanceMoney,jdbcType=REAL},
+		#{status,jdbcType=INTEGER}, #{placeNum,jdbcType=VARCHAR},
+		#{sysRight,jdbcType=VARCHAR},
+		#{isShare,jdbcType=INTEGER}, #{memo,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP},
+		#{createUserName,jdbcType=VARCHAR}, #{yktId,jdbcType=INTEGER},
+		#{carNo,jdbcType=VARCHAR},
+		#{cardType,jdbcType=INTEGER}, #{sType,jdbcType=INTEGER}, #{carNoType,jdbcType=INTEGER},
+		#{carColour,jdbcType=VARCHAR}, #{startDate,jdbcType=TIMESTAMP},
+		#{endDate,jdbcType=TIMESTAMP},
+		#{planId,jdbcType=INTEGER}, #{perName,jdbcType=VARCHAR}, #{perTel,jdbcType=VARCHAR},
+		#{perIdCode,jdbcType=VARCHAR}, #{wechatNo,jdbcType=VARCHAR},
+		#{landLineNum,jdbcType=VARCHAR},
+		#{perIdNo,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE},
+		#{perNation,jdbcType=VARCHAR}, #{perPlace,jdbcType=VARCHAR},
+		#{perZipCode,jdbcType=VARCHAR},
+		#{marry,jdbcType=VARCHAR}, #{perEmail,jdbcType=VARCHAR}, #{perType,jdbcType=INTEGER},
+		#{enterDate,jdbcType=DATE}, #{formatDate,jdbcType=DATE},
+		#{eduLevel,jdbcType=VARCHAR},
+		#{politicalStatus,jdbcType=VARCHAR}, #{positions,jdbcType=VARCHAR}, #{isLeave,jdbcType=INTEGER},
+		#{leaveDate,jdbcType=DATE}, #{leaveCause,jdbcType=VARCHAR},
+		#{placeId,jdbcType=INTEGER},
+		#{pNum,jdbcType=INTEGER}, #{placeName,jdbcType=VARCHAR}, #{deptName,jdbcType=VARCHAR},
+		#{pType,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.VwParkCarIsuse">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into vw_park_car_isuse
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="cardId != null">
+				card_id,
+			</if>
+			<if test="cFlag != null">
+				c_flag,
+			</if>
+			<if test="pId != null">
+				p_id,
+			</if>
+			<if test="foregift != null">
+				foregift,
+			</if>
+			<if test="balanceMoney != null">
+				balance_money,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="placeNum != null">
+				place_num,
+			</if>
+			<if test="sysRight != null">
+				sys_right,
+			</if>
+			<if test="isShare != null">
+				is_share,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="createUserName != null">
+				create_user_name,
+			</if>
+			<if test="yktId != null">
+				ykt_id,
+			</if>
+			<if test="carNo != null">
+				car_no,
+			</if>
+			<if test="cardType != null">
+				card_type,
+			</if>
+			<if test="sType != null">
+				s_type,
+			</if>
+			<if test="carNoType != null">
+				car_no_type,
+			</if>
+			<if test="carColour != null">
+				car_colour,
+			</if>
+			<if test="startDate != null">
+				start_date,
+			</if>
+			<if test="endDate != null">
+				end_date,
+			</if>
+			<if test="planId != null">
+				plan_id,
+			</if>
+			<if test="perName != null">
+				per_name,
+			</if>
+			<if test="perTel != null">
+				per_tel,
+			</if>
+			<if test="perIdCode != null">
+				per_id_code,
+			</if>
+			<if test="wechatNo != null">
+				wechat_no,
+			</if>
+			<if test="landLineNum != null">
+				land_line_num,
+			</if>
+			<if test="perIdNo != null">
+				per_id_no,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="birthday != null">
+				birthday,
+			</if>
+			<if test="perNation != null">
+				per_nation,
+			</if>
+			<if test="perPlace != null">
+				per_place,
+			</if>
+			<if test="perZipCode != null">
+				per_zip_code,
+			</if>
+			<if test="marry != null">
+				marry,
+			</if>
+			<if test="perEmail != null">
+				per_email,
+			</if>
+			<if test="perType != null">
+				per_type,
+			</if>
+			<if test="enterDate != null">
+				enter_date,
+			</if>
+			<if test="formatDate != null">
+				format_date,
+			</if>
+			<if test="eduLevel != null">
+				edu_level,
+			</if>
+			<if test="politicalStatus != null">
+				political_status,
+			</if>
+			<if test="positions != null">
+				positions,
+			</if>
+			<if test="isLeave != null">
+				is_leave,
+			</if>
+			<if test="leaveDate != null">
+				leave_date,
+			</if>
+			<if test="leaveCause != null">
+				leave_cause,
+			</if>
+			<if test="placeId != null">
+				place_id,
+			</if>
+			<if test="pNum != null">
+				p_num,
+			</if>
+			<if test="placeName != null">
+				place_name,
+			</if>
+			<if test="deptName != null">
+				dept_name,
+			</if>
+			<if test="pType != null">
+				p_type,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="cardId != null">
+				#{cardId,jdbcType=VARCHAR},
+			</if>
+			<if test="cFlag != null">
+				#{cFlag,jdbcType=INTEGER},
+			</if>
+			<if test="pId != null">
+				#{pId,jdbcType=INTEGER},
+			</if>
+			<if test="foregift != null">
+				#{foregift,jdbcType=REAL},
+			</if>
+			<if test="balanceMoney != null">
+				#{balanceMoney,jdbcType=REAL},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="placeNum != null">
+				#{placeNum,jdbcType=VARCHAR},
+			</if>
+			<if test="sysRight != null">
+				#{sysRight,jdbcType=VARCHAR},
+			</if>
+			<if test="isShare != null">
+				#{isShare,jdbcType=INTEGER},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				#{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="yktId != null">
+				#{yktId,jdbcType=INTEGER},
+			</if>
+			<if test="carNo != null">
+				#{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				#{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="sType != null">
+				#{sType,jdbcType=INTEGER},
+			</if>
+			<if test="carNoType != null">
+				#{carNoType,jdbcType=INTEGER},
+			</if>
+			<if test="carColour != null">
+				#{carColour,jdbcType=VARCHAR},
+			</if>
+			<if test="startDate != null">
+				#{startDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endDate != null">
+				#{endDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="planId != null">
+				#{planId,jdbcType=INTEGER},
+			</if>
+			<if test="perName != null">
+				#{perName,jdbcType=VARCHAR},
+			</if>
+			<if test="perTel != null">
+				#{perTel,jdbcType=VARCHAR},
+			</if>
+			<if test="perIdCode != null">
+				#{perIdCode,jdbcType=VARCHAR},
+			</if>
+			<if test="wechatNo != null">
+				#{wechatNo,jdbcType=VARCHAR},
+			</if>
+			<if test="landLineNum != null">
+				#{landLineNum,jdbcType=VARCHAR},
+			</if>
+			<if test="perIdNo != null">
+				#{perIdNo,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="birthday != null">
+				#{birthday,jdbcType=DATE},
+			</if>
+			<if test="perNation != null">
+				#{perNation,jdbcType=VARCHAR},
+			</if>
+			<if test="perPlace != null">
+				#{perPlace,jdbcType=VARCHAR},
+			</if>
+			<if test="perZipCode != null">
+				#{perZipCode,jdbcType=VARCHAR},
+			</if>
+			<if test="marry != null">
+				#{marry,jdbcType=VARCHAR},
+			</if>
+			<if test="perEmail != null">
+				#{perEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="perType != null">
+				#{perType,jdbcType=INTEGER},
+			</if>
+			<if test="enterDate != null">
+				#{enterDate,jdbcType=DATE},
+			</if>
+			<if test="formatDate != null">
+				#{formatDate,jdbcType=DATE},
+			</if>
+			<if test="eduLevel != null">
+				#{eduLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="politicalStatus != null">
+				#{politicalStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="positions != null">
+				#{positions,jdbcType=VARCHAR},
+			</if>
+			<if test="isLeave != null">
+				#{isLeave,jdbcType=INTEGER},
+			</if>
+			<if test="leaveDate != null">
+				#{leaveDate,jdbcType=DATE},
+			</if>
+			<if test="leaveCause != null">
+				#{leaveCause,jdbcType=VARCHAR},
+			</if>
+			<if test="placeId != null">
+				#{placeId,jdbcType=INTEGER},
+			</if>
+			<if test="pNum != null">
+				#{pNum,jdbcType=INTEGER},
+			</if>
+			<if test="placeName != null">
+				#{placeName,jdbcType=VARCHAR},
+			</if>
+			<if test="deptName != null">
+				#{deptName,jdbcType=VARCHAR},
+			</if>
+			<if test="pType != null">
+				#{pType,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectMonthCar" parameterType="com.drzk.vo.VwParkCarIsuse"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from vw_park_car_isuse
+		<where>
+			<if test="id != null">
+				id = #{id,jdbcType =INTEGER }
+			</if>
+			<if test="carNo != null">
+				and SUBSTRING(car_no,2) = #{carNo,jdbcType =VARCHAR }
+			</if>
+			<if test="status != null">
+				and status = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="cardId != null">
+				and card_id= #{cardId,jdbcType=VARCHAR}
+			</if>
+			<if test="cFlag != null">
+				and c_flag = #{cFlag,jdbcType=INTEGER}
+			</if>
+		</where>
+		order by id DESC LIMIT 1
+	</select>
+	<select id="selectCarsByGroupId" parameterType="java.lang.Integer"
+		resultType="java.lang.String">
+		select car_no
+		from vw_park_car_isuse
+		<where>
+			place_id = #{groupId,jdbcType=INTEGER}
+		</where>
+	</select>
+	<select id="selectChange" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from vw_park_car_isuse
+		where is_load =0 or is_load is null group by p_id
+	</select>
+	<select id="selectByPid" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from vw_park_car_isuse
+		where p_id = #{pid,jdbcType=INTEGER} and is_load=0 limit 1
+	</select>
+	<select id="selectByCardId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from vw_park_car_isuse
+		where card_id = #{cardId,jdbcType=INTEGER}
+	</select>
+</mapper>

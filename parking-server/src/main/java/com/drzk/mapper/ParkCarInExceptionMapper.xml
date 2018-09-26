@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.ParkCarInExceptionMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.ParkCarInException">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="mach_no" jdbcType="INTEGER" property="machNo" />
+		<result column="ykt_id" jdbcType="INTEGER" property="yktId" />
+		<result column="card_id" jdbcType="VARCHAR" property="cardId" />
+		<result column="c_flag" jdbcType="INTEGER" property="cFlag" />
+		<result column="card_no" jdbcType="VARCHAR" property="cardNo" />
+		<result column="emp_name" jdbcType="VARCHAR" property="empName" />
+		<result column="car_no" jdbcType="VARCHAR" property="carNo" />
+		<result column="assistant_car_no" jdbcType="VARCHAR" property="assistantCarNo" />
+		<result column="modify_car_no" jdbcType="VARCHAR" property="modifyCarNo" />
+		<result column="card_type" jdbcType="INTEGER" property="cardType" />
+		<result column="car_no_type" jdbcType="INTEGER" property="carNoType" />
+		<result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+		<result column="in_user_name" jdbcType="VARCHAR" property="inUserName" />
+		<result column="in_pic" jdbcType="VARCHAR" property="inPic" />
+		<result column="back_in_pic" jdbcType="VARCHAR" property="backInPic" />
+		<result column="small_pic" jdbcType="VARCHAR" property="smallPic" />
+		<result column="assistant_small_pic" jdbcType="VARCHAR"
+			property="assistantSmallPic" />
+		<result column="b_in_pic" jdbcType="VARCHAR" property="bInPic" />
+		<result column="b_back_in_pic" jdbcType="VARCHAR" property="bBackInPic" />
+		<result column="b_small_pic" jdbcType="VARCHAR" property="bSmallPic" />
+		<result column="b_assistant_small_pic" jdbcType="VARCHAR"
+			property="bAssistantSmallPic" />
+		<result column="b_in_time" jdbcType="TIMESTAMP" property="bInTime" />
+		<result column="in_way" jdbcType="INTEGER" property="inWay" />
+		<result column="is_load" jdbcType="INTEGER" property="isLoad" />
+		<result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+		<result column="guid" jdbcType="VARCHAR" property="guid" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, mach_no, ykt_id, card_id, c_flag, card_no, emp_name, car_no,
+		assistant_car_no,
+		modify_car_no, card_type, car_no_type, in_time, in_user_name, in_pic, back_in_pic,
+		small_pic, assistant_small_pic, b_in_pic, b_back_in_pic, b_small_pic,
+		b_assistant_small_pic,
+		b_in_time, in_way,is_load,is_delete,guid
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_car_in_exception
+		where is_delete =0 and id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from park_car_in_exception
+		where is_delete=0 and id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.ParkCarInException">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into park_car_in_exception (id, mach_no, ykt_id,
+		card_id, c_flag, card_no,
+		emp_name, car_no, assistant_car_no,
+		modify_car_no, card_type, car_no_type,
+		in_time, in_user_name, in_pic,
+		back_in_pic, small_pic, assistant_small_pic,
+		b_in_pic, b_back_in_pic, b_small_pic,
+		b_assistant_small_pic, b_in_time, in_way,is_delete,is_load,guid
+		)
+		values (#{id,jdbcType=INTEGER}, #{machNo,jdbcType=INTEGER},
+		#{yktId,jdbcType=INTEGER},
+		#{cardId,jdbcType=VARCHAR}, #{cFlag,jdbcType=INTEGER}, #{cardNo,jdbcType=VARCHAR},
+		#{empName,jdbcType=VARCHAR}, #{carNo,jdbcType=VARCHAR},
+		#{assistantCarNo,jdbcType=VARCHAR},
+		#{modifyCarNo,jdbcType=VARCHAR}, #{cardType,jdbcType=INTEGER}, #{carNoType,jdbcType=INTEGER},
+		#{inTime,jdbcType=TIMESTAMP}, #{inUserName,jdbcType=VARCHAR},
+		#{inPic,jdbcType=VARCHAR},
+		#{backInPic,jdbcType=VARCHAR}, #{smallPic,jdbcType=VARCHAR}, #{assistantSmallPic,jdbcType=VARCHAR},
+		#{bInPic,jdbcType=VARCHAR}, #{bBackInPic,jdbcType=VARCHAR},
+		#{bSmallPic,jdbcType=VARCHAR},
+		#{bAssistantSmallPic,jdbcType=VARCHAR}, #{bInTime,jdbcType=TIMESTAMP}, #{inWay,jdbcType=INTEGER},
+		#{isLoad,jdbcType=INTEGER},#{isDelete,jdbcType=INTEGER},#{guid,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.ParkCarInException">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into park_car_in_exception
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="machNo != null">
+				mach_no,
+			</if>
+			<if test="yktId != null">
+				ykt_id,
+			</if>
+			<if test="cardId != null">
+				card_id,
+			</if>
+			<if test="cFlag != null">
+				c_flag,
+			</if>
+			<if test="cardNo != null">
+				card_no,
+			</if>
+			<if test="empName != null">
+				emp_name,
+			</if>
+			<if test="carNo != null">
+				car_no,
+			</if>
+			<if test="assistantCarNo != null">
+				assistant_car_no,
+			</if>
+			<if test="modifyCarNo != null">
+				modify_car_no,
+			</if>
+			<if test="cardType != null">
+				card_type,
+			</if>
+			<if test="carNoType != null">
+				car_no_type,
+			</if>
+			<if test="inTime != null">
+				in_time,
+			</if>
+			<if test="inUserName != null">
+				in_user_name,
+			</if>
+			<if test="inPic != null">
+				in_pic,
+			</if>
+			<if test="backInPic != null">
+				back_in_pic,
+			</if>
+			<if test="smallPic != null">
+				small_pic,
+			</if>
+			<if test="assistantSmallPic != null">
+				assistant_small_pic,
+			</if>
+			<if test="bInPic != null">
+				b_in_pic,
+			</if>
+			<if test="bBackInPic != null">
+				b_back_in_pic,
+			</if>
+			<if test="bSmallPic != null">
+				b_small_pic,
+			</if>
+			<if test="bAssistantSmallPic != null">
+				b_assistant_small_pic,
+			</if>
+			<if test="bInTime != null">
+				b_in_time,
+			</if>
+			<if test="inWay != null">
+				in_way,
+			</if>
+			<if test="isDelete != null">
+				is_delete,
+			</if>
+			<if test="isLoad != null">
+				is_load,
+			</if>
+			<if test="guid != null">
+				guid
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="machNo != null">
+				#{machNo,jdbcType=INTEGER},
+			</if>
+			<if test="yktId != null">
+				#{yktId,jdbcType=INTEGER},
+			</if>
+			<if test="cardId != null">
+				#{cardId,jdbcType=VARCHAR},
+			</if>
+			<if test="cFlag != null">
+				#{cFlag,jdbcType=INTEGER},
+			</if>
+			<if test="cardNo != null">
+				#{cardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="empName != null">
+				#{empName,jdbcType=VARCHAR},
+			</if>
+			<if test="carNo != null">
+				#{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="assistantCarNo != null">
+				#{assistantCarNo,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyCarNo != null">
+				#{modifyCarNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				#{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="carNoType != null">
+				#{carNoType,jdbcType=INTEGER},
+			</if>
+			<if test="inTime != null">
+				#{inTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="inUserName != null">
+				#{inUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="inPic != null">
+				#{inPic,jdbcType=VARCHAR},
+			</if>
+			<if test="backInPic != null">
+				#{backInPic,jdbcType=VARCHAR},
+			</if>
+			<if test="smallPic != null">
+				#{smallPic,jdbcType=VARCHAR},
+			</if>
+			<if test="assistantSmallPic != null">
+				#{assistantSmallPic,jdbcType=VARCHAR},
+			</if>
+			<if test="bInPic != null">
+				#{bInPic,jdbcType=VARCHAR},
+			</if>
+			<if test="bBackInPic != null">
+				#{bBackInPic,jdbcType=VARCHAR},
+			</if>
+			<if test="bSmallPic != null">
+				#{bSmallPic,jdbcType=VARCHAR},
+			</if>
+			<if test="bAssistantSmallPic != null">
+				#{bAssistantSmallPic,jdbcType=VARCHAR},
+			</if>
+			<if test="bInTime != null">
+				#{bInTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="inWay != null">
+				#{inWay,jdbcType=INTEGER},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=INTEGER},
+			</if>
+			<if test="isLoad != null">
+				#{isLoad,jdbcType=INTEGER},
+			</if>
+			<if test="guid != null">
+				#{guid,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.ParkCarInException">
+		update park_car_in_exception
+		<set>
+			<if test="machNo != null">
+				mach_no = #{machNo,jdbcType=INTEGER},
+			</if>
+			<if test="yktId != null">
+				ykt_id = #{yktId,jdbcType=INTEGER},
+			</if>
+			<if test="cardId != null">
+				card_id = #{cardId,jdbcType=VARCHAR},
+			</if>
+			<if test="cFlag != null">
+				c_flag = #{cFlag,jdbcType=INTEGER},
+			</if>
+			<if test="cardNo != null">
+				card_no = #{cardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="empName != null">
+				emp_name = #{empName,jdbcType=VARCHAR},
+			</if>
+			<if test="carNo != null">
+				car_no = #{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="assistantCarNo != null">
+				assistant_car_no = #{assistantCarNo,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyCarNo != null">
+				modify_car_no = #{modifyCarNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				card_type = #{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="carNoType != null">
+				car_no_type = #{carNoType,jdbcType=INTEGER},
+			</if>
+			<if test="inTime != null">
+				in_time = #{inTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="inUserName != null">
+				in_user_name = #{inUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="inPic != null">
+				in_pic = #{inPic,jdbcType=VARCHAR},
+			</if>
+			<if test="backInPic != null">
+				back_in_pic = #{backInPic,jdbcType=VARCHAR},
+			</if>
+			<if test="smallPic != null">
+				small_pic = #{smallPic,jdbcType=VARCHAR},
+			</if>
+			<if test="assistantSmallPic != null">
+				assistant_small_pic = #{assistantSmallPic,jdbcType=VARCHAR},
+			</if>
+			<if test="bInPic != null">
+				b_in_pic = #{bInPic,jdbcType=VARCHAR},
+			</if>
+			<if test="bBackInPic != null">
+				b_back_in_pic = #{bBackInPic,jdbcType=VARCHAR},
+			</if>
+			<if test="bSmallPic != null">
+				b_small_pic = #{bSmallPic,jdbcType=VARCHAR},
+			</if>
+			<if test="bAssistantSmallPic != null">
+				b_assistant_small_pic = #{bAssistantSmallPic,jdbcType=VARCHAR},
+			</if>
+			<if test="bInTime != null">
+				b_in_time = #{bInTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="inWay != null">
+				in_way = #{inWay,jdbcType=INTEGER},
+			</if>
+			<if test="inWay != null">
+				is_delete = #{isDelete,jdbcType=INTEGER},
+			</if>
+			<if test="inWay != null">
+				is_load = #{isLoad,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.ParkCarInException">
+		update park_car_in_exception
+		set mach_no = #{machNo,jdbcType=INTEGER},
+		ykt_id = #{yktId,jdbcType=INTEGER},
+		card_id = #{cardId,jdbcType=VARCHAR},
+		c_flag = #{cFlag,jdbcType=INTEGER},
+		card_no = #{cardNo,jdbcType=VARCHAR},
+		emp_name = #{empName,jdbcType=VARCHAR},
+		car_no = #{carNo,jdbcType=VARCHAR},
+		assistant_car_no = #{assistantCarNo,jdbcType=VARCHAR},
+		modify_car_no = #{modifyCarNo,jdbcType=VARCHAR},
+		card_type = #{cardType,jdbcType=INTEGER},
+		car_no_type = #{carNoType,jdbcType=INTEGER},
+		in_time = #{inTime,jdbcType=TIMESTAMP},
+		in_user_name = #{inUserName,jdbcType=VARCHAR},
+		in_pic = #{inPic,jdbcType=VARCHAR},
+		back_in_pic = #{backInPic,jdbcType=VARCHAR},
+		small_pic = #{smallPic,jdbcType=VARCHAR},
+		assistant_small_pic = #{assistantSmallPic,jdbcType=VARCHAR},
+		b_in_pic = #{bInPic,jdbcType=VARCHAR},
+		b_back_in_pic = #{bBackInPic,jdbcType=VARCHAR},
+		b_small_pic = #{bSmallPic,jdbcType=VARCHAR},
+		b_assistant_small_pic = #{bAssistantSmallPic,jdbcType=VARCHAR},
+		b_in_time = #{bInTime,jdbcType=TIMESTAMP},
+		in_way = #{inWay,jdbcType=INTEGER},
+		is_load = #{isLoad,jdbcType=INTEGER},
+		is_delete = #{isDelete,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectTopDS" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_car_in_exception
+		where is_load =0 or is_load is null
+		order by id limit 100
+	</select>
+
+	<select id="selectByGuid" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_car_in_exception
+		where is_load =0 and guid =#{guid,jdbcType=VARCHAR}
+	</select>
+	<update id="updateDSStatusFalied">
+		update park_car_in_exception
+		set is_load = #{status}
+		where guid in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+</mapper>

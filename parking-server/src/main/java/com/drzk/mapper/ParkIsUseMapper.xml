@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.ParkIsUseMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.ParkIsUse">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="ykt_id" jdbcType="INTEGER" property="yktId" />
+		<result column="card_id" jdbcType="VARCHAR" property="cardId" />
+		<result column="card_no" jdbcType="VARCHAR" property="cardNo" />
+		<result column="car_no" jdbcType="VARCHAR" property="carNo" />
+		<result column="card_type" jdbcType="INTEGER" property="cardType" />
+		<result column="car_no_type" jdbcType="INTEGER" property="carNoType" />
+		<result column="car_place" jdbcType="VARCHAR" property="carPlace" />
+		<result column="car_color" jdbcType="VARCHAR" property="carColor" />
+		<result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
+		<result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+		<result column="down_load" jdbcType="VARCHAR" property="downLoad" />
+		<result column="is_load" jdbcType="INTEGER" property="isLoad" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		<result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+		<result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName" />
+		<result column="is_use_type" jdbcType="INTEGER" property="isUseType" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, ykt_id, card_id, card_no, car_no, card_type, car_no_type, car_place,
+		car_color,
+		start_date, end_date, down_load, is_load, create_date, create_user_name,
+		modify_date,
+		modify_user_name, is_use_type
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_is_use
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from park_is_use
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.ParkIsUse">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into park_is_use (id, ykt_id, card_id,
+		card_no, car_no, card_type,
+		car_no_type, car_place, car_color,
+		start_date, end_date, down_load,
+		is_load, create_date, create_user_name,
+		modify_date, modify_user_name, is_use_type
+		)
+		values (#{id,jdbcType=INTEGER}, #{yktId,jdbcType=INTEGER},
+		#{cardId,jdbcType=VARCHAR},
+		#{cardNo,jdbcType=VARCHAR}, #{carNo,jdbcType=VARCHAR}, #{cardType,jdbcType=INTEGER},
+		#{carNoType,jdbcType=INTEGER}, #{carPlace,jdbcType=VARCHAR},
+		#{carColor,jdbcType=VARCHAR},
+		#{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, #{downLoad,jdbcType=VARCHAR},
+		#{isLoad,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP},
+		#{createUserName,jdbcType=VARCHAR},
+		#{modifyDate,jdbcType=TIMESTAMP}, #{modifyUserName,jdbcType=VARCHAR}, #{isUseType,jdbcType=INTEGER}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.ParkIsUse">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into park_is_use
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="yktId != null">
+				ykt_id,
+			</if>
+			<if test="cardId != null">
+				card_id,
+			</if>
+			<if test="cardNo != null">
+				card_no,
+			</if>
+			<if test="carNo != null">
+				car_no,
+			</if>
+			<if test="cardType != null">
+				card_type,
+			</if>
+			<if test="carNoType != null">
+				car_no_type,
+			</if>
+			<if test="carPlace != null">
+				car_place,
+			</if>
+			<if test="carColor != null">
+				car_color,
+			</if>
+			<if test="startDate != null">
+				start_date,
+			</if>
+			<if test="endDate != null">
+				end_date,
+			</if>
+			<if test="downLoad != null">
+				down_load,
+			</if>
+			<if test="isLoad != null">
+				is_load,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="createUserName != null">
+				create_user_name,
+			</if>
+			<if test="modifyDate != null">
+				modify_date,
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name,
+			</if>
+			<if test="isUseType != null">
+				is_use_type,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="yktId != null">
+				#{yktId,jdbcType=INTEGER},
+			</if>
+			<if test="cardId != null">
+				#{cardId,jdbcType=VARCHAR},
+			</if>
+			<if test="cardNo != null">
+				#{cardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="carNo != null">
+				#{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				#{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="carNoType != null">
+				#{carNoType,jdbcType=INTEGER},
+			</if>
+			<if test="carPlace != null">
+				#{carPlace,jdbcType=VARCHAR},
+			</if>
+			<if test="carColor != null">
+				#{carColor,jdbcType=VARCHAR},
+			</if>
+			<if test="startDate != null">
+				#{startDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endDate != null">
+				#{endDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="downLoad != null">
+				#{downLoad,jdbcType=VARCHAR},
+			</if>
+			<if test="isLoad != null">
+				#{isLoad,jdbcType=INTEGER},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				#{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				#{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				#{modifyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="isUseType != null">
+				#{isUseType,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.ParkIsUse">
+		update park_is_use
+		<set>
+			<if test="yktId != null">
+				ykt_id = #{yktId,jdbcType=INTEGER},
+			</if>
+			<if test="cardId != null">
+				card_id = #{cardId,jdbcType=VARCHAR},
+			</if>
+			<if test="cardNo != null">
+				card_no = #{cardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="carNo != null">
+				car_no = #{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				card_type = #{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="carNoType != null">
+				car_no_type = #{carNoType,jdbcType=INTEGER},
+			</if>
+			<if test="carPlace != null">
+				car_place = #{carPlace,jdbcType=VARCHAR},
+			</if>
+			<if test="carColor != null">
+				car_color = #{carColor,jdbcType=VARCHAR},
+			</if>
+			<if test="startDate != null">
+				start_date = #{startDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endDate != null">
+				end_date = #{endDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="downLoad != null">
+				down_load = #{downLoad,jdbcType=VARCHAR},
+			</if>
+			<if test="isLoad != null">
+				is_load = #{isLoad,jdbcType=INTEGER},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				create_user_name = #{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="isUseType != null">
+				is_use_type = #{isUseType,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.ParkIsUse">
+		update park_is_use
+		set ykt_id = #{yktId,jdbcType=INTEGER},
+		card_id = #{cardId,jdbcType=VARCHAR},
+		card_no = #{cardNo,jdbcType=VARCHAR},
+		car_no = #{carNo,jdbcType=VARCHAR},
+		card_type = #{cardType,jdbcType=INTEGER},
+		car_no_type = #{carNoType,jdbcType=INTEGER},
+		car_place = #{carPlace,jdbcType=VARCHAR},
+		car_color = #{carColor,jdbcType=VARCHAR},
+		start_date = #{startDate,jdbcType=TIMESTAMP},
+		end_date = #{endDate,jdbcType=TIMESTAMP},
+		down_load = #{downLoad,jdbcType=VARCHAR},
+		is_load = #{isLoad,jdbcType=INTEGER},
+		create_date = #{createDate,jdbcType=TIMESTAMP},
+		create_user_name = #{createUserName,jdbcType=VARCHAR},
+		modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+		modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+		is_use_type = #{isUseType,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

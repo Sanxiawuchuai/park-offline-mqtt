@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.VwParkFreeMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.VwParkFree">
+		<result column="card_type" jdbcType="INTEGER" property="cardType" />
+		<result column="card_id" jdbcType="VARCHAR" property="cardId" />
+		<result column="card_no" jdbcType="VARCHAR" property="cardNo" />
+		<result column="card_type_name" jdbcType="VARCHAR" property="cardTypeName" />
+		<result column="car_no" jdbcType="VARCHAR" property="carNo" />
+		<result column="free_amount" jdbcType="DOUBLE" property="freeAmount" />
+		<result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+		<result column="pay_charge_time" jdbcType="TIMESTAMP" property="payChargeTime" />
+		<result column="pay_user_name" jdbcType="VARCHAR" property="payUserName" />
+		<result column="free_name" jdbcType="VARCHAR" property="freeName" />
+		<result column="free_type" jdbcType="INTEGER" property="freeType" />
+		<result column="credentials_pic" jdbcType="VARCHAR" property="credentialsPic" />
+	</resultMap>
+	<insert id="insert" parameterType="com.drzk.vo.VwParkFree">
+		insert into vw_park_free (card_type, card_id, card_no,
+		card_type_name, car_no, free_amount,
+		in_time, pay_charge_time, pay_user_name,
+		free_name, free_type, credentials_pic
+		)
+		values (#{cardType,jdbcType=INTEGER}, #{cardId,jdbcType=VARCHAR},
+		#{cardNo,jdbcType=VARCHAR},
+		#{cardTypeName,jdbcType=VARCHAR}, #{carNo,jdbcType=VARCHAR}, #{freeAmount,jdbcType=DOUBLE},
+		#{inTime,jdbcType=TIMESTAMP}, #{payChargeTime,jdbcType=TIMESTAMP},
+		#{payUserName,jdbcType=VARCHAR},
+		#{freeName,jdbcType=VARCHAR}, #{freeType,jdbcType=INTEGER}, #{credentialsPic,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.VwParkFree">
+		insert into vw_park_free
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="cardType != null">
+				card_type,
+			</if>
+			<if test="cardId != null">
+				card_id,
+			</if>
+			<if test="cardNo != null">
+				card_no,
+			</if>
+			<if test="cardTypeName != null">
+				card_type_name,
+			</if>
+			<if test="carNo != null">
+				car_no,
+			</if>
+			<if test="freeAmount != null">
+				free_amount,
+			</if>
+			<if test="inTime != null">
+				in_time,
+			</if>
+			<if test="payChargeTime != null">
+				pay_charge_time,
+			</if>
+			<if test="payUserName != null">
+				pay_user_name,
+			</if>
+			<if test="freeName != null">
+				free_name,
+			</if>
+			<if test="freeType != null">
+				free_type,
+			</if>
+			<if test="credentialsPic != null">
+				credentials_pic,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="cardType != null">
+				#{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="cardId != null">
+				#{cardId,jdbcType=VARCHAR},
+			</if>
+			<if test="cardNo != null">
+				#{cardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cardTypeName != null">
+				#{cardTypeName,jdbcType=VARCHAR},
+			</if>
+			<if test="carNo != null">
+				#{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="freeAmount != null">
+				#{freeAmount,jdbcType=DOUBLE},
+			</if>
+			<if test="inTime != null">
+				#{inTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="payChargeTime != null">
+				#{payChargeTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="payUserName != null">
+				#{payUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="freeName != null">
+				#{freeName,jdbcType=VARCHAR},
+			</if>
+			<if test="freeType != null">
+				#{freeType,jdbcType=INTEGER},
+			</if>
+			<if test="credentialsPic != null">
+				#{credentialsPic,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+</mapper>

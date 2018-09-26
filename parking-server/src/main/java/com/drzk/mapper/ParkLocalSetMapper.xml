@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.ParkLocalSetMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.ParkLocalSet">
+		<id column="box_id" jdbcType="INTEGER" property="boxId" />
+		<result column="box_ip" jdbcType="VARCHAR" property="boxIp" />
+		<result column="box_name" jdbcType="VARCHAR" property="boxName" />
+		<result column="box_type" jdbcType="INTEGER" property="boxType" />
+		<result column="ticket_com" jdbcType="INTEGER" property="ticketCom" />
+		<result column="place_type" jdbcType="INTEGER" property="placeType" />
+		<result column="place_mode" jdbcType="INTEGER" property="placeMode" />
+		<result column="place_num" jdbcType="INTEGER" property="placeNum" />
+		<result column="credentials_type" jdbcType="INTEGER" property="credentialsType" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		<result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+		<result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName" />
+		<result column="is_load" jdbcType="INTEGER" property="isLoad" />
+		<result column="loginName" jdbcType="VARCHAR" property="loginName" />
+		<result column="online" jdbcType="INTEGER" property="online" />
+		<result column="luid" jdbcType="VARCHAR" property="luid" />
+		<result column="del_frag" jdbcType="INTEGER" property="delFrag" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		box_id, box_ip, box_name, box_type, ticket_com, place_type,
+		place_mode,
+		place_num,luid,del_frag,
+		credentials_type, create_date,
+		create_user_name, modify_date, modify_user_name,
+		is_load,loginName,online
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_local_set
+		where del_frag =0 and box_id =
+		#{boxId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		park_local_set
+		where box_id = #{boxId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.ParkLocalSet">
+		insert into park_local_set
+		(box_ip, box_name,luid,
+		box_type, ticket_com, place_type,
+		place_mode, place_num, credentials_type,
+		create_date, create_user_name,
+		modify_date,
+		modify_user_name, is_load,loginName,online,del_frag)
+		values
+		(#{boxIp,jdbcType=VARCHAR},
+		#{boxName,jdbcType=VARCHAR},#{luid},
+		#{boxType,jdbcType=INTEGER},
+		#{ticketCom,jdbcType=INTEGER}, #{placeType,jdbcType=INTEGER},
+		#{placeMode,jdbcType=INTEGER}, #{placeNum,jdbcType=INTEGER},
+		#{credentialsType,jdbcType=INTEGER},
+		#{createDate,jdbcType=TIMESTAMP},
+		#{createUserName,jdbcType=VARCHAR}, #{modifyDate,jdbcType=TIMESTAMP},
+		#{modifyUserName,jdbcType=VARCHAR},
+		#{isLoad,jdbcType=INTEGER},#{loginName,jdbcType=VARCHAR},
+		#{online,jdbcType=INTEGER},#{delFrag})
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.ParkLocalSet">
+		insert into park_local_set
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="boxId != null">
+				box_id,
+			</if>
+			<if test="boxIp != null">
+				box_ip,
+			</if>
+			<if test="boxName != null">
+				box_name,
+			</if>
+			<if test="boxType != null">
+				box_type,
+			</if>
+			<if test="ticketCom != null">
+				ticket_com,
+			</if>
+			<if test="placeType != null">
+				place_type,
+			</if>
+			<if test="placeMode != null">
+				place_mode,
+			</if>
+			<if test="placeNum != null">
+				place_num,
+			</if>
+			<if test="credentialsType != null">
+				credentials_type,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="createUserName != null">
+				create_user_name,
+			</if>
+			<if test="modifyDate != null">
+				modify_date,
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name,
+			</if>
+			<if test="isLoad != null">
+				is_load,
+			</if>
+			<if test="loginName != null">
+				loginName,
+			</if>
+			<if test="online != null">
+				online,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="boxId != null">
+				#{boxId,jdbcType=INTEGER},
+			</if>
+			<if test="boxIp != null">
+				#{boxIp,jdbcType=VARCHAR},
+			</if>
+			<if test="boxName != null">
+				#{boxName,jdbcType=VARCHAR},
+			</if>
+			<if test="boxType != null">
+				#{boxType,jdbcType=INTEGER},
+			</if>
+			<if test="ticketCom != null">
+				#{ticketCom,jdbcType=INTEGER},
+			</if>
+			<if test="placeType != null">
+				#{placeType,jdbcType=INTEGER},
+			</if>
+			<if test="placeMode != null">
+				#{placeMode,jdbcType=INTEGER},
+			</if>
+			<if test="placeNum != null">
+				#{placeNum,jdbcType=INTEGER},
+			</if>
+			<if test="credentialsType != null">
+				#{credentialsType,jdbcType=INTEGER},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				#{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				#{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				#{modifyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="isLoad != null">
+				#{isLoad,jdbcType=INTEGER},
+			</if>
+			<if test="loginName != null">
+				and loginName = #{loginName,jdbcType=VARCHAR}
+			</if>
+			<if test="online != null">
+				and online = #{online,jdbcType=INTEGER}
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.ParkLocalSet">
+		update park_local_set
+		<set>
+			<if test="boxIp != null">
+				box_ip = #{boxIp,jdbcType=VARCHAR},
+			</if>
+			<if test="boxName != null">
+				box_name = #{boxName,jdbcType=VARCHAR},
+			</if>
+			<if test="boxType != null">
+				box_type = #{boxType,jdbcType=INTEGER},
+			</if>
+			<if test="ticketCom != null">
+				ticket_com = #{ticketCom,jdbcType=INTEGER},
+			</if>
+			<if test="placeType != null">
+				place_type = #{placeType,jdbcType=INTEGER},
+			</if>
+			<if test="placeMode != null">
+				place_mode = #{placeMode,jdbcType=INTEGER},
+			</if>
+			<if test="placeNum != null">
+				place_num = #{placeNum,jdbcType=INTEGER},
+			</if>
+			<if test="credentialsType != null">
+				credentials_type = #{credentialsType,jdbcType=INTEGER},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				create_user_name = #{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="isLoad != null">
+				is_load = #{isLoad,jdbcType=INTEGER},
+			</if>
+			<if test="online != null">
+				online = #{online,jdbcType=INTEGER},
+			</if>
+			<if test="loginName != null">
+				and loginName = #{loginName,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where box_id = #{boxId,jdbcType=INTEGER}
+	</update>
+	<update id="updateOnlineState" parameterType="com.drzk.vo.ParkLocalSet">
+		update park_local_set
+		<set>
+			<if test="online != null">
+				online = #{online,jdbcType=INTEGER},
+			</if>
+			<if test="loginName != null">
+				loginName = #{loginName,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where box_id = #{boxId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.ParkLocalSet">
+		update
+		park_local_set
+		set box_ip = #{boxIp,jdbcType=VARCHAR},
+		box_name =
+		#{boxName,jdbcType=VARCHAR},
+		box_type = #{boxType,jdbcType=INTEGER},
+		ticket_com = #{ticketCom,jdbcType=INTEGER},
+		place_type =
+		#{placeType,jdbcType=INTEGER},
+		place_mode =
+		#{placeMode,jdbcType=INTEGER},
+		place_num =
+		#{placeNum,jdbcType=INTEGER},
+		credentials_type =
+		#{credentialsType,jdbcType=INTEGER},
+		create_date =
+		#{createDate,jdbcType=TIMESTAMP},
+		create_user_name =
+		#{createUserName,jdbcType=VARCHAR},
+		modify_date =
+		#{modifyDate,jdbcType=TIMESTAMP},
+		modify_user_name =
+		#{modifyUserName,jdbcType=VARCHAR},
+		is_load =
+		#{isLoad,jdbcType=INTEGER},
+		loginName = #{loginName,jdbcType=VARCHAR},
+		online = #{online,jdbcType =INTEGER}
+		where box_id =
+		#{boxId,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectAllLocalSet" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_local_set
+		where del_frag =0
+	</select>
+	<select id="selectDSTop" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_local_set
+		where is_load =0 or is_load is null LIMIT 100
+	</select>
+	<update id="updateDS">
+		update park_local_set set is_load =#{status}
+		where luid in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<select id="selectByGuid" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_local_set
+		where is_load =0 and luid =#{luid,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByBoxId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_local_set
+		where box_id =#{boxId,jdbcType=INTEGER}
+	</select>
+
+
+    <update id="updateByUuid" parameterType="com.drzk.vo.ParkLocalSet">
+        update
+        park_local_set
+        set box_ip = #{boxIp,jdbcType=VARCHAR},
+        box_name =#{boxName,jdbcType=VARCHAR},
+        box_type = #{boxType},
+        modify_date =#{modifyDate},
+        modify_user_name =#{modifyUserName},
+        online = #{online}
+        where luid = #{luid}
+    </update>
+
+
+    <update id="deleteByUuid" parameterType="com.drzk.vo.ParkLocalSet">
+        update park_local_set
+        set del_frag = #{delFrag}
+        where luid =#{luid}
+    </update>
+
+    <select id="selectByUuid" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select box_id
+        from park_local_set
+         where luid =#{luid}
+    </select>
+
+</mapper>

@@ -1,0 +1,393 @@
+package rules.parkin
+import com.drzk.common.InOutRealTimeBase.Step;
+import com.drzk.common.InOutRealTimeBase;
+import com.drzk.fact.InRealTimeBase;
+global com.drzk.service.IParkingService parkInService;
+
+
+//获取车辆类型(特种车,黑名单,免费车辆) START
+rule "get car type"
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.START)
+then
+	Step $carType = parkInService.getSpecialOrBlackCar($parkIn);
+	System.out.println("车辆类型:"+$carType);
+	$parkIn.setNextStep($carType);
+	update($parkIn);
+end
+
+//特种车处理(开闸->播报语音) SPECIALCAR
+rule "special car"
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.SPECIALCAR)
+then
+	parkInService.open($parkIn.getChannelSet().getDsn()); //开闸
+	parkInService.broadcastVoice($parkIn);//报语音
+	$parkIn.getStatusMap().put("isSuccess",0);
+	$parkIn.setNextStep(Step.END);
+	update($parkIn);
+end
+
+//黑名单处理 BLACKLIST
+rule "black list"
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.BLACKLIST)
+then
+	parkInService.broadcastVoice($parkIn);//报语音
+	System.out.println("黑名单处理:播报语音");
+	$parkIn.getStatusMap().put("isSuccess",1);
+	$parkIn.getStatusMap().put("Msg","黑名单");
+	$parkIn.setNextStep(Step.END);
+	update($parkIn);
+end
+
+//免费车辆处理
+rule "free car"
+when 
+	$parkIn : InRealTimeBase(getNextStep() == Step.FREECAR)
+then
+	$parkIn.setNextStep(Step.ISNEEDCONFIRM);
+	update($parkIn);
+end
+
+
+//获取车辆卡类型(月卡 or 临时卡 or 储值卡)   CARDTYPE
+rule "get card type"
+when 
+	$parkIn : InRealTimeBase(getNextStep() == Step.NULL)
+then
+	int $cardType = parkInService.getCardTypeInfo($parkIn);
+	$parkIn.setNextStep(Step.ISFULLIN);
+	update($parkIn);
+end
+
+//判断满位是否允许入场 ISFULLIN
+rule "park full is allow in" 
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.ISFULLIN)
+then
+	boolean $isFullPass = parkInService.isParkFullPass($parkIn.getCarRealType());
+	System.out.println("满位允许入场:"+$isFullPass);
+	$parkIn.setNextStep($isFullPass? Step.FULLALLOWIN:Step.FULLNOTALLOWIN);
+	update($parkIn);
+end
+
+//判断满位是否允许入场 ISFULLIN
+rule "park full" 
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.FULLNOTALLOWIN)
+then
+	parkInService.broadcastVoice($parkIn);//报语音
+	$parkIn.getStatusMap().put("isSuccess",1);
+	$parkIn.getStatusMap().put("Msg","车场满位");
+	$parkIn.setNextStep(Step.END);
+	update($parkIn);
+end
+
+//获取车场类型(大小车场)
+rule "get park type"
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.FULLALLOWIN)
+then
+	boolean $isSmallPark=parkInService.isSmallPark($parkIn);
+	$parkIn.setNextStep(Step.ISREADSUCCESS);
+	update($parkIn);
+end
+
+//判断识别是否成功
+rule "is read success"
+when 
+	$parkIn : InRealTimeBase(getNextStep() == Step.ISREADSUCCESS)
+then
+	boolean $isReadSuccess = parkInService.isReadSuccess($parkIn);
+	System.out.println("判断识别是否成功:"+$isReadSuccess);
+	$parkIn.setNextStep($isReadSuccess? Step.ISREGULARCAR:Step.READFAIL);
+	update($parkIn);
+end
+
+//识别失败
+
+//判断是否为固定车(固定车包括月卡车,储值卡,免费卡) ISREGULARCAR
+rule "regular car" 
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.ISREGULARCAR)
+then
+	boolean $isRegularCar = parkInService.isRegularCar($parkIn);
+	System.out.println("是否是固定车:"+$isRegularCar);
+	$parkIn.setNextStep($isRegularCar? Step.REGULARCAR:Step.TEMPCAR);
+	update($parkIn);
+end	
+
+//固定车处理
+//检查固定车通道权限 
+rule "check regular passageway power" 
+when
+	//条件：上一步判断出车辆类型为固定车(REGULARCAR)
+	$parkIn : InRealTimeBase(getNextStep() == Step.REGULARCAR)  //固定车
+then
+	boolean $isChannelPower = parkInService.isCarTypeChannelPower($parkIn);
+	System.out.println("通道权限:"+$isChannelPower);
+	$parkIn.setNextStep($isChannelPower? Step.HASGULARPOWER:Step.NOGULARPOWER);
+	update($parkIn);
+end	
+
+//固定车没有通道权限 (报语音)
+rule "regular no power"
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.NOGULARPOWER)
+then
+	parkInService.broadcastVoice($parkIn);//报语音
+	$parkIn.getStatusMap().put("isSuccess",1);
+	$parkIn.getStatusMap().put("Msg","固定车没有通道权限");
+	$parkIn.setNextStep(Step.END);
+	update($parkIn);
+end
+
+
+//固定车入口检查(检查固定车是否在有效期内,或者当前时间段是否允许进入)
+rule "regular car is overdue"
+when
+	//条件：固定车，有通道权限
+	$parkIn : InRealTimeBase(getNextStep() == Step.HASGULARPOWER)
+then
+	//入口检查 将时间段禁止入场，授权未到有效期，过期 一起检查，分开返回
+	Step $carExpire = parkInService.isCardTypeExpireIn($parkIn);
+	$parkIn.setNextStep($carExpire);
+	update($parkIn);
+end
+
+//===EXPIRE固定车过期 ,  UNDUE未到期  ,TIMENOTALLOW时间段禁止进入, EFFECTIVE有效期内
+//UNDUE未到期 ，TIMENOTALLOW时间段禁止进入  暂时没处理
+
+
+//固定车过期
+rule "regular car is expire"
+when
+	//条件：固定车过期
+	$parkIn : InRealTimeBase(getNextStep() == Step.EXPIRE)
+then
+	parkInService.broadcastVoice($parkIn);//报语音
+	$parkIn.getStatusMap().put("isSuccess",1);
+	$parkIn.getStatusMap().put("Msg","固定车过期");
+	$parkIn.setNextStep(Step.END);
+	update($parkIn);
+end
+
+//固定车时间段禁止进入场
+rule "regular car is timenotallow"
+when
+	//条件：时间段禁止进入场
+	$parkIn : InRealTimeBase(getNextStep() == Step.TIMENOTALLOW)
+then
+	parkInService.broadcastVoice($parkIn);//报语音
+	$parkIn.getStatusMap().put("isSuccess",1);
+	$parkIn.getStatusMap().put("Msg","固定车时间段禁止进入场");
+	$parkIn.setNextStep(Step.END);
+	update($parkIn);
+end
+
+//固定车未到有效期
+rule "regular car is undue"
+when
+	//条件：未到有效期
+	$parkIn : InRealTimeBase(getNextStep() == Step.UNDUE)
+then
+	$parkIn.setNextStep(Step.TEMPCAR);
+	update($parkIn);
+end
+
+//固定车未到有效期
+rule "regular car is uneffective"
+when
+	//条件：未到有效期
+	$parkIn : InRealTimeBase(getNextStep() == Step.UNEFFECTIVE)
+then
+	$parkIn.setNextStep(Step.TEMPCAR);
+	update($parkIn);
+end
+
+//判断是否是家庭组车辆
+rule "is family group"
+when
+	//条件:固定车辆且未过期
+	$parkIn : InRealTimeBase(getNextStep() == Step.EFFECTIVE)
+then
+	boolean $isFamily = parkInService.isFamilyGroup($parkIn);
+	System.out.println("是否家庭组:"+$isFamily);
+	$parkIn.getStatusMap().put("familyType",$isFamily);
+	$parkIn.setNextStep($isFamily? Step.FAMILY:Step.NOTFAMILY);
+	update($parkIn);
+end
+
+
+//=========家庭组处理(判断家庭组是否满位，以及满位后是禁止入场还是当做临时卡处理)========
+//判断车位组入场时的类型
+rule "family type"
+when
+	//条件:是家庭组
+	$parkIn : InRealTimeBase(getNextStep() == Step.FAMILY)
+then
+	boolean $familyType = parkInService.getFamilyCarType($parkIn);
+	System.out.println("车位组入场类型:" + $familyType);
+	$parkIn.setNextStep($familyType? Step.FAMILYTEMP:Step.FAMILYMONTH);
+	update($parkIn);
+end
+
+
+//家庭组临时车是否允许入场
+rule "is family allow in"
+when
+	//条件：家庭组临时车
+	$parkIn : InRealTimeBase(getNextStep() == Step.FAMILYTEMP)
+then
+	boolean $isFamilyAllowIn = parkInService.isFamilyAllowIn($parkIn);
+	$parkIn.setNextStep($isFamilyAllowIn? Step.TEMPCAR:Step.FAMILYFULL);
+	update($parkIn);
+end
+
+//家庭组满位
+rule "family group full"
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.FAMILYFULL)
+then
+	//家庭组满位，播报语音
+	parkInService.broadcastVoice($parkIn);//报语音
+	System.out.println("家庭组满位");
+	$parkIn.getStatusMap().put("isSuccess",1);
+	$parkIn.getStatusMap().put("Msg","家庭组满位");
+	$parkIn.setNextStep(Step.END);
+	update($parkIn);
+end
+//===============================================
+
+
+//入场固定车赋值 NOTFAMILY(是固定车,但不是家庭组)或FAMILYMONTH(是家庭组且家庭组没满位)
+rule "regular car deal" 
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.NOTFAMILY || getNextStep() == Step.FAMILYMONTH)
+then
+	$parkIn.setNextStep(Step.ISNEEDCONFIRM);
+	update($parkIn);
+end
+
+//临时车处理 TEMPCAR(有两个来源：1，判断车辆类型时为临时车；2，车位组满位后允许以临时车入场)
+//判断临时车通道权限
+rule "check temp car passageway power"  
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.TEMPCAR)
+then
+	boolean $isTemplPower = parkInService.isCarTypeChannelPower($parkIn);
+	System.out.println("通道权限:"+$isTemplPower);
+	$parkIn.setNextStep($isTemplPower? Step.HASTEMPPOWER:Step.NOTEMPPOWER);
+	update($parkIn);
+end
+
+//无临时车通道权限
+rule "no temp car power"
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.NOTEMPPOWER)
+then
+	//临时车无通道权限报语音
+	parkInService.broadcastVoice($parkIn);//报语音
+	$parkIn.getStatusMap().put("isSuccess",1);
+	$parkIn.getStatusMap().put("Msg","无临时车通道权限");
+	$parkIn.setNextStep(Step.END);
+	update($parkIn);
+end
+
+//临时车有通道权限,预置入场类型(将判断放入判断内)
+rule "has temp car power"
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.HASTEMPPOWER)
+then
+	//预置车辆卡类型
+	//parkInService.presetCarType();
+	$parkIn.setNextStep(Step.PRESETCARTYPE);
+	update($parkIn);
+end
+
+//入场临时车赋值 
+rule "temp car deal" 
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.PRESETCARTYPE)
+then
+	$parkIn.setNextStep(Step.ISNEEDCONFIRM);
+	update($parkIn);
+end
+
+//入场是否需要确认
+rule "is need confirm"
+when 
+	$parkIn : InRealTimeBase(getNextStep() == Step.ISNEEDCONFIRM)
+then
+	boolean $isNeedConfirm = parkInService.isNeedConfirm($parkIn,null);
+	//System.out.println("是否需要确认:"+$isNeedConfirm);
+	$parkIn.setNextStep($isNeedConfirm? Step.NEEDCONFIRM:Step.SAVE);
+	update($parkIn);
+end
+
+//入场开闸需要确认
+rule "need confirm"
+when 
+	$parkIn : InRealTimeBase(getNextStep() == Step.NEEDCONFIRM)
+then
+    parkInService.broadcastVoice($parkIn);//报语音
+	parkInService.boxInIsOpen($parkIn);
+	//System.out.println("通知岗亭确认");
+	$parkIn.setNextStep(Step.END);
+	update($parkIn);
+end
+
+//入场开闸不需要确认 保存数据
+rule "not need confirm" 
+when 
+	$parkIn : InRealTimeBase(getNextStep() == Step.SAVE)
+then
+	parkInService.saveParkInRecord($parkIn);
+	parkInService.sendParkCarInRecordToBox($parkIn);
+	$parkIn.setNextStep(Step.OPEN);
+	update($parkIn);
+end
+
+//开闸
+rule "open"
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.OPEN)
+then
+	boolean $open = parkInService.open($parkIn.getChannelSet().getDsn());
+	parkInService.handInParkingCarInfo($parkIn,null);
+	parkInService.pushChargeData($parkIn);
+	//System.out.println("开闸:" + $open);
+	$parkIn.getStatusMap().put("isSuccess",0);
+	$parkIn.setNextStep(Step.VOICE);
+	update($parkIn);
+end
+
+//报语音
+rule "voice"
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.VOICE)
+then
+	boolean $voice = parkInService.broadcastVoice($parkIn);//报语音
+	//System.out.println("报语音:"+ $voice);
+	$parkIn.setNextStep(Step.END);
+	update($parkIn);
+end
+
+
+
+//判断是否推送
+rule "pushToBox"
+when
+	$parkIn : InRealTimeBase(getNextStep() == Step.END)
+then
+	boolean $pushBox = parkInService.parkErrorMessage($parkIn);
+end
+
+
+
+	
+
+
+
+

@@ -1,0 +1,7 @@
+*.prefs
+*.project
+*.classpath
+parking-server/target/
+*.log
+parking-server/logs/parking-server.log.1
+parking-server/logs/parking-server.log.2

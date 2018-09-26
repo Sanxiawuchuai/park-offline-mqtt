@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:int-mqtt="http://www.springframework.org/schema/integration/mqtt"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-4.3.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+        http://www.springframework.org/schema/integration/mqtt http://www.springframework.org/schema/integration/mqtt/spring-integration-mqtt-4.3.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<bean id="offlineClientFactory"
+		class="org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory">
+		<property name="cleanSession" value="${MQTT_CLEAN_SESSION}" />
+		<property name="keepAliveInterval"
+			value="${MQTT_KEEPALIVE_INTERVAL}" />
+		<!--  
+		<property name="userName" value="${MQTT_USERNAME}" />
+		<property name="password" value="${MQTT_PASSWORD}" />
+		-->
+		<property name="serverURIs">
+			<array>
+				<value>${MQTT_UPLINE}</value>
+			</array>
+		</property>
+	</bean>
+
+ 	<!-- 
+	<bean id="offlineMqttHandler"
+		class="org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler">
+		<constructor-arg name="clientId"
+			value="mqtt_chenlong_subcrib_a" />
+		<constructor-arg name="clientFactory"
+			ref="clientFactory" />
+		<property name="async" value="${MQTT_ASYNC}" />
+		<property name="defaultQos" value="${MQTT_DEFAULT_QOS}" />
+		<property name="completionTimeout"
+			value="${MQTT_COMPLETION_TIMEOUT}" />
+	</bean>
+ 	-->
+	<!-- 消息适配器 -->
+	<int-mqtt:message-driven-channel-adapter
+		id="mqttInbound" client-id="parking_server_mqtt_test_subcrib_178778"
+		topics="X21412300001/publish/data,refresh,test,offData" qos="0" client-factory="offlineClientFactory"
+		auto-startup="true" send-timeout="12" channel="offlineSubscribeChannel" />
+	<int:channel id="offlineSubscribeChannel" />
+
+	<!-- 消息处理类 ref="mqttServiceImpl" method="reciveMessage" -->
+	<int:service-activator id="offlineCaseService"
+		input-channel="offlineSubscribeChannel" ref="mqttServiceImpl"
+		method="reciveMessage" />
+
+</beans>

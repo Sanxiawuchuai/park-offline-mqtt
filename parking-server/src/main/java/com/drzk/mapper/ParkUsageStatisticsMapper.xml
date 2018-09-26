@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.ParkUsageStatisticsMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.ParkUsageStatistics">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="s_day" jdbcType="VARCHAR" property="sDay" />
+		<result column="card_type" jdbcType="INTEGER" property="cardType" />
+		<result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+		<result column="out_time" jdbcType="TIMESTAMP" property="outTime" />
+		<result column="in_hour" jdbcType="INTEGER" property="inHour" />
+		<result column="out_hour" jdbcType="INTEGER" property="outHour" />
+		<result column="t_0" jdbcType="REAL" property="t0" />
+		<result column="t_1" jdbcType="REAL" property="t1" />
+		<result column="t_2" jdbcType="REAL" property="t2" />
+		<result column="t_3" jdbcType="REAL" property="t3" />
+		<result column="t_4" jdbcType="REAL" property="t4" />
+		<result column="t_5" jdbcType="REAL" property="t5" />
+		<result column="t_6" jdbcType="REAL" property="t6" />
+		<result column="t_7" jdbcType="REAL" property="t7" />
+		<result column="t_8" jdbcType="REAL" property="t8" />
+		<result column="t_9" jdbcType="REAL" property="t9" />
+		<result column="t_10" jdbcType="REAL" property="t10" />
+		<result column="t_11" jdbcType="REAL" property="t11" />
+		<result column="t_12" jdbcType="REAL" property="t12" />
+		<result column="t_13" jdbcType="REAL" property="t13" />
+		<result column="t_14" jdbcType="REAL" property="t14" />
+		<result column="t_15" jdbcType="REAL" property="t15" />
+		<result column="t_16" jdbcType="REAL" property="t16" />
+		<result column="t_17" jdbcType="REAL" property="t17" />
+		<result column="t_18" jdbcType="REAL" property="t18" />
+		<result column="t_19" jdbcType="REAL" property="t19" />
+		<result column="t_20" jdbcType="REAL" property="t20" />
+		<result column="t_21" jdbcType="REAL" property="t21" />
+		<result column="t_22" jdbcType="REAL" property="t22" />
+		<result column="t_23" jdbcType="REAL" property="t23" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, s_day, card_type, in_time, out_time, in_hour, out_hour, t_0, t_1,
+		t_2, t_3, t_4,
+		t_5, t_6, t_7, t_8, t_9, t_10, t_11, t_12, t_13, t_14, t_15, t_16, t_17,
+		t_18, t_19,
+		t_20, t_21, t_22, t_23
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_usage_statistics
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from park_usage_statistics
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.ParkUsageStatistics">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into park_usage_statistics (id, s_day, card_type,
+		in_time, out_time, in_hour,
+		out_hour, t_0, t_1, t_2,
+		t_3, t_4, t_5, t_6,
+		t_7, t_8, t_9, t_10,
+		t_11, t_12, t_13, t_14,
+		t_15, t_16, t_17, t_18,
+		t_19, t_20, t_21, t_22,
+		t_23)
+		values (#{id,jdbcType=INTEGER}, #{sDay,jdbcType=VARCHAR},
+		#{cardType,jdbcType=INTEGER},
+		#{inTime,jdbcType=TIMESTAMP}, #{outTime,jdbcType=TIMESTAMP}, #{inHour,jdbcType=INTEGER},
+		#{outHour,jdbcType=INTEGER}, #{t0,jdbcType=REAL}, #{t1,jdbcType=REAL},
+		#{t2,jdbcType=REAL},
+		#{t3,jdbcType=REAL}, #{t4,jdbcType=REAL}, #{t5,jdbcType=REAL}, #{t6,jdbcType=REAL},
+		#{t7,jdbcType=REAL}, #{t8,jdbcType=REAL}, #{t9,jdbcType=REAL},
+		#{t10,jdbcType=REAL},
+		#{t11,jdbcType=REAL}, #{t12,jdbcType=REAL}, #{t13,jdbcType=REAL}, #{t14,jdbcType=REAL},
+		#{t15,jdbcType=REAL}, #{t16,jdbcType=REAL}, #{t17,jdbcType=REAL},
+		#{t18,jdbcType=REAL},
+		#{t19,jdbcType=REAL}, #{t20,jdbcType=REAL}, #{t21,jdbcType=REAL}, #{t22,jdbcType=REAL},
+		#{t23,jdbcType=REAL})
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.ParkUsageStatistics">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into park_usage_statistics
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="sDay != null">
+				s_day,
+			</if>
+			<if test="cardType != null">
+				card_type,
+			</if>
+			<if test="inTime != null">
+				in_time,
+			</if>
+			<if test="outTime != null">
+				out_time,
+			</if>
+			<if test="inHour != null">
+				in_hour,
+			</if>
+			<if test="outHour != null">
+				out_hour,
+			</if>
+			<if test="t0 != null">
+				t_0,
+			</if>
+			<if test="t1 != null">
+				t_1,
+			</if>
+			<if test="t2 != null">
+				t_2,
+			</if>
+			<if test="t3 != null">
+				t_3,
+			</if>
+			<if test="t4 != null">
+				t_4,
+			</if>
+			<if test="t5 != null">
+				t_5,
+			</if>
+			<if test="t6 != null">
+				t_6,
+			</if>
+			<if test="t7 != null">
+				t_7,
+			</if>
+			<if test="t8 != null">
+				t_8,
+			</if>
+			<if test="t9 != null">
+				t_9,
+			</if>
+			<if test="t10 != null">
+				t_10,
+			</if>
+			<if test="t11 != null">
+				t_11,
+			</if>
+			<if test="t12 != null">
+				t_12,
+			</if>
+			<if test="t13 != null">
+				t_13,
+			</if>
+			<if test="t14 != null">
+				t_14,
+			</if>
+			<if test="t15 != null">
+				t_15,
+			</if>
+			<if test="t16 != null">
+				t_16,
+			</if>
+			<if test="t17 != null">
+				t_17,
+			</if>
+			<if test="t18 != null">
+				t_18,
+			</if>
+			<if test="t19 != null">
+				t_19,
+			</if>
+			<if test="t20 != null">
+				t_20,
+			</if>
+			<if test="t21 != null">
+				t_21,
+			</if>
+			<if test="t22 != null">
+				t_22,
+			</if>
+			<if test="t23 != null">
+				t_23,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="sDay != null">
+				#{sDay,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				#{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="inTime != null">
+				#{inTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="outTime != null">
+				#{outTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="inHour != null">
+				#{inHour,jdbcType=INTEGER},
+			</if>
+			<if test="outHour != null">
+				#{outHour,jdbcType=INTEGER},
+			</if>
+			<if test="t0 != null">
+				#{t0,jdbcType=REAL},
+			</if>
+			<if test="t1 != null">
+				#{t1,jdbcType=REAL},
+			</if>
+			<if test="t2 != null">
+				#{t2,jdbcType=REAL},
+			</if>
+			<if test="t3 != null">
+				#{t3,jdbcType=REAL},
+			</if>
+			<if test="t4 != null">
+				#{t4,jdbcType=REAL},
+			</if>
+			<if test="t5 != null">
+				#{t5,jdbcType=REAL},
+			</if>
+			<if test="t6 != null">
+				#{t6,jdbcType=REAL},
+			</if>
+			<if test="t7 != null">
+				#{t7,jdbcType=REAL},
+			</if>
+			<if test="t8 != null">
+				#{t8,jdbcType=REAL},
+			</if>
+			<if test="t9 != null">
+				#{t9,jdbcType=REAL},
+			</if>
+			<if test="t10 != null">
+				#{t10,jdbcType=REAL},
+			</if>
+			<if test="t11 != null">
+				#{t11,jdbcType=REAL},
+			</if>
+			<if test="t12 != null">
+				#{t12,jdbcType=REAL},
+			</if>
+			<if test="t13 != null">
+				#{t13,jdbcType=REAL},
+			</if>
+			<if test="t14 != null">
+				#{t14,jdbcType=REAL},
+			</if>
+			<if test="t15 != null">
+				#{t15,jdbcType=REAL},
+			</if>
+			<if test="t16 != null">
+				#{t16,jdbcType=REAL},
+			</if>
+			<if test="t17 != null">
+				#{t17,jdbcType=REAL},
+			</if>
+			<if test="t18 != null">
+				#{t18,jdbcType=REAL},
+			</if>
+			<if test="t19 != null">
+				#{t19,jdbcType=REAL},
+			</if>
+			<if test="t20 != null">
+				#{t20,jdbcType=REAL},
+			</if>
+			<if test="t21 != null">
+				#{t21,jdbcType=REAL},
+			</if>
+			<if test="t22 != null">
+				#{t22,jdbcType=REAL},
+			</if>
+			<if test="t23 != null">
+				#{t23,jdbcType=REAL},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.ParkUsageStatistics">
+		update park_usage_statistics
+		<set>
+			<if test="sDay != null">
+				s_day = #{sDay,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				card_type = #{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="inTime != null">
+				in_time = #{inTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="outTime != null">
+				out_time = #{outTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="inHour != null">
+				in_hour = #{inHour,jdbcType=INTEGER},
+			</if>
+			<if test="outHour != null">
+				out_hour = #{outHour,jdbcType=INTEGER},
+			</if>
+			<if test="t0 != null">
+				t_0 = #{t0,jdbcType=REAL},
+			</if>
+			<if test="t1 != null">
+				t_1 = #{t1,jdbcType=REAL},
+			</if>
+			<if test="t2 != null">
+				t_2 = #{t2,jdbcType=REAL},
+			</if>
+			<if test="t3 != null">
+				t_3 = #{t3,jdbcType=REAL},
+			</if>
+			<if test="t4 != null">
+				t_4 = #{t4,jdbcType=REAL},
+			</if>
+			<if test="t5 != null">
+				t_5 = #{t5,jdbcType=REAL},
+			</if>
+			<if test="t6 != null">
+				t_6 = #{t6,jdbcType=REAL},
+			</if>
+			<if test="t7 != null">
+				t_7 = #{t7,jdbcType=REAL},
+			</if>
+			<if test="t8 != null">
+				t_8 = #{t8,jdbcType=REAL},
+			</if>
+			<if test="t9 != null">
+				t_9 = #{t9,jdbcType=REAL},
+			</if>
+			<if test="t10 != null">
+				t_10 = #{t10,jdbcType=REAL},
+			</if>
+			<if test="t11 != null">
+				t_11 = #{t11,jdbcType=REAL},
+			</if>
+			<if test="t12 != null">
+				t_12 = #{t12,jdbcType=REAL},
+			</if>
+			<if test="t13 != null">
+				t_13 = #{t13,jdbcType=REAL},
+			</if>
+			<if test="t14 != null">
+				t_14 = #{t14,jdbcType=REAL},
+			</if>
+			<if test="t15 != null">
+				t_15 = #{t15,jdbcType=REAL},
+			</if>
+			<if test="t16 != null">
+				t_16 = #{t16,jdbcType=REAL},
+			</if>
+			<if test="t17 != null">
+				t_17 = #{t17,jdbcType=REAL},
+			</if>
+			<if test="t18 != null">
+				t_18 = #{t18,jdbcType=REAL},
+			</if>
+			<if test="t19 != null">
+				t_19 = #{t19,jdbcType=REAL},
+			</if>
+			<if test="t20 != null">
+				t_20 = #{t20,jdbcType=REAL},
+			</if>
+			<if test="t21 != null">
+				t_21 = #{t21,jdbcType=REAL},
+			</if>
+			<if test="t22 != null">
+				t_22 = #{t22,jdbcType=REAL},
+			</if>
+			<if test="t23 != null">
+				t_23 = #{t23,jdbcType=REAL},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.ParkUsageStatistics">
+		update park_usage_statistics
+		set s_day = #{sDay,jdbcType=VARCHAR},
+		card_type = #{cardType,jdbcType=INTEGER},
+		in_time = #{inTime,jdbcType=TIMESTAMP},
+		out_time = #{outTime,jdbcType=TIMESTAMP},
+		in_hour = #{inHour,jdbcType=INTEGER},
+		out_hour = #{outHour,jdbcType=INTEGER},
+		t_0 = #{t0,jdbcType=REAL},
+		t_1 = #{t1,jdbcType=REAL},
+		t_2 = #{t2,jdbcType=REAL},
+		t_3 = #{t3,jdbcType=REAL},
+		t_4 = #{t4,jdbcType=REAL},
+		t_5 = #{t5,jdbcType=REAL},
+		t_6 = #{t6,jdbcType=REAL},
+		t_7 = #{t7,jdbcType=REAL},
+		t_8 = #{t8,jdbcType=REAL},
+		t_9 = #{t9,jdbcType=REAL},
+		t_10 = #{t10,jdbcType=REAL},
+		t_11 = #{t11,jdbcType=REAL},
+		t_12 = #{t12,jdbcType=REAL},
+		t_13 = #{t13,jdbcType=REAL},
+		t_14 = #{t14,jdbcType=REAL},
+		t_15 = #{t15,jdbcType=REAL},
+		t_16 = #{t16,jdbcType=REAL},
+		t_17 = #{t17,jdbcType=REAL},
+		t_18 = #{t18,jdbcType=REAL},
+		t_19 = #{t19,jdbcType=REAL},
+		t_20 = #{t20,jdbcType=REAL},
+		t_21 = #{t21,jdbcType=REAL},
+		t_22 = #{t22,jdbcType=REAL},
+		t_23 = #{t23,jdbcType=REAL}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

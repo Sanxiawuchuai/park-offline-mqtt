@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.PerCompanyMapper">
+  <resultMap id="BaseResultMap" type="com.drzk.vo.PerCompany">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="cuid" jdbcType="VARCHAR" property="cuid" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="company_addr" jdbcType="VARCHAR" property="companyAddr" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="comp_phone" jdbcType="VARCHAR" property="compPhone" />
+    <result column="legel_person" jdbcType="VARCHAR" property="legelPerson" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="del_frag" jdbcType="INTEGER" property="delFrag" />
+    <result column="is_load" jdbcType="INTEGER" property="isLoad" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, cuid, company_name, company_addr, email, comp_phone, legel_person, create_date, 
+    create_user_name, modify_date, modify_user_name, memo, del_frag, is_load
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from per_company
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from per_company
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.drzk.vo.PerCompany">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into per_company (cuid, company_name, company_addr, 
+      email, comp_phone, legel_person, 
+      create_date, create_user_name, modify_date, 
+      modify_user_name, memo, del_frag, 
+      is_load)
+    values (#{cuid,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, #{companyAddr,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{compPhone,jdbcType=VARCHAR}, #{legelPerson,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{createUserName,jdbcType=VARCHAR}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{modifyUserName,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{delFrag,jdbcType=INTEGER}, 
+      #{isLoad,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.drzk.vo.PerCompany">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into per_company
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="cuid != null">
+        cuid,
+      </if>
+      <if test="companyName != null">
+        company_name,
+      </if>
+      <if test="companyAddr != null">
+        company_addr,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="compPhone != null">
+        comp_phone,
+      </if>
+      <if test="legelPerson != null">
+        legel_person,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="createUserName != null">
+        create_user_name,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="modifyUserName != null">
+        modify_user_name,
+      </if>
+      <if test="memo != null">
+        memo,
+      </if>
+      <if test="delFrag != null">
+        del_frag,
+      </if>
+      <if test="isLoad != null">
+        is_load,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="cuid != null">
+        #{cuid,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAddr != null">
+        #{companyAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="compPhone != null">
+        #{compPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="legelPerson != null">
+        #{legelPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserName != null">
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyUserName != null">
+        #{modifyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null">
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="delFrag != null">
+        #{delFrag,jdbcType=INTEGER},
+      </if>
+      <if test="isLoad != null">
+        #{isLoad,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.PerCompany">
+    update per_company
+    <set>
+      <if test="cuid != null">
+        cuid = #{cuid,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAddr != null">
+        company_addr = #{companyAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="compPhone != null">
+        comp_phone = #{compPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="legelPerson != null">
+        legel_person = #{legelPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserName != null">
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyUserName != null">
+        modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="delFrag != null">
+        del_frag = #{delFrag,jdbcType=INTEGER},
+      </if>
+      <if test="isLoad != null">
+        is_load = #{isLoad,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.drzk.vo.PerCompany">
+    update per_company
+    set cuid = #{cuid,jdbcType=VARCHAR},
+      company_name = #{companyName,jdbcType=VARCHAR},
+      company_addr = #{companyAddr,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      comp_phone = #{compPhone,jdbcType=VARCHAR},
+      legel_person = #{legelPerson,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      del_frag = #{delFrag,jdbcType=INTEGER},
+      is_load = #{isLoad,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectTopDS"   resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from per_company
+    where is_load =0 or is_load is null
+    limit 100
+  </select>
+ <update id="updateStatus">
+		update per_company
+		set is_load = #{status}
+		where cuid in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+    <!--删除数据-->
+    <update id="deleteByUuid" parameterType="com.drzk.vo.PerCompany">
+        update per_company
+        set del_frag = #{delFrag}
+        where cuid =#{cuid}
+    </update>
+
+    <update id="updateByUuid" parameterType="com.drzk.vo.PerCompany">
+        update per_company
+        set
+        company_name = #{companyName,jdbcType=VARCHAR},
+        company_addr = #{companyAddr,jdbcType=VARCHAR},
+        email = #{email,jdbcType=VARCHAR},
+        comp_phone = #{compPhone,jdbcType=VARCHAR},
+        legel_person = #{legelPerson,jdbcType=VARCHAR},
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+        modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+        memo = #{memo,jdbcType=VARCHAR}
+        where cuid = #{cuid,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectByUuid" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select id
+        from per_company
+        where cuid =#{cuid}
+    </select>
+
+</mapper>

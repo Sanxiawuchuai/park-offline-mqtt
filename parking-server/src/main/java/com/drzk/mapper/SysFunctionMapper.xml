@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.SysFunctionMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.SysFunction">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="fun_code" jdbcType="VARCHAR" property="funCode" />
+		<result column="fun_name" jdbcType="VARCHAR" property="funName" />
+		<result column="fun_type" jdbcType="INTEGER" property="funType" />
+		<result column="fun_no" jdbcType="INTEGER" property="funNo" />
+		<result column="fun_son" jdbcType="INTEGER" property="funSon" />
+		<result column="fun_mod_name" jdbcType="VARCHAR" property="funModName" />
+		<result column="fun_right" jdbcType="VARCHAR" property="funRight" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		<result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+		<result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, fun_code, fun_name, fun_type, fun_no, fun_son, fun_mod_name,
+		fun_right, create_date,
+		create_user_name, modify_date, modify_user_name
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_function
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from sys_function
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.SysFunction">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into sys_function (id, fun_code, fun_name,
+		fun_type, fun_no, fun_son,
+		fun_mod_name, fun_right, create_date,
+		create_user_name, modify_date, modify_user_name
+		)
+		values (#{id,jdbcType=INTEGER}, #{funCode,jdbcType=VARCHAR},
+		#{funName,jdbcType=VARCHAR},
+		#{funType,jdbcType=INTEGER}, #{funNo,jdbcType=INTEGER}, #{funSon,jdbcType=INTEGER},
+		#{funModName,jdbcType=VARCHAR}, #{funRight,jdbcType=VARCHAR},
+		#{createDate,jdbcType=TIMESTAMP},
+		#{createUserName,jdbcType=VARCHAR}, #{modifyDate,jdbcType=TIMESTAMP}, #{modifyUserName,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.SysFunction">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into sys_function
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="funCode != null">
+				fun_code,
+			</if>
+			<if test="funName != null">
+				fun_name,
+			</if>
+			<if test="funType != null">
+				fun_type,
+			</if>
+			<if test="funNo != null">
+				fun_no,
+			</if>
+			<if test="funSon != null">
+				fun_son,
+			</if>
+			<if test="funModName != null">
+				fun_mod_name,
+			</if>
+			<if test="funRight != null">
+				fun_right,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="createUserName != null">
+				create_user_name,
+			</if>
+			<if test="modifyDate != null">
+				modify_date,
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="funCode != null">
+				#{funCode,jdbcType=VARCHAR},
+			</if>
+			<if test="funName != null">
+				#{funName,jdbcType=VARCHAR},
+			</if>
+			<if test="funType != null">
+				#{funType,jdbcType=INTEGER},
+			</if>
+			<if test="funNo != null">
+				#{funNo,jdbcType=INTEGER},
+			</if>
+			<if test="funSon != null">
+				#{funSon,jdbcType=INTEGER},
+			</if>
+			<if test="funModName != null">
+				#{funModName,jdbcType=VARCHAR},
+			</if>
+			<if test="funRight != null">
+				#{funRight,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				#{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				#{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				#{modifyUserName,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.SysFunction">
+		update sys_function
+		<set>
+			<if test="funCode != null">
+				fun_code = #{funCode,jdbcType=VARCHAR},
+			</if>
+			<if test="funName != null">
+				fun_name = #{funName,jdbcType=VARCHAR},
+			</if>
+			<if test="funType != null">
+				fun_type = #{funType,jdbcType=INTEGER},
+			</if>
+			<if test="funNo != null">
+				fun_no = #{funNo,jdbcType=INTEGER},
+			</if>
+			<if test="funSon != null">
+				fun_son = #{funSon,jdbcType=INTEGER},
+			</if>
+			<if test="funModName != null">
+				fun_mod_name = #{funModName,jdbcType=VARCHAR},
+			</if>
+			<if test="funRight != null">
+				fun_right = #{funRight,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				create_user_name = #{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.SysFunction">
+		update sys_function
+		set fun_code = #{funCode,jdbcType=VARCHAR},
+		fun_name = #{funName,jdbcType=VARCHAR},
+		fun_type = #{funType,jdbcType=INTEGER},
+		fun_no = #{funNo,jdbcType=INTEGER},
+		fun_son = #{funSon,jdbcType=INTEGER},
+		fun_mod_name = #{funModName,jdbcType=VARCHAR},
+		fun_right = #{funRight,jdbcType=VARCHAR},
+		create_date = #{createDate,jdbcType=TIMESTAMP},
+		create_user_name = #{createUserName,jdbcType=VARCHAR},
+		modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+		modify_user_name = #{modifyUserName,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

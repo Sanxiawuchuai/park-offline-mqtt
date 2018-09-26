@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.PerPersonsMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.PerPersons">
+		<id column="pid" jdbcType="INTEGER" property="pid" />
+		<result column="per_id" jdbcType="VARCHAR" property="perId" />
+		<result column="per_name" jdbcType="VARCHAR" property="perName" />
+		<result column="per_id_code" jdbcType="VARCHAR" property="perIdCode" />
+		<result column="per_addr" jdbcType="VARCHAR" property="perAddr" />
+		<result column="wechat_no" jdbcType="VARCHAR" property="wechatNo" />
+		<result column="per_tel" jdbcType="VARCHAR" property="perTel" />
+		<result column="land_line_num" jdbcType="VARCHAR" property="landLineNum" />
+		<result column="per_id_no" jdbcType="VARCHAR" property="perIdNo" />
+		<result column="sex" jdbcType="VARCHAR" property="sex" />
+		<result column="car_no" jdbcType="VARCHAR" property="carNo" />
+		<result column="birthday" jdbcType="DATE" property="birthday" />
+		<result column="per_nation" jdbcType="VARCHAR" property="perNation" />
+		<result column="per_place" jdbcType="VARCHAR" property="perPlace" />
+		<result column="per_zip_code" jdbcType="VARCHAR" property="perZipCode" />
+		<result column="marry" jdbcType="VARCHAR" property="marry" />
+		<result column="per_email" jdbcType="VARCHAR" property="perEmail" />
+		<result column="per_type" jdbcType="INTEGER" property="perType" />
+		<result column="enter_date" jdbcType="DATE" property="enterDate" />
+		<result column="format_date" jdbcType="DATE" property="formatDate" />
+		<result column="edu_level" jdbcType="VARCHAR" property="eduLevel" />
+		<result column="political_status" jdbcType="VARCHAR" property="politicalStatus" />
+		<result column="dept_id" jdbcType="VARCHAR" property="deptId" />
+		<result column="positions" jdbcType="VARCHAR" property="positions" />
+		<result column="is_leave" jdbcType="INTEGER" property="isLeave" />
+		<result column="leave_date" jdbcType="DATE" property="leaveDate" />
+		<result column="leave_cause" jdbcType="VARCHAR" property="leaveCause" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		<result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+		<result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName" />
+		<result column="memo" jdbcType="VARCHAR" property="memo" />
+		<result column="isload" jdbcType="INTEGER" property="isload" />
+		<result column="place_id" jdbcType="INTEGER" property="placeId" />
+		<result column="puid" jdbcType="VARCHAR" property="puid" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		pid, per_id, per_name, per_id_code, per_addr, wechat_no,
+		per_tel,
+		land_line_num,
+		per_id_no, sex, car_no, birthday, per_nation,
+		per_place, per_zip_code, marry,
+		per_email,
+		per_type, enter_date,
+		format_date, edu_level, political_status, dept_id,
+		positions,
+		is_leave,
+		leave_date, leave_cause, create_date, create_user_name, modify_date,
+		modify_user_name,
+		memo, isload ,per_pic,place_id,puid
+	</sql>
+
+	<select id="findById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from per_persons
+		where pid = #{pid,jdbcType=INTEGER}
+	</select>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from
+		per_persons
+		where pid = #{pid,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="com.drzk.vo.PerPersons" keyProperty="pid" useGeneratedKeys="true">
+		insert into per_persons
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="pid != null">
+				pid,
+			</if>
+			<if test="puid != null">
+				puid,
+			</if>
+			<if test="perId != null">
+				per_id,
+			</if>
+			<if test="perName != null">
+				per_name,
+			</if>
+			<if test="perIdCode != null">
+				per_id_code,
+			</if>
+			<if test="perAddr != null">
+				per_addr,
+			</if>
+			<if test="wechatNo != null">
+				wechat_no,
+			</if>
+			<if test="perTel != null">
+				per_tel,
+			</if>
+			<if test="landLineNum != null">
+				land_line_num,
+			</if>
+			<if test="perIdNo != null">
+				per_id_no,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="carNo != null">
+				car_no,
+			</if>
+			<if test="birthday != null">
+				birthday,
+			</if>
+			<if test="perNation != null">
+				per_nation,
+			</if>
+			<if test="perPlace != null">
+				per_place,
+			</if>
+			<if test="perZipCode != null">
+				per_zip_code,
+			</if>
+			<if test="marry != null">
+				marry,
+			</if>
+			<if test="perEmail != null">
+				per_email,
+			</if>
+			<if test="perType != null">
+				per_type,
+			</if>
+			<if test="enterDate != null">
+				enter_date,
+			</if>
+			<if test="formatDate != null">
+				format_date,
+			</if>
+			<if test="eduLevel != null">
+				edu_level,
+			</if>
+			<if test="politicalStatus != null">
+				political_status,
+			</if>
+			<if test="deptId != null">
+				dept_id,
+			</if>
+			<if test="positions != null">
+				positions,
+			</if>
+			<if test="isLeave != null">
+				is_leave,
+			</if>
+			<if test="leaveDate != null">
+				leave_date,
+			</if>
+			<if test="leaveCause != null">
+				leave_cause,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="createUserName != null">
+				create_user_name,
+			</if>
+			<if test="modifyDate != null">
+				modify_date,
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="isload != null">
+				isload,
+			</if>
+			<if test="perPic != null">
+				per_pic,
+			</if>
+			<if test="placeId != null">
+				place_id,
+			</if>
+			<if test="delFrag != null">
+				del_frag,
+			</if>
+			<if test="compId != null">
+				comp_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="pid != null">
+				#{pid,jdbcType=INTEGER},
+			</if>
+			<if test="puid != null">
+				#{puid,jdbcType=VARCHAR},
+			</if>
+			<if test="perId != null">
+				#{perId,jdbcType=VARCHAR},
+			</if>
+			<if test="perName != null">
+				#{perName,jdbcType=VARCHAR},
+			</if>
+			<if test="perIdCode != null">
+				#{perIdCode,jdbcType=VARCHAR},
+			</if>
+			<if test="perAddr != null">
+				#{perAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="wechatNo != null">
+				#{wechatNo,jdbcType=VARCHAR},
+			</if>
+			<if test="perTel != null">
+				#{perTel,jdbcType=VARCHAR},
+			</if>
+			<if test="landLineNum != null">
+				#{landLineNum,jdbcType=VARCHAR},
+			</if>
+			<if test="perIdNo != null">
+				#{perIdNo,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=TINYINT},
+			</if>
+			<if test="carNo != null">
+				#{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="birthday != null">
+				#{birthday,jdbcType=DATE},
+			</if>
+			<if test="perNation != null">
+				#{perNation,jdbcType=VARCHAR},
+			</if>
+			<if test="perPlace != null">
+				#{perPlace,jdbcType=VARCHAR},
+			</if>
+			<if test="perZipCode != null">
+				#{perZipCode,jdbcType=VARCHAR},
+			</if>
+			<if test="marry != null">
+				#{marry,jdbcType=TINYINT},
+			</if>
+			<if test="perEmail != null">
+				#{perEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="perType != null">
+				#{perType,jdbcType=TINYINT},
+			</if>
+			<if test="enterDate != null">
+				#{enterDate,jdbcType=DATE},
+			</if>
+			<if test="formatDate != null">
+				#{formatDate,jdbcType=DATE},
+			</if>
+			<if test="eduLevel != null">
+				#{eduLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="politicalStatus != null">
+				#{politicalStatus,jdbcType=TINYINT},
+			</if>
+			<if test="deptId != null">
+				#{deptId,jdbcType=INTEGER},
+			</if>
+			<if test="positions != null">
+				#{positions,jdbcType=VARCHAR},
+			</if>
+			<if test="isLeave != null">
+				#{isLeave,jdbcType=TINYINT},
+			</if>
+			<if test="leaveDate != null">
+				#{leaveDate,jdbcType=DATE},
+			</if>
+			<if test="leaveCause != null">
+				#{leaveCause,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				#{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				#{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				#{modifyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="isload != null">
+				#{isload,jdbcType=INTEGER},
+			</if>
+			<if test="perPic != null">
+				#{perPic,jdbcType=VARCHAR},
+			</if>
+			<if test="placeId != null">
+				#{placeId,jdbcType=INTEGER},
+			</if>
+			<if test="delFrag != null">
+				#{delFrag,jdbcType=INTEGER},
+			</if>
+			<if test="compId != null">
+				#{compId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="selectByCarNo" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from per_persons
+		where car_no = #{carNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectPidByPuid" parameterType="java.util.List"
+		resultType="java.lang.String">
+		select pid
+		from per_persons
+		where puid in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="getPerInfo" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" /> from per_persons
+		 <where>
+			 <if test="perName!=null">
+				 and per_name = #{perName}
+			 </if>
+			 <if test="perTel!=null">
+				 and per_tel = #{perTel}
+			 </if>
+		 </where>
+	</select>
+
+	<update id="updateStatus">
+		update per_persons
+		set isload = #{status}
+		where puid in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+    <insert id="insertOnline" parameterType="com.drzk.vo.PerPersons">
+        insert into per_persons (
+        per_id, per_name,puid,
+        per_id_code, per_addr, wechat_no,
+        per_tel,
+        land_line_num, per_id_no,
+        sex, car_no, birthday,
+        per_nation, per_place,
+        per_zip_code,
+        marry, per_email, per_type,
+        enter_date, format_date,
+        edu_level,
+        political_status, dept_id, positions,
+        is_leave, leave_date,
+        leave_cause,
+        create_date, create_user_name, modify_date,
+        modify_user_name, memo, isload,comp_id,del_frag,place_id
+        )
+        values (
+        #{perId},
+        #{perName},#{puid},
+        #{perIdCode}, #{perAddr},
+        #{wechatNo},
+        #{perTel},
+        #{landLineNum},
+        #{perIdNo},
+        #{sex}, #{carNo},
+        #{birthday},
+        #{perNation},
+        #{perPlace},
+        #{perZipCode},
+        #{marry}, #{perEmail},
+        #{perType},
+        #{enterDate},
+        #{formatDate},
+        #{eduLevel},
+        #{politicalStatus}, #{deptId},
+        #{positions},
+        #{isLeave},
+        #{leaveDate},
+        #{leaveCause},
+        #{createDate}, #{createUserName},
+        #{modifyDate},
+        #{modifyUserName},
+        #{memo},
+        #{isload},
+        #{compId},#{delFrag},#{placeId}
+        )
+    </insert>
+
+    <update id="updateByUuid" parameterType="com.drzk.vo.PerPersons">
+        update per_persons
+        set per_id = #{perId},
+        per_name =#{perName},
+        per_id_code =#{perIdCode},
+        per_addr = #{perAddr},
+        wechat_no = #{wechatNo},
+        per_tel =#{perTel},
+        land_line_num =#{landLineNum},
+        per_id_no =#{perIdNo},
+        sex = #{sex},
+        car_no =#{carNo},
+        birthday = #{birthday},
+        per_nation = #{perNation},
+        per_place = #{perPlace},
+        per_zip_code = #{perZipCode},
+        marry = #{marry},
+        per_email = #{perEmail},
+        per_type =#{perType},
+        enter_date = #{enterDate},
+        format_date = #{formatDate},
+        edu_level =#{eduLevel},
+        political_status =#{politicalStatus},
+        dept_id =#{deptId},
+        positions = #{positions},
+        is_leave = #{isLeave},
+        leave_date =#{leaveDate},
+        leave_cause =#{leaveCause},
+        create_date =#{createDate},
+        create_user_name =#{createUserName},
+        modify_date =#{modifyDate},
+        modify_user_name =#{modifyUserName},
+        memo = #{memo},
+        place_id =#{placeId},
+        comp_id=#{compId}
+        where puid = #{puid}
+    </update>
+
+    <update id="deleteByUuid" parameterType="com.drzk.vo.PerPersons">
+        update per_persons set del_frag = #{delFrag}  where puid = #{puid}
+    </update>
+</mapper>

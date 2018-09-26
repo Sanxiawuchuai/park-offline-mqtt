@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.ParkFreeTypeMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.ParkFreeType">
+		<id column="free_type" jdbcType="INTEGER" property="freeType" />
+		<result column="free_name" jdbcType="VARCHAR" property="freeName" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		<result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+		<result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName" />
+		<result column="memo" jdbcType="VARCHAR" property="memo" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		free_type, free_name, create_date, create_user_name,
+		modify_date,
+		modify_user_name,
+		memo
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_free_type
+		where free_type = #{freeType,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		park_free_type
+		where free_type = #{freeType,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.ParkFreeType">
+		insert into park_free_type
+		(free_type, free_name, create_date,
+		create_user_name, modify_date,
+		modify_user_name,
+		memo)
+		values (#{freeType,jdbcType=INTEGER},
+		#{freeName,jdbcType=VARCHAR},
+		#{createDate,jdbcType=TIMESTAMP},
+		#{createUserName,jdbcType=VARCHAR}, #{modifyDate,jdbcType=TIMESTAMP},
+		#{modifyUserName,jdbcType=VARCHAR},
+		#{memo,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.ParkFreeType">
+		insert into park_free_type
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="freeType != null">
+				free_type,
+			</if>
+			<if test="freeName != null">
+				free_name,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="createUserName != null">
+				create_user_name,
+			</if>
+			<if test="modifyDate != null">
+				modify_date,
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="freeType != null">
+				#{freeType,jdbcType=INTEGER},
+			</if>
+			<if test="freeName != null">
+				#{freeName,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				#{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				#{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				#{modifyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.ParkFreeType">
+		update park_free_type
+		<set>
+			<if test="freeName != null">
+				free_name = #{freeName,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				create_user_name = #{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where free_type = #{freeType,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.ParkFreeType">
+		update
+		park_free_type
+		set free_name = #{freeName,jdbcType=VARCHAR},
+		create_date = #{createDate,jdbcType=TIMESTAMP},
+		create_user_name =
+		#{createUserName,jdbcType=VARCHAR},
+		modify_date =
+		#{modifyDate,jdbcType=TIMESTAMP},
+		modify_user_name =
+		#{modifyUserName,jdbcType=VARCHAR},
+		memo = #{memo,jdbcType=VARCHAR}
+		where free_type = #{freeType,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectAllParkFreeType" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_free_type
+	</select>
+</mapper>

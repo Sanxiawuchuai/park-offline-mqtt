@@ -1,0 +1,19 @@
+package com.drzk.offline.vo;
+
+public class ChargePaySuccess {
+
+	private String uId; //唯一标志
+	private String boxIP; //岗亭 IP
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
+	}
+	public String getBoxIP() {
+		return boxIP;
+	}
+	public void setBoxIP(String boxIP) {
+		this.boxIP = boxIP;
+	}
+}

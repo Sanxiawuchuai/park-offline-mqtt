@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.VwCarInExceptionMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.VwCarInException">
+		<result column="id" jdbcType="INTEGER" property="id" />
+		<result column="mach_no" jdbcType="INTEGER" property="machNo" />
+		<result column="ykt_id" jdbcType="INTEGER" property="yktId" />
+		<result column="card_id" jdbcType="VARCHAR" property="cardId" />
+		<result column="c_flag" jdbcType="INTEGER" property="cFlag" />
+		<result column="card_no" jdbcType="VARCHAR" property="cardNo" />
+		<result column="emp_name" jdbcType="VARCHAR" property="empName" />
+		<result column="car_no" jdbcType="VARCHAR" property="carNo" />
+		<result column="assistant_car_no" jdbcType="VARCHAR" property="assistantCarNo" />
+		<result column="card_type" jdbcType="INTEGER" property="cardType" />
+		<result column="car_no_type" jdbcType="INTEGER" property="carNoType" />
+		<result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+		<result column="in_user_name" jdbcType="VARCHAR" property="inUserName" />
+		<result column="in_pic" jdbcType="VARCHAR" property="inPic" />
+		<result column="back_in_pic" jdbcType="VARCHAR" property="backInPic" />
+		<result column="small_pic" jdbcType="VARCHAR" property="smallPic" />
+		<result column="assistant_small_pic" jdbcType="VARCHAR"
+			property="assistantSmallPic" />
+		<result column="b_in_time" jdbcType="TIMESTAMP" property="bInTime" />
+		<result column="b_in_pic" jdbcType="VARCHAR" property="bInPic" />
+		<result column="b_back_in_pic" jdbcType="VARCHAR" property="bBackInPic" />
+		<result column="b_small_pic" jdbcType="VARCHAR" property="bSmallPic" />
+		<result column="b_assistant_small_pic" jdbcType="VARCHAR"
+			property="bAssistantSmallPic" />
+		<result column="channel_name" jdbcType="VARCHAR" property="channelName" />
+		<result column="a_custname" jdbcType="VARCHAR" property="aCustname" />
+		<result column="in_way" jdbcType="INTEGER" property="inWay" />
+		<result column="in_way_name" jdbcType="VARCHAR" property="inWayName" />
+	</resultMap>
+	<insert id="insert" parameterType="com.drzk.vo.VwCarInException">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into vw_car_in_exception (id, mach_no, ykt_id,
+		card_id, c_flag, card_no,
+		emp_name, car_no, assistant_car_no,
+		card_type, car_no_type, in_time,
+		in_user_name, in_pic, back_in_pic,
+		small_pic, assistant_small_pic, b_in_time,
+		b_in_pic, b_back_in_pic, b_small_pic,
+		b_assistant_small_pic, channel_name, a_custname,
+		in_way, in_way_name)
+		values (#{id,jdbcType=INTEGER}, #{machNo,jdbcType=INTEGER},
+		#{yktId,jdbcType=INTEGER},
+		#{cardId,jdbcType=VARCHAR}, #{cFlag,jdbcType=INTEGER}, #{cardNo,jdbcType=VARCHAR},
+		#{empName,jdbcType=VARCHAR}, #{carNo,jdbcType=VARCHAR},
+		#{assistantCarNo,jdbcType=VARCHAR},
+		#{cardType,jdbcType=INTEGER}, #{carNoType,jdbcType=INTEGER}, #{inTime,jdbcType=TIMESTAMP},
+		#{inUserName,jdbcType=VARCHAR}, #{inPic,jdbcType=VARCHAR},
+		#{backInPic,jdbcType=VARCHAR},
+		#{smallPic,jdbcType=VARCHAR}, #{assistantSmallPic,jdbcType=VARCHAR}, #{bInTime,jdbcType=TIMESTAMP},
+		#{bInPic,jdbcType=VARCHAR}, #{bBackInPic,jdbcType=VARCHAR},
+		#{bSmallPic,jdbcType=VARCHAR},
+		#{bAssistantSmallPic,jdbcType=VARCHAR}, #{channelName,jdbcType=VARCHAR}, #{aCustname,jdbcType=VARCHAR},
+		#{inWay,jdbcType=INTEGER}, #{inWayName,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.VwCarInException">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into vw_car_in_exception
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="machNo != null">
+				mach_no,
+			</if>
+			<if test="yktId != null">
+				ykt_id,
+			</if>
+			<if test="cardId != null">
+				card_id,
+			</if>
+			<if test="cFlag != null">
+				c_flag,
+			</if>
+			<if test="cardNo != null">
+				card_no,
+			</if>
+			<if test="empName != null">
+				emp_name,
+			</if>
+			<if test="carNo != null">
+				car_no,
+			</if>
+			<if test="assistantCarNo != null">
+				assistant_car_no,
+			</if>
+			<if test="cardType != null">
+				card_type,
+			</if>
+			<if test="carNoType != null">
+				car_no_type,
+			</if>
+			<if test="inTime != null">
+				in_time,
+			</if>
+			<if test="inUserName != null">
+				in_user_name,
+			</if>
+			<if test="inPic != null">
+				in_pic,
+			</if>
+			<if test="backInPic != null">
+				back_in_pic,
+			</if>
+			<if test="smallPic != null">
+				small_pic,
+			</if>
+			<if test="assistantSmallPic != null">
+				assistant_small_pic,
+			</if>
+			<if test="bInTime != null">
+				b_in_time,
+			</if>
+			<if test="bInPic != null">
+				b_in_pic,
+			</if>
+			<if test="bBackInPic != null">
+				b_back_in_pic,
+			</if>
+			<if test="bSmallPic != null">
+				b_small_pic,
+			</if>
+			<if test="bAssistantSmallPic != null">
+				b_assistant_small_pic,
+			</if>
+			<if test="channelName != null">
+				channel_name,
+			</if>
+			<if test="aCustname != null">
+				a_custname,
+			</if>
+			<if test="inWay != null">
+				in_way,
+			</if>
+			<if test="inWayName != null">
+				in_way_name,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="machNo != null">
+				#{machNo,jdbcType=INTEGER},
+			</if>
+			<if test="yktId != null">
+				#{yktId,jdbcType=INTEGER},
+			</if>
+			<if test="cardId != null">
+				#{cardId,jdbcType=VARCHAR},
+			</if>
+			<if test="cFlag != null">
+				#{cFlag,jdbcType=INTEGER},
+			</if>
+			<if test="cardNo != null">
+				#{cardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="empName != null">
+				#{empName,jdbcType=VARCHAR},
+			</if>
+			<if test="carNo != null">
+				#{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="assistantCarNo != null">
+				#{assistantCarNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				#{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="carNoType != null">
+				#{carNoType,jdbcType=INTEGER},
+			</if>
+			<if test="inTime != null">
+				#{inTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="inUserName != null">
+				#{inUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="inPic != null">
+				#{inPic,jdbcType=VARCHAR},
+			</if>
+			<if test="backInPic != null">
+				#{backInPic,jdbcType=VARCHAR},
+			</if>
+			<if test="smallPic != null">
+				#{smallPic,jdbcType=VARCHAR},
+			</if>
+			<if test="assistantSmallPic != null">
+				#{assistantSmallPic,jdbcType=VARCHAR},
+			</if>
+			<if test="bInTime != null">
+				#{bInTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="bInPic != null">
+				#{bInPic,jdbcType=VARCHAR},
+			</if>
+			<if test="bBackInPic != null">
+				#{bBackInPic,jdbcType=VARCHAR},
+			</if>
+			<if test="bSmallPic != null">
+				#{bSmallPic,jdbcType=VARCHAR},
+			</if>
+			<if test="bAssistantSmallPic != null">
+				#{bAssistantSmallPic,jdbcType=VARCHAR},
+			</if>
+			<if test="channelName != null">
+				#{channelName,jdbcType=VARCHAR},
+			</if>
+			<if test="aCustname != null">
+				#{aCustname,jdbcType=VARCHAR},
+			</if>
+			<if test="inWay != null">
+				#{inWay,jdbcType=INTEGER},
+			</if>
+			<if test="inWayName != null">
+				#{inWayName,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+</mapper>

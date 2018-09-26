@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.ParkAccountTypeMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.ParkAccountType">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="a_type" jdbcType="INTEGER" property="aType" />
+		<result column="a_name" jdbcType="VARCHAR" property="aName" />
+		<result column="a_custname" jdbcType="VARCHAR" property="aCustname" />
+		<result column="no_use" jdbcType="INTEGER" property="noUse" />
+		<result column="is_send" jdbcType="INTEGER" property="isSend" />
+		<result column="id_mode" jdbcType="INTEGER" property="idMode" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		<result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+		<result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, a_type, a_name, a_custname, no_use, is_send, id_mode, create_date,
+		create_user_name,
+		modify_date, modify_user_name
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_account_type
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="getAccName" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" /> from park_account_type
+		where a_type = #{aType}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from park_account_type
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.ParkAccountType">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into park_account_type (id, a_type, a_name,
+		a_custname, no_use, is_send,
+		id_mode, create_date, create_user_name,
+		modify_date, modify_user_name)
+		values (#{id,jdbcType=INTEGER}, #{aType,jdbcType=INTEGER},
+		#{aName,jdbcType=VARCHAR},
+		#{aCustname,jdbcType=VARCHAR}, #{noUse,jdbcType=INTEGER}, #{isSend,jdbcType=INTEGER},
+		#{idMode,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP},
+		#{createUserName,jdbcType=VARCHAR},
+		#{modifyDate,jdbcType=TIMESTAMP}, #{modifyUserName,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.ParkAccountType">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into park_account_type
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="aType != null">
+				a_type,
+			</if>
+			<if test="aName != null">
+				a_name,
+			</if>
+			<if test="aCustname != null">
+				a_custname,
+			</if>
+			<if test="noUse != null">
+				no_use,
+			</if>
+			<if test="isSend != null">
+				is_send,
+			</if>
+			<if test="idMode != null">
+				id_mode,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="createUserName != null">
+				create_user_name,
+			</if>
+			<if test="modifyDate != null">
+				modify_date,
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="aType != null">
+				#{aType,jdbcType=INTEGER},
+			</if>
+			<if test="aName != null">
+				#{aName,jdbcType=VARCHAR},
+			</if>
+			<if test="aCustname != null">
+				#{aCustname,jdbcType=VARCHAR},
+			</if>
+			<if test="noUse != null">
+				#{noUse,jdbcType=INTEGER},
+			</if>
+			<if test="isSend != null">
+				#{isSend,jdbcType=INTEGER},
+			</if>
+			<if test="idMode != null">
+				#{idMode,jdbcType=INTEGER},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				#{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				#{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				#{modifyUserName,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.ParkAccountType">
+		update park_account_type
+		<set>
+			<if test="aType != null">
+				a_type = #{aType,jdbcType=INTEGER},
+			</if>
+			<if test="aName != null">
+				a_name = #{aName,jdbcType=VARCHAR},
+			</if>
+			<if test="aCustname != null">
+				a_custname = #{aCustname,jdbcType=VARCHAR},
+			</if>
+			<if test="noUse != null">
+				no_use = #{noUse,jdbcType=INTEGER},
+			</if>
+			<if test="isSend != null">
+				is_send = #{isSend,jdbcType=INTEGER},
+			</if>
+			<if test="idMode != null">
+				id_mode = #{idMode,jdbcType=INTEGER},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				create_user_name = #{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.ParkAccountType">
+		update park_account_type
+		set a_type = #{aType,jdbcType=INTEGER},
+		a_name = #{aName,jdbcType=VARCHAR},
+		a_custname = #{aCustname,jdbcType=VARCHAR},
+		no_use = #{noUse,jdbcType=INTEGER},
+		is_send = #{isSend,jdbcType=INTEGER},
+		id_mode = #{idMode,jdbcType=INTEGER},
+		create_date = #{createDate,jdbcType=TIMESTAMP},
+		create_user_name = #{createUserName,jdbcType=VARCHAR},
+		modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+		modify_user_name = #{modifyUserName,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectAllAccountType" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_account_type
+	</select>
+	
+	<update id="updateName">
+		update park_account_type set a_custname = #{aCustname,jdbcType=VARCHAR} where a_type=#{aType}
+	</update>
+</mapper>

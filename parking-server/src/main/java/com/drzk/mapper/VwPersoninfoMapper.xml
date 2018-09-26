@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.VwPersoninfoMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.VwPersoninfo">
+		<result column="pid" jdbcType="INTEGER" property="pid" />
+		<result column="puid" jdbcType="VARCHAR" property="puid" />
+		<result column="per_id" jdbcType="VARCHAR" property="perId" />
+		<result column="per_name" jdbcType="VARCHAR" property="perName" />
+		<result column="per_id_code" jdbcType="VARCHAR" property="perIdCode" />
+		<result column="per_addr" jdbcType="VARCHAR" property="perAddr" />
+		<result column="wechat_no" jdbcType="VARCHAR" property="wechatNo" />
+		<result column="per_tel" jdbcType="VARCHAR" property="perTel" />
+		<result column="land_line_num" jdbcType="VARCHAR" property="landLineNum" />
+		<result column="per_id_no" jdbcType="VARCHAR" property="perIdNo" />
+		<result column="sex" jdbcType="VARCHAR" property="sex" />
+		<result column="car_no" jdbcType="VARCHAR" property="carNo" />
+		<result column="birthday" jdbcType="DATE" property="birthday" />
+		<result column="per_nation" jdbcType="VARCHAR" property="perNation" />
+		<result column="per_place" jdbcType="VARCHAR" property="perPlace" />
+		<result column="per_zip_code" jdbcType="VARCHAR" property="perZipCode" />
+		<result column="marry" jdbcType="VARCHAR" property="marry" />
+		<result column="per_email" jdbcType="VARCHAR" property="perEmail" />
+		<result column="per_type" jdbcType="INTEGER" property="perType" />
+		<result column="enter_date" jdbcType="DATE" property="enterDate" />
+		<result column="format_date" jdbcType="DATE" property="formatDate" />
+		<result column="edu_level" jdbcType="VARCHAR" property="eduLevel" />
+		<result column="political_status" jdbcType="VARCHAR" property="politicalStatus" />
+		<result column="dept_id" jdbcType="INTEGER" property="deptId" />
+		<result column="positions" jdbcType="VARCHAR" property="positions" />
+		<result column="is_leave" jdbcType="INTEGER" property="isLeave" />
+		<result column="leave_date" jdbcType="DATE" property="leaveDate" />
+		<result column="leave_cause" jdbcType="VARCHAR" property="leaveCause" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		<result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+		<result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName" />
+		<result column="memo" jdbcType="VARCHAR" property="memo" />
+		<result column="isload" jdbcType="INTEGER" property="isload" />
+		<result column="per_pic" jdbcType="VARCHAR" property="perPic" />
+		<result column="place_id" jdbcType="VARCHAR" property="placeId" />
+		<result column="del_frag" jdbcType="INTEGER" property="delFrag" />
+		<result column="duid" jdbcType="VARCHAR" property="duid" />
+		<result column="dept_name" jdbcType="VARCHAR" property="deptName" />
+		<result column="top_dept_id" jdbcType="INTEGER" property="topDeptId" />
+		<result column="place_name" jdbcType="VARCHAR" property="placeName" />
+		<result column="place_num" jdbcType="INTEGER" property="placeNum" />
+		<result column="place_in" jdbcType="INTEGER" property="placeIn" />
+		<result column="p_type" jdbcType="INTEGER" property="pType" />
+		<result column="cuid" jdbcType="VARCHAR" property="cuid" />
+		<result column="company_name" jdbcType="VARCHAR" property="companyName" />
+		<result column="comp_id" jdbcType="INTEGER" property="compId" />
+		
+	</resultMap>
+	<sql id="Base_Column_List">
+		pid, puid, per_id,
+		per_name, per_id_code, per_addr,
+		wechat_no, per_tel, land_line_num,
+		per_id_no, sex, car_no,
+		birthday, per_nation, per_place,
+		per_zip_code, marry, per_email,
+		per_type, enter_date, format_date,
+		edu_level, political_status, dept_id,
+		positions, is_leave, leave_date,
+		leave_cause, create_date, create_user_name,
+		modify_date, modify_user_name, memo,
+		isload, per_pic, place_id,
+		del_frag,duid, dept_name, top_dept_id,
+		place_name, place_num, place_in,
+		p_type,cuid,company_name,comp_id
+	</sql>
+	<select id="selectByIsload" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from vw_personinfo
+		where isload =0 or isload is null
+		order by pid limit 100
+	</select>
+	<insert id="insert" parameterType="com.drzk.vo.VwPersoninfo">
+		insert into vw_personInfo (pid, puid, per_id,
+		per_name, per_id_code, per_addr,
+		wechat_no, per_tel, land_line_num,
+		per_id_no, sex, car_no,
+		birthday, per_nation, per_place,
+		per_zip_code, marry, per_email,
+		per_type, enter_date, format_date,
+		edu_level, political_status, dept_id,
+		positions, is_leave, leave_date,
+		leave_cause, create_date, create_user_name,
+		modify_date, modify_user_name, memo,
+		isload, per_pic, place_id,
+		del_frag, dept_name, top_dept_id,
+		place_name, place_num, place_in,
+		p_type)
+		values (#{pid,jdbcType=INTEGER}, #{puid,jdbcType=VARCHAR},
+		#{perId,jdbcType=VARCHAR},
+		#{perName,jdbcType=VARCHAR}, #{perIdCode,jdbcType=VARCHAR}, #{perAddr,jdbcType=VARCHAR},
+		#{wechatNo,jdbcType=VARCHAR}, #{perTel,jdbcType=VARCHAR},
+		#{landLineNum,jdbcType=VARCHAR},
+		#{perIdNo,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{carNo,jdbcType=VARCHAR},
+		#{birthday,jdbcType=DATE}, #{perNation,jdbcType=VARCHAR},
+		#{perPlace,jdbcType=VARCHAR},
+		#{perZipCode,jdbcType=VARCHAR}, #{marry,jdbcType=VARCHAR}, #{perEmail,jdbcType=VARCHAR},
+		#{perType,jdbcType=INTEGER}, #{enterDate,jdbcType=DATE},
+		#{formatDate,jdbcType=DATE},
+		#{eduLevel,jdbcType=VARCHAR}, #{politicalStatus,jdbcType=VARCHAR}, #{deptId,jdbcType=INTEGER},
+		#{positions,jdbcType=VARCHAR}, #{isLeave,jdbcType=INTEGER},
+		#{leaveDate,jdbcType=DATE},
+		#{leaveCause,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{createUserName,jdbcType=VARCHAR},
+		#{modifyDate,jdbcType=TIMESTAMP}, #{modifyUserName,jdbcType=VARCHAR},
+		#{memo,jdbcType=VARCHAR},
+		#{isload,jdbcType=INTEGER}, #{perPic,jdbcType=VARCHAR}, #{placeId,jdbcType=VARCHAR},
+		#{delFrag,jdbcType=INTEGER}, #{deptName,jdbcType=VARCHAR},
+		#{topDeptId,jdbcType=INTEGER},
+		#{placeName,jdbcType=VARCHAR}, #{placeNum,jdbcType=INTEGER}, #{placeIn,jdbcType=INTEGER},
+		#{pType,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.VwPersoninfo">
+		insert into vw_personInfo
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="pid != null">
+				pid,
+			</if>
+			<if test="puid != null">
+				puid,
+			</if>
+			<if test="perId != null">
+				per_id,
+			</if>
+			<if test="perName != null">
+				per_name,
+			</if>
+			<if test="perIdCode != null">
+				per_id_code,
+			</if>
+			<if test="perAddr != null">
+				per_addr,
+			</if>
+			<if test="wechatNo != null">
+				wechat_no,
+			</if>
+			<if test="perTel != null">
+				per_tel,
+			</if>
+			<if test="landLineNum != null">
+				land_line_num,
+			</if>
+			<if test="perIdNo != null">
+				per_id_no,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="carNo != null">
+				car_no,
+			</if>
+			<if test="birthday != null">
+				birthday,
+			</if>
+			<if test="perNation != null">
+				per_nation,
+			</if>
+			<if test="perPlace != null">
+				per_place,
+			</if>
+			<if test="perZipCode != null">
+				per_zip_code,
+			</if>
+			<if test="marry != null">
+				marry,
+			</if>
+			<if test="perEmail != null">
+				per_email,
+			</if>
+			<if test="perType != null">
+				per_type,
+			</if>
+			<if test="enterDate != null">
+				enter_date,
+			</if>
+			<if test="formatDate != null">
+				format_date,
+			</if>
+			<if test="eduLevel != null">
+				edu_level,
+			</if>
+			<if test="politicalStatus != null">
+				political_status,
+			</if>
+			<if test="deptId != null">
+				dept_id,
+			</if>
+			<if test="positions != null">
+				positions,
+			</if>
+			<if test="isLeave != null">
+				is_leave,
+			</if>
+			<if test="leaveDate != null">
+				leave_date,
+			</if>
+			<if test="leaveCause != null">
+				leave_cause,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="createUserName != null">
+				create_user_name,
+			</if>
+			<if test="modifyDate != null">
+				modify_date,
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="isload != null">
+				isload,
+			</if>
+			<if test="perPic != null">
+				per_pic,
+			</if>
+			<if test="placeId != null">
+				place_id,
+			</if>
+			<if test="delFrag != null">
+				del_frag,
+			</if>
+			<if test="deptName != null">
+				dept_name,
+			</if>
+			<if test="topDeptId != null">
+				top_dept_id,
+			</if>
+			<if test="placeName != null">
+				place_name,
+			</if>
+			<if test="placeNum != null">
+				place_num,
+			</if>
+			<if test="placeIn != null">
+				place_in,
+			</if>
+			<if test="pType != null">
+				p_type,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="pid != null">
+				#{pid,jdbcType=INTEGER},
+			</if>
+			<if test="puid != null">
+				#{puid,jdbcType=VARCHAR},
+			</if>
+			<if test="perId != null">
+				#{perId,jdbcType=VARCHAR},
+			</if>
+			<if test="perName != null">
+				#{perName,jdbcType=VARCHAR},
+			</if>
+			<if test="perIdCode != null">
+				#{perIdCode,jdbcType=VARCHAR},
+			</if>
+			<if test="perAddr != null">
+				#{perAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="wechatNo != null">
+				#{wechatNo,jdbcType=VARCHAR},
+			</if>
+			<if test="perTel != null">
+				#{perTel,jdbcType=VARCHAR},
+			</if>
+			<if test="landLineNum != null">
+				#{landLineNum,jdbcType=VARCHAR},
+			</if>
+			<if test="perIdNo != null">
+				#{perIdNo,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="carNo != null">
+				#{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="birthday != null">
+				#{birthday,jdbcType=DATE},
+			</if>
+			<if test="perNation != null">
+				#{perNation,jdbcType=VARCHAR},
+			</if>
+			<if test="perPlace != null">
+				#{perPlace,jdbcType=VARCHAR},
+			</if>
+			<if test="perZipCode != null">
+				#{perZipCode,jdbcType=VARCHAR},
+			</if>
+			<if test="marry != null">
+				#{marry,jdbcType=VARCHAR},
+			</if>
+			<if test="perEmail != null">
+				#{perEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="perType != null">
+				#{perType,jdbcType=INTEGER},
+			</if>
+			<if test="enterDate != null">
+				#{enterDate,jdbcType=DATE},
+			</if>
+			<if test="formatDate != null">
+				#{formatDate,jdbcType=DATE},
+			</if>
+			<if test="eduLevel != null">
+				#{eduLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="politicalStatus != null">
+				#{politicalStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="deptId != null">
+				#{deptId,jdbcType=INTEGER},
+			</if>
+			<if test="positions != null">
+				#{positions,jdbcType=VARCHAR},
+			</if>
+			<if test="isLeave != null">
+				#{isLeave,jdbcType=INTEGER},
+			</if>
+			<if test="leaveDate != null">
+				#{leaveDate,jdbcType=DATE},
+			</if>
+			<if test="leaveCause != null">
+				#{leaveCause,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				#{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				#{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				#{modifyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="isload != null">
+				#{isload,jdbcType=INTEGER},
+			</if>
+			<if test="perPic != null">
+				#{perPic,jdbcType=VARCHAR},
+			</if>
+			<if test="placeId != null">
+				#{placeId,jdbcType=VARCHAR},
+			</if>
+			<if test="delFrag != null">
+				#{delFrag,jdbcType=INTEGER},
+			</if>
+			<if test="deptName != null">
+				#{deptName,jdbcType=VARCHAR},
+			</if>
+			<if test="topDeptId != null">
+				#{topDeptId,jdbcType=INTEGER},
+			</if>
+			<if test="placeName != null">
+				#{placeName,jdbcType=VARCHAR},
+			</if>
+			<if test="placeNum != null">
+				#{placeNum,jdbcType=INTEGER},
+			</if>
+			<if test="placeIn != null">
+				#{placeIn,jdbcType=INTEGER},
+			</if>
+			<if test="pType != null">
+				#{pType,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+</mapper>

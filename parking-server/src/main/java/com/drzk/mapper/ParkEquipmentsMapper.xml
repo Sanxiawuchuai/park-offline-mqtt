@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.ParkEquipmentsMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.ParkEquipments">
+		<id column="eq_id" jdbcType="INTEGER" property="eqId" />
+		<result column="eq_name" jdbcType="VARCHAR" property="eqName" />
+		<result column="memo" jdbcType="VARCHAR" property="memo" />
+		<result column="client_no" jdbcType="VARCHAR" property="clientNo" />
+		<result column="down_load" jdbcType="VARCHAR" property="downLoad" />
+		<result column="euid" jdbcType="VARCHAR" property="euid" />
+		<result column="del_frag" jdbcType="INTEGER" property="delFrag" />
+		<result column="is_load" jdbcType="INTEGER" property="isLoad" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		eq_id, eq_name, memo, client_no, down_load,euid,del_frag,is_load
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_equipments
+		where eq_id = #{eqId,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectByGuid" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_equipments
+		where euid = #{euid,jdbcType=INTEGER}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from park_equipments
+		where eq_id = #{eqId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.ParkEquipments">
+		insert into park_equipments (eq_id, eq_name, memo,
+		client_no, down_load)
+		values (#{eqId,jdbcType=INTEGER}, #{eqName,jdbcType=VARCHAR},
+		#{memo,jdbcType=VARCHAR},
+		#{clientNo,jdbcType=VARCHAR}, #{downLoad,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.ParkEquipments">
+		insert into park_equipments
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="eqId != null">
+				eq_id,
+			</if>
+			<if test="eqName != null">
+				eq_name,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="clientNo != null">
+				client_no,
+			</if>
+			<if test="downLoad != null">
+				down_load,
+			</if>
+			<if test="euid != null">
+				euid,
+			</if>
+			<if test="isLoad != null">
+				is_load,
+			</if>
+			<if test="delFrag != null">
+				del_frag,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="eqId != null">
+				#{eqId,jdbcType=INTEGER},
+			</if>
+			<if test="eqName != null">
+				#{eqName,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="clientNo != null">
+				#{clientNo,jdbcType=VARCHAR},
+			</if>
+			<if test="downLoad != null">
+				#{downLoad,jdbcType=VARCHAR},
+			</if>
+			<if test="euid != null">
+				#{euid,jdbcType=VARCHAR},
+			</if>
+			<if test="isLoad != null">
+				#{isLoad,jdbcType=INTEGER},
+			</if>
+			<if test="delFrag != null">
+				#{delFrag,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.ParkEquipments">
+		update park_equipments
+		<set>
+			<if test="eqName != null">
+				eq_name = #{eqName,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="clientNo != null">
+				client_no = #{clientNo,jdbcType=VARCHAR},
+			</if>
+			<if test="downLoad != null">
+				down_load = #{downLoad,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where eq_id = #{eqId,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updatePrimaryKey" parameterType="com.drzk.vo.ParkEquipments">
+		update park_equipments
+		<set>
+			<if test="eqName != null">
+				eq_name = #{eqName,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="clientNo != null">
+				client_no = #{clientNo,jdbcType=VARCHAR},
+			</if>
+			<if test="downLoad != null">
+				down_load = #{downLoad,jdbcType=VARCHAR},
+			</if>
+			<if test="delFrag != null">
+				del_frag = #{delFrag,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where euid = #{euid,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.ParkEquipments">
+		update park_equipments
+		set eq_name = #{eqName,jdbcType=VARCHAR},
+		memo = #{memo,jdbcType=VARCHAR},
+		client_no = #{clientNo,jdbcType=VARCHAR},
+		down_load = #{downLoad,jdbcType=VARCHAR}
+		where eq_id = #{eqId,jdbcType=INTEGER}
+	</update>
+	<select id="selectAllEquipmentsInfo" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_equipments
+	</select>
+
+	<select id="selectDSTop" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_equipments
+		where is_load =0 or is_load is null limit 100
+	</select>
+
+	<update id="updateDSStatus">
+		update park_equipments
+		set is_load = #{status}
+		where euid in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+</mapper>

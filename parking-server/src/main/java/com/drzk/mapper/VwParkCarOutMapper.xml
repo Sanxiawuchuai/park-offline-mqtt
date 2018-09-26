@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.VwParkCarOutMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.VwParkCarOut">
+		<result column="id" jdbcType="INTEGER" property="id" />
+		<result column="in_id" jdbcType="VARCHAR" property="inId" />
+		<result column="guid" jdbcType="VARCHAR" property="guid" />
+		<result column="in_mach_no" jdbcType="INTEGER" property="inMachNo" />
+		<result column="out_mach_no" jdbcType="INTEGER" property="outMachNo" />
+		<result column="ykt_id" jdbcType="INTEGER" property="yktId" />
+		<result column="card_id" jdbcType="VARCHAR" property="cardId" />
+		<result column="c_flag" jdbcType="INTEGER" property="cFlag" />
+		<result column="card_no" jdbcType="VARCHAR" property="cardNo" />
+		<result column="in_car_no" jdbcType="VARCHAR" property="inCarNo" />
+		<result column="back_in_car_no" jdbcType="VARCHAR" property="backInCarNo" />
+		<result column="out_car_no" jdbcType="VARCHAR" property="outCarNo" />
+		<result column="back_out_car_no" jdbcType="VARCHAR" property="backOutCarNo" />
+		<result column="car_no_type" jdbcType="INTEGER" property="carNoType" />
+		<result column="card_type" jdbcType="INTEGER" property="cardType" />
+		<result column="free_type" jdbcType="INTEGER" property="freeType" />
+		<result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+		<result column="out_time" jdbcType="TIMESTAMP" property="outTime" />
+		<result column="in_pic" jdbcType="VARCHAR" property="inPic" />
+		<result column="back_in_pic" jdbcType="VARCHAR" property="backInPic" />
+		<result column="out_pic" jdbcType="VARCHAR" property="outPic" />
+		<result column="back_out_pic" jdbcType="VARCHAR" property="backOutPic" />
+		<result column="in_user_name" jdbcType="VARCHAR" property="inUserName" />
+		<result column="out_user_name" jdbcType="VARCHAR" property="outUserName" />
+		<result column="credentials_pic" jdbcType="VARCHAR" property="credentialsPic" />
+		<result column="account_charge" jdbcType="REAL" property="accountCharge" />
+		<result column="pay_charge" jdbcType="REAL" property="payCharge" />
+		<result column="balance_money" jdbcType="REAL" property="balanceMoney" />
+		<result column="discount_no" jdbcType="INTEGER" property="discountNo" />
+		<result column="type_id" jdbcType="INTEGER" property="typeId" />
+		<result column="discount_time" jdbcType="TIMESTAMP" property="discountTime" />
+		<result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+		<result column="memo" jdbcType="VARCHAR" property="memo" />
+		<result column="is_load" jdbcType="INTEGER" property="isLoad" />
+		<result column="dis_amount" jdbcType="DOUBLE" property="disAmount" />
+		<result column="free_amount" jdbcType="DOUBLE" property="freeAmount" />
+		<result column="in_channel_name" jdbcType="VARCHAR" property="inChannelName" />
+		<result column="out_channel_name" jdbcType="VARCHAR" property="outChannelName" />
+		<result column="card_type_name" jdbcType="VARCHAR" property="cardTypeName" />
+		<result column="out_way" jdbcType="INTEGER" property="outWay" />
+		<result column="out_way_name" jdbcType="VARCHAR" property="outWayName" />
+		<result column="free_name" jdbcType="VARCHAR" property="freeName" />
+		<result column="per_name" jdbcType="VARCHAR" property="perName" />
+		<result column="centrial_time" jdbcType="TIMESTAMP" property="centrialTime" />
+		<result column="is_out" jdbcType="INTEGER" property="isOut" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,in_id,guid,in_mach_no,out_mach_no,ykt_id,card_id,c_flag,card_no,
+		in_car_no,back_in_car_no,out_car_no,back_out_car_no,car_no_type,card_type,
+		free_type,in_time,out_time,in_pic,back_in_pic,out_pic,back_out_pic,in_user_name,
+		out_user_name,credentials_pic,account_charge,pay_charge,balance_money,discount_no,
+		type_id,discount_time,order_num,memo,is_load,dis_amount,free_amount,in_channel_name,
+		out_channel_name,out_way,out_way_name,free_name,per_name,centrial_time,is_out
+	</sql>
+	<insert id="insert" parameterType="com.drzk.vo.VwParkCarOut">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into vw_park_car_out (id, in_id, guid,
+		in_mach_no, out_mach_no, ykt_id,
+		card_id, c_flag, card_no,
+		in_car_no, back_in_car_no, out_car_no,
+		back_out_car_no, car_no_type, card_type,
+		free_type, in_time, out_time,
+		in_pic, back_in_pic, out_pic,
+		back_out_pic, in_user_name, out_user_name,
+		credentials_pic, account_charge, pay_charge,
+		balance_money, discount_no, type_id,
+		discount_time, order_num, memo,
+		is_load, dis_amount, free_amount,
+		in_channel_name, out_channel_name, card_type_name,
+		out_way, out_way_name, free_name,centrial_time,per_name
+		)
+		values (#{id,jdbcType=INTEGER}, #{inId,jdbcType=VARCHAR},
+		#{guid,jdbcType=VARCHAR},
+		#{inMachNo,jdbcType=INTEGER}, #{outMachNo,jdbcType=INTEGER}, #{yktId,jdbcType=INTEGER},
+		#{cardId,jdbcType=VARCHAR}, #{cFlag,jdbcType=INTEGER},
+		#{cardNo,jdbcType=VARCHAR},
+		#{inCarNo,jdbcType=VARCHAR}, #{backInCarNo,jdbcType=VARCHAR}, #{outCarNo,jdbcType=VARCHAR},
+		#{backOutCarNo,jdbcType=VARCHAR}, #{carNoType,jdbcType=INTEGER},
+		#{cardType,jdbcType=INTEGER},
+		#{freeType,jdbcType=INTEGER}, #{inTime,jdbcType=TIMESTAMP}, #{outTime,jdbcType=TIMESTAMP},
+		#{inPic,jdbcType=VARCHAR}, #{backInPic,jdbcType=VARCHAR},
+		#{outPic,jdbcType=VARCHAR},
+		#{backOutPic,jdbcType=VARCHAR}, #{inUserName,jdbcType=VARCHAR}, #{outUserName,jdbcType=VARCHAR},
+		#{credentialsPic,jdbcType=VARCHAR}, #{accountCharge,jdbcType=REAL},
+		#{payCharge,jdbcType=REAL},
+		#{balanceMoney,jdbcType=REAL}, #{discountNo,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER},
+		#{discountTime,jdbcType=TIMESTAMP}, #{orderNum,jdbcType=VARCHAR},
+		#{memo,jdbcType=VARCHAR},
+		#{isLoad,jdbcType=INTEGER}, #{disAmount,jdbcType=DOUBLE}, #{freeAmount,jdbcType=DOUBLE},
+		#{inChannelName,jdbcType=VARCHAR}, #{outChannelName,jdbcType=VARCHAR},
+		#{cardTypeName,jdbcType=VARCHAR},
+		#{outWay,jdbcType=INTEGER}, #{outWayName,jdbcType=VARCHAR}, #{freeName,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.VwParkCarOut">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into vw_park_car_out
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="inId != null">
+				in_id,
+			</if>
+			<if test="guid != null">
+				guid,
+			</if>
+			<if test="inMachNo != null">
+				in_mach_no,
+			</if>
+			<if test="outMachNo != null">
+				out_mach_no,
+			</if>
+			<if test="yktId != null">
+				ykt_id,
+			</if>
+			<if test="cardId != null">
+				card_id,
+			</if>
+			<if test="cFlag != null">
+				c_flag,
+			</if>
+			<if test="cardNo != null">
+				card_no,
+			</if>
+			<if test="inCarNo != null">
+				in_car_no,
+			</if>
+			<if test="backInCarNo != null">
+				back_in_car_no,
+			</if>
+			<if test="outCarNo != null">
+				out_car_no,
+			</if>
+			<if test="backOutCarNo != null">
+				back_out_car_no,
+			</if>
+			<if test="carNoType != null">
+				car_no_type,
+			</if>
+			<if test="cardType != null">
+				card_type,
+			</if>
+			<if test="freeType != null">
+				free_type,
+			</if>
+			<if test="inTime != null">
+				in_time,
+			</if>
+			<if test="outTime != null">
+				out_time,
+			</if>
+			<if test="inPic != null">
+				in_pic,
+			</if>
+			<if test="backInPic != null">
+				back_in_pic,
+			</if>
+			<if test="outPic != null">
+				out_pic,
+			</if>
+			<if test="backOutPic != null">
+				back_out_pic,
+			</if>
+			<if test="inUserName != null">
+				in_user_name,
+			</if>
+			<if test="outUserName != null">
+				out_user_name,
+			</if>
+			<if test="credentialsPic != null">
+				credentials_pic,
+			</if>
+			<if test="accountCharge != null">
+				account_charge,
+			</if>
+			<if test="payCharge != null">
+				pay_charge,
+			</if>
+			<if test="balanceMoney != null">
+				balance_money,
+			</if>
+			<if test="discountNo != null">
+				discount_no,
+			</if>
+			<if test="typeId != null">
+				type_id,
+			</if>
+			<if test="discountTime != null">
+				discount_time,
+			</if>
+			<if test="orderNum != null">
+				order_num,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="isLoad != null">
+				is_load,
+			</if>
+			<if test="disAmount != null">
+				dis_amount,
+			</if>
+			<if test="freeAmount != null">
+				free_amount,
+			</if>
+			<if test="inChannelName != null">
+				in_channel_name,
+			</if>
+			<if test="outChannelName != null">
+				out_channel_name,
+			</if>
+			<if test="cardTypeName != null">
+				card_type_name,
+			</if>
+			<if test="outWay != null">
+				out_way,
+			</if>
+			<if test="outWayName != null">
+				out_way_name,
+			</if>
+			<if test="freeName != null">
+				free_name,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="inId != null">
+				#{inId,jdbcType=VARCHAR},
+			</if>
+			<if test="guid != null">
+				#{guid,jdbcType=VARCHAR},
+			</if>
+			<if test="inMachNo != null">
+				#{inMachNo,jdbcType=INTEGER},
+			</if>
+			<if test="outMachNo != null">
+				#{outMachNo,jdbcType=INTEGER},
+			</if>
+			<if test="yktId != null">
+				#{yktId,jdbcType=INTEGER},
+			</if>
+			<if test="cardId != null">
+				#{cardId,jdbcType=VARCHAR},
+			</if>
+			<if test="cFlag != null">
+				#{cFlag,jdbcType=INTEGER},
+			</if>
+			<if test="cardNo != null">
+				#{cardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="inCarNo != null">
+				#{inCarNo,jdbcType=VARCHAR},
+			</if>
+			<if test="backInCarNo != null">
+				#{backInCarNo,jdbcType=VARCHAR},
+			</if>
+			<if test="outCarNo != null">
+				#{outCarNo,jdbcType=VARCHAR},
+			</if>
+			<if test="backOutCarNo != null">
+				#{backOutCarNo,jdbcType=VARCHAR},
+			</if>
+			<if test="carNoType != null">
+				#{carNoType,jdbcType=INTEGER},
+			</if>
+			<if test="cardType != null">
+				#{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="freeType != null">
+				#{freeType,jdbcType=INTEGER},
+			</if>
+			<if test="inTime != null">
+				#{inTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="outTime != null">
+				#{outTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="inPic != null">
+				#{inPic,jdbcType=VARCHAR},
+			</if>
+			<if test="backInPic != null">
+				#{backInPic,jdbcType=VARCHAR},
+			</if>
+			<if test="outPic != null">
+				#{outPic,jdbcType=VARCHAR},
+			</if>
+			<if test="backOutPic != null">
+				#{backOutPic,jdbcType=VARCHAR},
+			</if>
+			<if test="inUserName != null">
+				#{inUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="outUserName != null">
+				#{outUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="credentialsPic != null">
+				#{credentialsPic,jdbcType=VARCHAR},
+			</if>
+			<if test="accountCharge != null">
+				#{accountCharge,jdbcType=REAL},
+			</if>
+			<if test="payCharge != null">
+				#{payCharge,jdbcType=REAL},
+			</if>
+			<if test="balanceMoney != null">
+				#{balanceMoney,jdbcType=REAL},
+			</if>
+			<if test="discountNo != null">
+				#{discountNo,jdbcType=INTEGER},
+			</if>
+			<if test="typeId != null">
+				#{typeId,jdbcType=INTEGER},
+			</if>
+			<if test="discountTime != null">
+				#{discountTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="orderNum != null">
+				#{orderNum,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="isLoad != null">
+				#{isLoad,jdbcType=INTEGER},
+			</if>
+			<if test="disAmount != null">
+				#{disAmount,jdbcType=DOUBLE},
+			</if>
+			<if test="freeAmount != null">
+				#{freeAmount,jdbcType=DOUBLE},
+			</if>
+			<if test="inChannelName != null">
+				#{inChannelName,jdbcType=VARCHAR},
+			</if>
+			<if test="outChannelName != null">
+				#{outChannelName,jdbcType=VARCHAR},
+			</if>
+			<if test="cardTypeName != null">
+				#{cardTypeName,jdbcType=VARCHAR},
+			</if>
+			<if test="outWay != null">
+				#{outWay,jdbcType=INTEGER},
+			</if>
+			<if test="outWayName != null">
+				#{outWayName,jdbcType=VARCHAR},
+			</if>
+			<if test="freeName != null">
+				#{freeName,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectByIllegaOpenGate" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from vw_park_car_out
+		where (is_load=0 or is_load is null) and card_type <![CDATA[ < ]]>
+		5
+		LIMIT 100
+	</select>
+
+
+</mapper>

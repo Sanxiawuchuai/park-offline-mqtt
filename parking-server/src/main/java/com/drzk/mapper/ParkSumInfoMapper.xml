@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.ParkSumInfoMapper">
+  <resultMap id="BaseResultMap" type="com.drzk.vo.ParkSumInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="puid" jdbcType="VARCHAR" property="puid" />
+    <result column="login_date" jdbcType="TIMESTAMP" property="loginDate" />
+    <result column="hand_gate" jdbcType="INTEGER" property="handGate" />
+    <result column="computer_gate" jdbcType="INTEGER" property="computerGate" />
+    <result column="temp_car_in" jdbcType="INTEGER" property="tempCarIn" />
+    <result column="temp_car_out" jdbcType="INTEGER" property="tempCarOut" />
+    <result column="month_car_in" jdbcType="INTEGER" property="monthCarIn" />
+    <result column="month_car_out" jdbcType="INTEGER" property="monthCarOut" />
+    <result column="stored_car_num" jdbcType="INTEGER" property="storedCarNum" />
+    <result column="stored_car_money" jdbcType="REAL" property="storedCarMoney" />
+    <result column="temp_free" jdbcType="INTEGER" property="tempFree" />
+    <result column="free_car_no" jdbcType="INTEGER" property="freeCarNo" />
+    <result column="free_charge" jdbcType="REAL" property="freeCharge" />
+    <result column="dis_sum" jdbcType="INTEGER" property="disSum" />
+    <result column="dis_charge" jdbcType="REAL" property="disCharge" />
+    <result column="cash_charge" jdbcType="REAL" property="cashCharge" />
+    <result column="wechat_charge" jdbcType="REAL" property="wechatCharge" />
+    <result column="alipay_charge" jdbcType="REAL" property="alipayCharge" />
+    <result column="unionpay_chagre" jdbcType="REAL" property="unionpayChagre" />
+    <result column="thirdpay_charge" jdbcType="REAL" property="thirdpayCharge" />
+    <result column="account" jdbcType="REAL" property="account" />
+    <result column="is_load" jdbcType="INTEGER" property="isLoad" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, puid, login_date, hand_gate, computer_gate, temp_car_in, temp_car_out, month_car_in, 
+    month_car_out, stored_car_num, stored_car_money, temp_free, free_car_no, free_charge, 
+    dis_sum, dis_charge, cash_charge, wechat_charge, alipay_charge, unionpay_chagre, 
+    thirdpay_charge, account, is_load
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from park_sum_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="selectByLoginDate" parameterType="java.sql.Timestamp" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from park_sum_info
+    WHERE DATE_FORMAT(login_date, '%Y-%m-%d') = DATE_FORMAT(#{loginDate,jdbcType=TIMESTAMP}, '%Y-%m-%d') limit 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from park_sum_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.drzk.vo.ParkSumInfo">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into park_sum_info (puid, login_date, hand_gate, 
+      computer_gate, temp_car_in, temp_car_out, 
+      month_car_in, month_car_out, stored_car_num, 
+      stored_car_money, temp_free, free_car_no, 
+      free_charge, dis_sum, dis_charge, 
+      cash_charge, wechat_charge, alipay_charge, 
+      unionpay_chagre, thirdpay_charge, account, 
+      is_load)
+    values (#{puid,jdbcType=VARCHAR}, #{loginDate,jdbcType=TIMESTAMP}, #{handGate,jdbcType=INTEGER}, 
+      #{computerGate,jdbcType=INTEGER}, #{tempCarIn,jdbcType=INTEGER}, #{tempCarOut,jdbcType=INTEGER}, 
+      #{monthCarIn,jdbcType=INTEGER}, #{monthCarOut,jdbcType=INTEGER}, #{storedCarNum,jdbcType=INTEGER}, 
+      #{storedCarMoney,jdbcType=REAL}, #{tempFree,jdbcType=INTEGER}, #{freeCarNo,jdbcType=INTEGER}, 
+      #{freeCharge,jdbcType=REAL}, #{disSum,jdbcType=INTEGER}, #{disCharge,jdbcType=REAL}, 
+      #{cashCharge,jdbcType=REAL}, #{wechatCharge,jdbcType=REAL}, #{alipayCharge,jdbcType=REAL}, 
+      #{unionpayChagre,jdbcType=REAL}, #{thirdpayCharge,jdbcType=REAL}, #{account,jdbcType=REAL}, 
+      #{isLoad,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.drzk.vo.ParkSumInfo">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into park_sum_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="puid != null">
+        puid,
+      </if>
+      <if test="loginDate != null">
+        login_date,
+      </if>
+      <if test="handGate != null">
+        hand_gate,
+      </if>
+      <if test="computerGate != null">
+        computer_gate,
+      </if>
+      <if test="tempCarIn != null">
+        temp_car_in,
+      </if>
+      <if test="tempCarOut != null">
+        temp_car_out,
+      </if>
+      <if test="monthCarIn != null">
+        month_car_in,
+      </if>
+      <if test="monthCarOut != null">
+        month_car_out,
+      </if>
+      <if test="storedCarNum != null">
+        stored_car_num,
+      </if>
+      <if test="storedCarMoney != null">
+        stored_car_money,
+      </if>
+      <if test="tempFree != null">
+        temp_free,
+      </if>
+      <if test="freeCarNo != null">
+        free_car_no,
+      </if>
+      <if test="freeCharge != null">
+        free_charge,
+      </if>
+      <if test="disSum != null">
+        dis_sum,
+      </if>
+      <if test="disCharge != null">
+        dis_charge,
+      </if>
+      <if test="cashCharge != null">
+        cash_charge,
+      </if>
+      <if test="wechatCharge != null">
+        wechat_charge,
+      </if>
+      <if test="alipayCharge != null">
+        alipay_charge,
+      </if>
+      <if test="unionpayChagre != null">
+        unionpay_chagre,
+      </if>
+      <if test="thirdpayCharge != null">
+        thirdpay_charge,
+      </if>
+      <if test="account != null">
+        account,
+      </if>
+      <if test="isLoad != null">
+        is_load,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="puid != null">
+        #{puid,jdbcType=VARCHAR},
+      </if>
+      <if test="loginDate != null">
+        #{loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="handGate != null">
+        #{handGate,jdbcType=INTEGER},
+      </if>
+      <if test="computerGate != null">
+        #{computerGate,jdbcType=INTEGER},
+      </if>
+      <if test="tempCarIn != null">
+        #{tempCarIn,jdbcType=INTEGER},
+      </if>
+      <if test="tempCarOut != null">
+        #{tempCarOut,jdbcType=INTEGER},
+      </if>
+      <if test="monthCarIn != null">
+        #{monthCarIn,jdbcType=INTEGER},
+      </if>
+      <if test="monthCarOut != null">
+        #{monthCarOut,jdbcType=INTEGER},
+      </if>
+      <if test="storedCarNum != null">
+        #{storedCarNum,jdbcType=INTEGER},
+      </if>
+      <if test="storedCarMoney != null">
+        #{storedCarMoney,jdbcType=REAL},
+      </if>
+      <if test="tempFree != null">
+        #{tempFree,jdbcType=INTEGER},
+      </if>
+      <if test="freeCarNo != null">
+        #{freeCarNo,jdbcType=INTEGER},
+      </if>
+      <if test="freeCharge != null">
+        #{freeCharge,jdbcType=REAL},
+      </if>
+      <if test="disSum != null">
+        #{disSum,jdbcType=INTEGER},
+      </if>
+      <if test="disCharge != null">
+        #{disCharge,jdbcType=REAL},
+      </if>
+      <if test="cashCharge != null">
+        #{cashCharge,jdbcType=REAL},
+      </if>
+      <if test="wechatCharge != null">
+        #{wechatCharge,jdbcType=REAL},
+      </if>
+      <if test="alipayCharge != null">
+        #{alipayCharge,jdbcType=REAL},
+      </if>
+      <if test="unionpayChagre != null">
+        #{unionpayChagre,jdbcType=REAL},
+      </if>
+      <if test="thirdpayCharge != null">
+        #{thirdpayCharge,jdbcType=REAL},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=REAL},
+      </if>
+      <if test="isLoad != null">
+        #{isLoad,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.ParkSumInfo">
+    update park_sum_info
+    <set>
+      <if test="puid != null">
+        puid = #{puid,jdbcType=VARCHAR},
+      </if>
+      <if test="loginDate != null">
+        login_date = #{loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="handGate != null">
+        hand_gate = #{handGate,jdbcType=INTEGER},
+      </if>
+      <if test="computerGate != null">
+        computer_gate = #{computerGate,jdbcType=INTEGER},
+      </if>
+      <if test="tempCarIn != null">
+        temp_car_in = #{tempCarIn,jdbcType=INTEGER},
+      </if>
+      <if test="tempCarOut != null">
+        temp_car_out = #{tempCarOut,jdbcType=INTEGER},
+      </if>
+      <if test="monthCarIn != null">
+        month_car_in = #{monthCarIn,jdbcType=INTEGER},
+      </if>
+      <if test="monthCarOut != null">
+        month_car_out = #{monthCarOut,jdbcType=INTEGER},
+      </if>
+      <if test="storedCarNum != null">
+        stored_car_num = #{storedCarNum,jdbcType=INTEGER},
+      </if>
+      <if test="storedCarMoney != null">
+        stored_car_money = #{storedCarMoney,jdbcType=REAL},
+      </if>
+      <if test="tempFree != null">
+        temp_free = #{tempFree,jdbcType=INTEGER},
+      </if>
+      <if test="freeCarNo != null">
+        free_car_no = #{freeCarNo,jdbcType=INTEGER},
+      </if>
+      <if test="freeCharge != null">
+        free_charge = #{freeCharge,jdbcType=REAL},
+      </if>
+      <if test="disSum != null">
+        dis_sum = #{disSum,jdbcType=INTEGER},
+      </if>
+      <if test="disCharge != null">
+        dis_charge = #{disCharge,jdbcType=REAL},
+      </if>
+      <if test="cashCharge != null">
+        cash_charge = #{cashCharge,jdbcType=REAL},
+      </if>
+      <if test="wechatCharge != null">
+        wechat_charge = #{wechatCharge,jdbcType=REAL},
+      </if>
+      <if test="alipayCharge != null">
+        alipay_charge = #{alipayCharge,jdbcType=REAL},
+      </if>
+      <if test="unionpayChagre != null">
+        unionpay_chagre = #{unionpayChagre,jdbcType=REAL},
+      </if>
+      <if test="thirdpayCharge != null">
+        thirdpay_charge = #{thirdpayCharge,jdbcType=REAL},
+      </if>
+      <if test="account != null">
+        account = #{account,jdbcType=REAL},
+      </if>
+      <if test="isLoad != null">
+        is_load = #{isLoad,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.drzk.vo.ParkSumInfo">
+    update park_sum_info
+    set puid = #{puid,jdbcType=VARCHAR},
+      login_date = #{loginDate,jdbcType=TIMESTAMP},
+      hand_gate = #{handGate,jdbcType=INTEGER},
+      computer_gate = #{computerGate,jdbcType=INTEGER},
+      temp_car_in = #{tempCarIn,jdbcType=INTEGER},
+      temp_car_out = #{tempCarOut,jdbcType=INTEGER},
+      month_car_in = #{monthCarIn,jdbcType=INTEGER},
+      month_car_out = #{monthCarOut,jdbcType=INTEGER},
+      stored_car_num = #{storedCarNum,jdbcType=INTEGER},
+      stored_car_money = #{storedCarMoney,jdbcType=REAL},
+      temp_free = #{tempFree,jdbcType=INTEGER},
+      free_car_no = #{freeCarNo,jdbcType=INTEGER},
+      free_charge = #{freeCharge,jdbcType=REAL},
+      dis_sum = #{disSum,jdbcType=INTEGER},
+      dis_charge = #{disCharge,jdbcType=REAL},
+      cash_charge = #{cashCharge,jdbcType=REAL},
+      wechat_charge = #{wechatCharge,jdbcType=REAL},
+      alipay_charge = #{alipayCharge,jdbcType=REAL},
+      unionpay_chagre = #{unionpayChagre,jdbcType=REAL},
+      thirdpay_charge = #{thirdpayCharge,jdbcType=REAL},
+      account = #{account,jdbcType=REAL},
+      is_load = #{isLoad,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

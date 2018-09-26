@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.ParkDeviceStatusMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.ParkDeviceStatus">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="mac_no" jdbcType="INTEGER" property="macNo" />
+		<result column="mac_ip" jdbcType="VARCHAR" property="macIp" />
+		<result column="box_id" jdbcType="INTEGER" property="boxId" />
+		<result column="road_gate_state" jdbcType="INTEGER" property="roadGateState" />
+		<result column="card_machine_state" jdbcType="INTEGER"
+			property="cardMachineState" />
+		<result column="paper_machine_state" jdbcType="INTEGER"
+			property="paperMachineState" />
+		<result column="power_reset" jdbcType="INTEGER" property="powerReset" />
+		<result column="groud_sense_unnormal" jdbcType="INTEGER"
+			property="groudSenseUnnormal" />
+		<result column="camera_unnormal" jdbcType="INTEGER" property="cameraUnnormal" />
+		<result column="client_connect_unnormal" jdbcType="INTEGER"
+			property="clientConnectUnnormal" />
+		<result column="server_connect_unnormal" jdbcType="INTEGER"
+			property="serverConnectUnnormal" />
+		<result column="Dis_module_con_unnormal" jdbcType="INTEGER"
+			property="disModuleConUnnormal" />
+		<result column="voicemodule_con_unnormal" jdbcType="INTEGER"
+			property="voicemoduleConUnnormal" />
+		<result column="road_gate_Con_unnormal" jdbcType="INTEGER"
+			property="roadGateConUnnormal" />
+		<result column="card_mach_con_unormal" jdbcType="INTEGER"
+			property="cardMachConUnormal" />
+		<result column="paper_mach_con_unormal" jdbcType="INTEGER"
+			property="paperMachConUnormal" />
+		<result column="main_board_net_unnormal" jdbcType="INTEGER"
+			property="mainBoardNetUnnormal" />
+		<result column="clock_unnormal" jdbcType="INTEGER" property="clockUnnormal" />
+		<result column="storage_unnormal" jdbcType="INTEGER" property="storageUnnormal" />
+		<result column="online_time" jdbcType="TIMESTAMP" property="onlineTime" />
+		<result column="last_update_time" jdbcType="TIMESTAMP"
+			property="lastUpdateTime" />
+		<result column="memo" jdbcType="VARCHAR" property="memo" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, mac_no, mac_ip, box_id, road_gate_state,
+		card_machine_state,
+		paper_machine_state,
+		power_reset,
+		groud_sense_unnormal, camera_unnormal, client_connect_unnormal,
+		server_connect_unnormal,
+		Dis_module_con_unnormal,
+		voicemodule_con_unnormal, road_gate_Con_unnormal,
+		card_mach_con_unormal,
+		paper_mach_con_unormal, main_board_net_unnormal,
+		clock_unnormal, storage_unnormal,
+		online_time, last_update_time, memo
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_device_status
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectByBoxId" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_device_status
+		where box_id = #{boxId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		park_device_status
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.ParkDeviceStatus">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into park_device_status (id, mac_no, mac_ip,
+		box_id,
+		road_gate_state, card_machine_state,
+		paper_machine_state, power_reset,
+		groud_sense_unnormal,
+		camera_unnormal, client_connect_unnormal,
+		server_connect_unnormal, Dis_module_con_unnormal,
+		voicemodule_con_unnormal, road_gate_Con_unnormal,
+		card_mach_con_unormal, paper_mach_con_unormal,
+		main_board_net_unnormal, clock_unnormal, storage_unnormal,
+		online_time, last_update_time, memo
+		)
+		values (#{id,jdbcType=INTEGER},
+		#{macNo,jdbcType=INTEGER},
+		#{macIp,jdbcType=VARCHAR},
+		#{boxId,jdbcType=INTEGER}, #{roadGateState,jdbcType=INTEGER},
+		#{cardMachineState,jdbcType=INTEGER},
+		#{paperMachineState,jdbcType=INTEGER}, #{powerReset,jdbcType=INTEGER},
+		#{groudSenseUnnormal,jdbcType=INTEGER},
+		#{cameraUnnormal,jdbcType=INTEGER},
+		#{clientConnectUnnormal,jdbcType=INTEGER},
+		#{serverConnectUnnormal,jdbcType=INTEGER},
+		#{disModuleConUnnormal,jdbcType=INTEGER},
+		#{voicemoduleConUnnormal,jdbcType=INTEGER},
+		#{roadGateConUnnormal,jdbcType=INTEGER},
+		#{cardMachConUnormal,jdbcType=INTEGER},
+		#{paperMachConUnormal,jdbcType=INTEGER},
+		#{mainBoardNetUnnormal,jdbcType=INTEGER},
+		#{clockUnnormal,jdbcType=INTEGER},
+		#{storageUnnormal,jdbcType=INTEGER},
+		#{onlineTime,jdbcType=TIMESTAMP},
+		#{lastUpdateTime,jdbcType=TIMESTAMP}, #{memo,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.ParkDeviceStatus">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into park_device_status
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="macNo != null">
+				mac_no,
+			</if>
+			<if test="macIp != null">
+				mac_ip,
+			</if>
+			<if test="boxId != null">
+				box_id,
+			</if>
+			<if test="roadGateState != null">
+				road_gate_state,
+			</if>
+			<if test="cardMachineState != null">
+				card_machine_state,
+			</if>
+			<if test="paperMachineState != null">
+				paper_machine_state,
+			</if>
+			<if test="powerReset != null">
+				power_reset,
+			</if>
+			<if test="groudSenseUnnormal != null">
+				groud_sense_unnormal,
+			</if>
+			<if test="cameraUnnormal != null">
+				camera_unnormal,
+			</if>
+			<if test="clientConnectUnnormal != null">
+				client_connect_unnormal,
+			</if>
+			<if test="serverConnectUnnormal != null">
+				server_connect_unnormal,
+			</if>
+			<if test="disModuleConUnnormal != null">
+				Dis_module_con_unnormal,
+			</if>
+			<if test="voicemoduleConUnnormal != null">
+				voicemodule_con_unnormal,
+			</if>
+			<if test="roadGateConUnnormal != null">
+				road_gate_Con_unnormal,
+			</if>
+			<if test="cardMachConUnormal != null">
+				card_mach_con_unormal,
+			</if>
+			<if test="paperMachConUnormal != null">
+				paper_mach_con_unormal,
+			</if>
+			<if test="mainBoardNetUnnormal != null">
+				main_board_net_unnormal,
+			</if>
+			<if test="clockUnnormal != null">
+				clock_unnormal,
+			</if>
+			<if test="storageUnnormal != null">
+				storage_unnormal,
+			</if>
+			<if test="onlineTime != null">
+				online_time,
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="macNo != null">
+				#{macNo,jdbcType=INTEGER},
+			</if>
+			<if test="macIp != null">
+				#{macIp,jdbcType=VARCHAR},
+			</if>
+			<if test="boxId != null">
+				#{boxId,jdbcType=INTEGER},
+			</if>
+			<if test="roadGateState != null">
+				#{roadGateState,jdbcType=INTEGER},
+			</if>
+			<if test="cardMachineState != null">
+				#{cardMachineState,jdbcType=INTEGER},
+			</if>
+			<if test="paperMachineState != null">
+				#{paperMachineState,jdbcType=INTEGER},
+			</if>
+			<if test="powerReset != null">
+				#{powerReset,jdbcType=INTEGER},
+			</if>
+			<if test="groudSenseUnnormal != null">
+				#{groudSenseUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="cameraUnnormal != null">
+				#{cameraUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="clientConnectUnnormal != null">
+				#{clientConnectUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="serverConnectUnnormal != null">
+				#{serverConnectUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="disModuleConUnnormal != null">
+				#{disModuleConUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="voicemoduleConUnnormal != null">
+				#{voicemoduleConUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="roadGateConUnnormal != null">
+				#{roadGateConUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="cardMachConUnormal != null">
+				#{cardMachConUnormal,jdbcType=INTEGER},
+			</if>
+			<if test="paperMachConUnormal != null">
+				#{paperMachConUnormal,jdbcType=INTEGER},
+			</if>
+			<if test="mainBoardNetUnnormal != null">
+				#{mainBoardNetUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="clockUnnormal != null">
+				#{clockUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="storageUnnormal != null">
+				#{storageUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="onlineTime != null">
+				#{onlineTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lastUpdateTime != null">
+				#{lastUpdateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.ParkDeviceStatus">
+		update park_device_status
+		<set>
+			<if test="macNo != null">
+				mac_no = #{macNo,jdbcType=INTEGER},
+			</if>
+			<if test="macIp != null">
+				mac_ip = #{macIp,jdbcType=VARCHAR},
+			</if>
+			<if test="boxId != null">
+				box_id = #{boxId,jdbcType=INTEGER},
+			</if>
+			<if test="roadGateState != null">
+				road_gate_state = #{roadGateState,jdbcType=INTEGER},
+			</if>
+			<if test="cardMachineState != null">
+				card_machine_state =
+				#{cardMachineState,jdbcType=INTEGER},
+			</if>
+			<if test="paperMachineState != null">
+				paper_machine_state =
+				#{paperMachineState,jdbcType=INTEGER},
+			</if>
+			<if test="powerReset != null">
+				power_reset = #{powerReset,jdbcType=INTEGER},
+			</if>
+			<if test="groudSenseUnnormal != null">
+				groud_sense_unnormal =
+				#{groudSenseUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="cameraUnnormal != null">
+				camera_unnormal = #{cameraUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="clientConnectUnnormal != null">
+				client_connect_unnormal =
+				#{clientConnectUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="serverConnectUnnormal != null">
+				server_connect_unnormal =
+				#{serverConnectUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="disModuleConUnnormal != null">
+				Dis_module_con_unnormal =
+				#{disModuleConUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="voicemoduleConUnnormal != null">
+				voicemodule_con_unnormal =
+				#{voicemoduleConUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="roadGateConUnnormal != null">
+				road_gate_Con_unnormal =
+				#{roadGateConUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="cardMachConUnormal != null">
+				card_mach_con_unormal =
+				#{cardMachConUnormal,jdbcType=INTEGER},
+			</if>
+			<if test="paperMachConUnormal != null">
+				paper_mach_con_unormal =
+				#{paperMachConUnormal,jdbcType=INTEGER},
+			</if>
+			<if test="mainBoardNetUnnormal != null">
+				main_board_net_unnormal =
+				#{mainBoardNetUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="clockUnnormal != null">
+				clock_unnormal = #{clockUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="storageUnnormal != null">
+				storage_unnormal = #{storageUnnormal,jdbcType=INTEGER},
+			</if>
+			<if test="onlineTime != null">
+				online_time = #{onlineTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="memo != null">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.ParkDeviceStatus">
+		update
+		park_device_status
+		set mac_no = #{macNo,jdbcType=INTEGER},
+		mac_ip =
+		#{macIp,jdbcType=VARCHAR},
+		box_id = #{boxId,jdbcType=INTEGER},
+		road_gate_state = #{roadGateState,jdbcType=INTEGER},
+		card_machine_state = #{cardMachineState,jdbcType=INTEGER},
+		paper_machine_state = #{paperMachineState,jdbcType=INTEGER},
+		power_reset = #{powerReset,jdbcType=INTEGER},
+		groud_sense_unnormal =
+		#{groudSenseUnnormal,jdbcType=INTEGER},
+		camera_unnormal =
+		#{cameraUnnormal,jdbcType=INTEGER},
+		client_connect_unnormal =
+		#{clientConnectUnnormal,jdbcType=INTEGER},
+		server_connect_unnormal =
+		#{serverConnectUnnormal,jdbcType=INTEGER},
+		Dis_module_con_unnormal =
+		#{disModuleConUnnormal,jdbcType=INTEGER},
+		voicemodule_con_unnormal =
+		#{voicemoduleConUnnormal,jdbcType=INTEGER},
+		road_gate_Con_unnormal =
+		#{roadGateConUnnormal,jdbcType=INTEGER},
+		card_mach_con_unormal =
+		#{cardMachConUnormal,jdbcType=INTEGER},
+		paper_mach_con_unormal =
+		#{paperMachConUnormal,jdbcType=INTEGER},
+		main_board_net_unnormal =
+		#{mainBoardNetUnnormal,jdbcType=INTEGER},
+		clock_unnormal =
+		#{clockUnnormal,jdbcType=INTEGER},
+		storage_unnormal =
+		#{storageUnnormal,jdbcType=INTEGER},
+		online_time =
+		#{onlineTime,jdbcType=TIMESTAMP},
+		last_update_time =
+		#{lastUpdateTime,jdbcType=TIMESTAMP},
+		memo = #{memo,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectLastByConIp" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_device_status
+		where mac_ip = #{ip,jdbcType=VARCHAR}
+		order by
+		id desc limit 1
+	</select>
+</mapper>

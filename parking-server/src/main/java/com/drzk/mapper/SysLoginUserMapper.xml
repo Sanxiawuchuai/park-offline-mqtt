@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.SysLoginUserMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.SysLoginUser">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="login_name" jdbcType="VARCHAR" property="loginName" />
+		<result column="user_name" jdbcType="VARCHAR" property="userName" />
+		<result column="pss_word" jdbcType="VARCHAR" property="pssWord" />
+		<result column="opera_carNo" jdbcType="VARCHAR" property="operaCarno" />
+		<result column="per_seq" jdbcType="VARCHAR" property="perSeq" />
+		<result column="Popedom_list" jdbcType="VARCHAR" property="popedomList" />
+		<result column="rank" jdbcType="INTEGER" property="rank" />
+		<result column="login_type" jdbcType="INTEGER" property="loginType" />
+		<result column="load_type" jdbcType="INTEGER" property="loadType" />
+		<result column="is_stop" jdbcType="INTEGER" property="isStop" />
+		<result column="memo" jdbcType="VARCHAR" property="memo" />
+		<result column="user_type" jdbcType="INTEGER" property="userType" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		<result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+		<result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName" />
+		<result column="is_load" jdbcType="INTEGER" property="isLoad" />
+		<result column="is_login_box" jdbcType="INTEGER" property="isLoginBox" />
+		
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, login_name, user_name, pss_word, opera_carNo, per_seq, Popedom_list,
+		rank, login_type,
+		load_type, is_stop, memo, user_type, create_date, create_user_name, modify_date,
+		modify_user_name, is_load,is_login_box
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_login_user
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectByNameAndPwd" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_login_user
+		where login_name = #{0}
+		and pss_word = #{1}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from sys_login_user
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.SysLoginUser">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into sys_login_user (id, login_name, user_name,
+		pss_word, opera_carNo, per_seq,
+		Popedom_list, rank, login_type,
+		load_type, is_stop, memo,
+		user_type, create_date, create_user_name,
+		modify_date, modify_user_name, is_load
+		)
+		values (#{id,jdbcType=INTEGER}, #{loginName,jdbcType=VARCHAR},
+		#{userName,jdbcType=VARCHAR},
+		#{pssWord,jdbcType=VARCHAR}, #{operaCarno,jdbcType=VARCHAR}, #{perSeq,jdbcType=VARCHAR},
+		#{popedomList,jdbcType=VARCHAR}, #{rank,jdbcType=INTEGER},
+		#{loginType,jdbcType=INTEGER},
+		#{loadType,jdbcType=INTEGER}, #{isStop,jdbcType=INTEGER}, #{memo,jdbcType=VARCHAR},
+		#{userType,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP},
+		#{createUserName,jdbcType=VARCHAR},
+		#{modifyDate,jdbcType=TIMESTAMP}, #{modifyUserName,jdbcType=VARCHAR}, #{isLoad,jdbcType=INTEGER}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.SysLoginUser">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into sys_login_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="loginName != null">
+				login_name,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="pssWord != null">
+				pss_word,
+			</if>
+			<if test="operaCarno != null">
+				opera_carNo,
+			</if>
+			<if test="perSeq != null">
+				per_seq,
+			</if>
+			<if test="popedomList != null">
+				Popedom_list,
+			</if>
+			<if test="rank != null">
+				rank,
+			</if>
+			<if test="loginType != null">
+				login_type,
+			</if>
+			<if test="loadType != null">
+				load_type,
+			</if>
+			<if test="isStop != null">
+				is_stop,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="userType != null">
+				user_type,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="createUserName != null">
+				create_user_name,
+			</if>
+			<if test="modifyDate != null">
+				modify_date,
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name,
+			</if>
+			<if test="isLoad != null">
+				is_load,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="loginName != null">
+				#{loginName,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="pssWord != null">
+				#{pssWord,jdbcType=VARCHAR},
+			</if>
+			<if test="operaCarno != null">
+				#{operaCarno,jdbcType=VARCHAR},
+			</if>
+			<if test="perSeq != null">
+				#{perSeq,jdbcType=VARCHAR},
+			</if>
+			<if test="popedomList != null">
+				#{popedomList,jdbcType=VARCHAR},
+			</if>
+			<if test="rank != null">
+				#{rank,jdbcType=INTEGER},
+			</if>
+			<if test="loginType != null">
+				#{loginType,jdbcType=INTEGER},
+			</if>
+			<if test="loadType != null">
+				#{loadType,jdbcType=INTEGER},
+			</if>
+			<if test="isStop != null">
+				#{isStop,jdbcType=INTEGER},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="userType != null">
+				#{userType,jdbcType=INTEGER},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				#{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				#{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				#{modifyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="isLoad != null">
+				#{isLoad,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.SysLoginUser">
+		update sys_login_user
+		<set>
+			<if test="loginName != null">
+				login_name = #{loginName,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				user_name = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="pssWord != null">
+				pss_word = #{pssWord,jdbcType=VARCHAR},
+			</if>
+			<if test="operaCarno != null">
+				opera_carNo = #{operaCarno,jdbcType=VARCHAR},
+			</if>
+			<if test="perSeq != null">
+				per_seq = #{perSeq,jdbcType=VARCHAR},
+			</if>
+			<if test="popedomList != null">
+				Popedom_list = #{popedomList,jdbcType=VARCHAR},
+			</if>
+			<if test="rank != null">
+				rank = #{rank,jdbcType=INTEGER},
+			</if>
+			<if test="loginType != null">
+				login_type = #{loginType,jdbcType=INTEGER},
+			</if>
+			<if test="loadType != null">
+				load_type = #{loadType,jdbcType=INTEGER},
+			</if>
+			<if test="isStop != null">
+				is_stop = #{isStop,jdbcType=INTEGER},
+			</if>
+			<if test="memo != null">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="userType != null">
+				user_type = #{userType,jdbcType=INTEGER},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				create_user_name = #{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="isLoad != null">
+				is_load = #{isLoad,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.SysLoginUser">
+		update sys_login_user
+		set login_name = #{loginName,jdbcType=VARCHAR},
+		user_name = #{userName,jdbcType=VARCHAR},
+		pss_word = #{pssWord,jdbcType=VARCHAR},
+		opera_carNo = #{operaCarno,jdbcType=VARCHAR},
+		per_seq = #{perSeq,jdbcType=VARCHAR},
+		Popedom_list = #{popedomList,jdbcType=VARCHAR},
+		rank = #{rank,jdbcType=INTEGER},
+		login_type = #{loginType,jdbcType=INTEGER},
+		load_type = #{loadType,jdbcType=INTEGER},
+		is_stop = #{isStop,jdbcType=INTEGER},
+		memo = #{memo,jdbcType=VARCHAR},
+		user_type = #{userType,jdbcType=INTEGER},
+		create_date = #{createDate,jdbcType=TIMESTAMP},
+		create_user_name = #{createUserName,jdbcType=VARCHAR},
+		modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+		modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+		is_load = #{isLoad,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

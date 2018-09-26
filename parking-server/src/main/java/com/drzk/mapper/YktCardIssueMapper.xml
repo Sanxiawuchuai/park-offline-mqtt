@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.YktCardIssueMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.YktCardIssue">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="cuid" jdbcType="VARCHAR" property="cuid" />
+		<result column="c_flag" jdbcType="INTEGER" property="cFlag" />
+		<result column="p_id" jdbcType="INTEGER" property="pId" />
+		<result column="foregift" jdbcType="REAL" property="foregift" />
+		<result column="balance_money" jdbcType="REAL" property="balanceMoney" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="sys_right" jdbcType="VARCHAR" property="sysRight" />
+		<result column="is_share" jdbcType="INTEGER" property="isShare" />
+		<result column="place_num" jdbcType="VARCHAR" property="placeNum" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		<result column="memo" jdbcType="VARCHAR" property="memo" />
+		<result column="is_load" jdbcType="INTEGER" property="isLoad" />
+		<result column="card_id" jdbcType="VARCHAR" property="cardId" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,cuid, c_flag, p_id, foregift, balance_money, status, sys_right, is_share,
+		place_num,
+		create_date, create_user_name, memo,is_load,card_id
+	</sql>
+
+	<select id="findById" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from ykt_card_issue
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="findByObjectId" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from ykt_card_issue where cuid = #{objectId}
+	</select>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from ykt_card_issue
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="com.drzk.vo.YktCardIssue" useGeneratedKeys="true" keyProperty="id">
+		insert into ykt_card_issue
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="cardId != null">
+				card_id,
+			</if>
+			<if test="cuid != null">
+				cuid,
+			</if>
+			<if test="cFlag != null">
+				c_flag,
+			</if>
+			<if test="pId != null">
+				p_id,
+			</if>
+			<if test="foregift != null">
+				foregift,
+			</if>
+			<if test="balanceMoney != null">
+				balance_money,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="sysRight != null">
+				sys_right,
+			</if>
+			<if test="isShare != null">
+				is_share,
+			</if>
+			<if test="placeNum != null">
+				place_num,
+			</if>
+			<if test="isLoad != null">
+				is_load,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="createUserName != null">
+				create_user_name,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="cardId != null">
+				#{cardId,jdbcType=VARCHAR},
+			</if>
+			<if test="cuid != null">
+				#{cuid,jdbcType=VARCHAR},
+			</if>
+			<if test="cFlag != null">
+				#{cFlag,jdbcType=TINYINT},
+			</if>
+			<if test="pId != null">
+				#{pId,jdbcType=INTEGER},
+			</if>
+			<if test="foregift != null">
+				#{foregift,jdbcType=REAL},
+			</if>
+			<if test="balanceMoney != null">
+				#{balanceMoney,jdbcType=REAL},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=TINYINT},
+			</if>
+			<if test="sysRight != null">
+				#{sysRight,jdbcType=VARCHAR},
+			</if>
+			<if test="isShare != null">
+				#{isShare,jdbcType=TINYINT},
+			</if>
+			<if test="placeNum != null">
+				#{placeNum,jdbcType=VARCHAR},
+			</if>
+			<if test="isLoad != null">
+				#{isLoad,jdbcType=TINYINT},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				#{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="com.drzk.vo.YktCardIssue">
+		update ykt_card_issue
+		<set>
+			<if test="cFlag != null">
+				c_flag = #{cFlag,jdbcType=INTEGER},
+			</if>
+			<if test="pId != null">
+				p_id = #{pId,jdbcType=INTEGER},
+			</if>
+			<if test="foregift != null">
+				foregift = #{foregift,jdbcType=REAL},
+			</if>
+			<if test="balanceMoney != null">
+				balance_money = #{balanceMoney,jdbcType=REAL},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="sysRight != null">
+				sys_right = #{sysRight,jdbcType=VARCHAR},
+			</if>
+			<if test="isShare != null">
+				is_share = #{isShare,jdbcType=INTEGER},
+			</if>
+			<if test="placeNum != null">
+				place_num = #{placeNum,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				create_user_name = #{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="cardId != null">
+				card_id = #{cardId,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectTopDS" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from ykt_card_issue
+		where is_load =0 limit 100
+	</select>
+
+	<select id="selectByGuid" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from ykt_card_issue
+		where is_load =0 and cuid =#{cuid,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateDSStatusFalied">
+		update ykt_card_issue set is_load =#{status}
+		where cuid in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<update id="updateDSStatusBypid">
+		update ykt_card_issue set is_load =#{status}
+		where p_id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<select id="selectBySelective" parameterType="com.drzk.vo.YktCardIssue" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from ykt_card_issue
+		 <where>
+			<if test="cFlag != null">
+				c_flag = #{cFlag,jdbcType=INTEGER},
+			</if>
+			<if test="pId != null">
+				and p_id = #{pId,jdbcType=INTEGER},
+			</if>
+			<if test="foregift != null">
+				and foregift = #{foregift,jdbcType=REAL},
+			</if>
+			<if test="balanceMoney != null">
+				and balance_money = #{balanceMoney,jdbcType=REAL},
+			</if>
+			<!-- <if test="status != null">
+				and status = #{status,jdbcType=INTEGER},
+			</if> -->
+			<if test="sysRight != null">
+				and sys_right = #{sysRight,jdbcType=VARCHAR},
+			</if>
+			<if test="isShare != null">
+				and is_share = #{isShare,jdbcType=INTEGER},
+			</if>
+			<if test="placeNum != null">
+				and place_num = #{placeNum,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				and create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				and create_user_name = #{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				and memo = #{memo,jdbcType=VARCHAR},
+			</if>
+			and status=0
+		</where>
+	</select>
+
+</mapper>

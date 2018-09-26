@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.VwParkIssueOperaMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.VwParkIssueOpera">
+		<result column="per_name" jdbcType="VARCHAR" property="perName" />
+		<result column="ykt_id" jdbcType="INTEGER" property="yktId" />
+		<result column="card_type" jdbcType="INTEGER" property="cardType" />
+		<result column="car_no" jdbcType="VARCHAR" property="carNo" />
+		<result column="oper_type" jdbcType="INTEGER" property="operType" />
+		<result column="before_money" jdbcType="REAL" property="beforeMoney" />
+		<result column="balance_money" jdbcType="REAL" property="balanceMoney" />
+		<result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
+		<result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+		<result column="pay_type" jdbcType="INTEGER" property="payType" />
+		<result column="place_name" jdbcType="VARCHAR" property="placeName" />
+		<result column="relase_time" jdbcType="TIMESTAMP" property="relaseTime" />
+		<result column="guid" jdbcType="VARCHAR" property="guid" />
+		<result column="opera_name" jdbcType="VARCHAR" property="operaName" />
+		<result column="memo" jdbcType="VARCHAR" property="memo" />
+		<result column="front_date" jdbcType="TIMESTAMP" property="frontDate" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="guid" jdbcType="VARCHAR" property="guid" />
+		<result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+		<result column="card_id" jdbcType="VARCHAR" property="cardId" />
+		<result column="foregift" jdbcType="REAL" property="foregift" />
+		<result column="pid" jdbcType="INTEGER" property="pid" />
+		<result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		<result column="is_load" jdbcType="INTEGER" property="isLoad" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		per_name,ykt_id,card_type,car_no,oper_type,before_money,balance_money,start_date,
+		end_date,pay_type,place_name,relase_time,opera_name,memo,front_date,create_date,guid,
+		address,phone,order_no,card_id,foregift,pid,create_user_name,is_load
+	</sql>
+	<insert id="insert" parameterType="com.drzk.vo.VwParkIssueOpera">
+		insert into vw_park_issue_opera (per_name, ykt_id, card_type,
+		car_no, oper_type, before_money,
+		balance_money, start_date, end_date,
+		pay_type, place_name, relase_time,
+		guid, opera_name, memo,
+		front_date, create_date)
+		values (#{perName,jdbcType=VARCHAR}, #{yktId,jdbcType=INTEGER},
+		#{cardType,jdbcType=INTEGER},
+		#{carNo,jdbcType=VARCHAR}, #{operType,jdbcType=INTEGER}, #{beforeMoney,jdbcType=REAL},
+		#{balanceMoney,jdbcType=REAL}, #{startDate,jdbcType=TIMESTAMP},
+		#{endDate,jdbcType=TIMESTAMP},
+		#{payType,jdbcType=INTEGER}, #{placeName,jdbcType=VARCHAR}, #{relaseTime,jdbcType=TIMESTAMP},
+		#{guid,jdbcType=VARCHAR}, #{operaName,jdbcType=VARCHAR},
+		#{memo,jdbcType=VARCHAR},
+		#{frontDate,jdbcType=TIMESTAMP}, #{createDate,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.VwParkIssueOpera">
+		insert into vw_park_issue_opera
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="perName != null">
+				per_name,
+			</if>
+			<if test="yktId != null">
+				ykt_id,
+			</if>
+			<if test="cardType != null">
+				card_type,
+			</if>
+			<if test="carNo != null">
+				car_no,
+			</if>
+			<if test="operType != null">
+				oper_type,
+			</if>
+			<if test="beforeMoney != null">
+				before_money,
+			</if>
+			<if test="balanceMoney != null">
+				balance_money,
+			</if>
+			<if test="startDate != null">
+				start_date,
+			</if>
+			<if test="endDate != null">
+				end_date,
+			</if>
+			<if test="payType != null">
+				pay_type,
+			</if>
+			<if test="placeName != null">
+				place_name,
+			</if>
+			<if test="relaseTime != null">
+				relase_time,
+			</if>
+			<if test="guid != null">
+				guid,
+			</if>
+			<if test="operaName != null">
+				opera_name,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="frontDate != null">
+				front_date,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="perName != null">
+				#{perName,jdbcType=VARCHAR},
+			</if>
+			<if test="yktId != null">
+				#{yktId,jdbcType=INTEGER},
+			</if>
+			<if test="cardType != null">
+				#{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="carNo != null">
+				#{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="operType != null">
+				#{operType,jdbcType=INTEGER},
+			</if>
+			<if test="beforeMoney != null">
+				#{beforeMoney,jdbcType=REAL},
+			</if>
+			<if test="balanceMoney != null">
+				#{balanceMoney,jdbcType=REAL},
+			</if>
+			<if test="startDate != null">
+				#{startDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endDate != null">
+				#{endDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="payType != null">
+				#{payType,jdbcType=INTEGER},
+			</if>
+			<if test="placeName != null">
+				#{placeName,jdbcType=VARCHAR},
+			</if>
+			<if test="relaseTime != null">
+				#{relaseTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="guid != null">
+				#{guid,jdbcType=VARCHAR},
+			</if>
+			<if test="operaName != null">
+				#{operaName,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="frontDate != null">
+				#{frontDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectByYktid" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from vw_park_issue_opera
+		where ykt_id=#{yktId,jdbcType=INTEGER}
+		order by create_date desc
+	</select>
+	<select id="selectByguid" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from vw_park_issue_opera
+		where guid=#{guid,jdbcType=VARCHAR}
+		order by create_date desc limit 1
+	</select>
+	<select id="selectByIsload" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		from
+		(SELECT
+		<include refid="Base_Column_List" />
+		FROM vw_park_issue_opera
+		where is_load =0 or is_load is null order by create_date desc ) as t
+		group by t.ykt_id
+	</select>
+</mapper>

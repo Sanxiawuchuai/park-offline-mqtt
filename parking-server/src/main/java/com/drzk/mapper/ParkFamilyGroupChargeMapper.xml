@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.ParkFamilyGroupChargeMapper">
+	<resultMap id="BaseResultMap"
+		type="com.drzk.vo.ParkFamilyGroupCharge">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="in_id" jdbcType="INTEGER" property="inId" />
+		<result column="car_no" jdbcType="VARCHAR" property="carNo" />
+		<result column="card_type" jdbcType="INTEGER"
+			property="cardType" />
+		<result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+		<result column="end_time" jdbcType="TIMESTAMP"
+			property="endTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, in_id, car_no, card_type, in_time, end_time
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_family_group_charge
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from
+		park_family_group_charge
+		where id =
+		#{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.drzk.vo.ParkFamilyGroupCharge">
+		<selectKey keyProperty="id" order="AFTER"
+			resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into park_family_group_charge (id, in_id, car_no,
+		card_type,
+		in_time, end_time
+		)
+		values (#{id,jdbcType=INTEGER},
+		#{inId,jdbcType=INTEGER},
+		#{carNo,jdbcType=VARCHAR},
+		#{cardType,jdbcType=INTEGER}, #{inTime,jdbcType=TIMESTAMP},
+		#{endTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.drzk.vo.ParkFamilyGroupCharge">
+		<selectKey keyProperty="id" order="AFTER"
+			resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into park_family_group_charge
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="inId != null">
+				in_id,
+			</if>
+			<if test="carNo != null">
+				car_no,
+			</if>
+			<if test="cardType != null">
+				card_type,
+			</if>
+			<if test="inTime != null">
+				in_time,
+			</if>
+			<if test="endTime != null">
+				end_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="inId != null">
+				#{inId,jdbcType=INTEGER},
+			</if>
+			<if test="carNo != null">
+				#{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				#{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="inTime != null">
+				#{inTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.drzk.vo.ParkFamilyGroupCharge">
+		update park_family_group_charge
+		<set>
+			<if test="inId != null">
+				in_id = #{inId,jdbcType=INTEGER},
+			</if>
+			<if test="carNo != null">
+				car_no = #{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				card_type = #{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="inTime != null">
+				in_time = #{inTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.drzk.vo.ParkFamilyGroupCharge">
+		update
+		park_family_group_charge
+		set in_id =
+		#{inId,jdbcType=INTEGER},
+		car_no =
+		#{carNo,jdbcType=VARCHAR},
+		card_type =
+		#{cardType,jdbcType=INTEGER},
+		in_time = #{inTime,jdbcType=TIMESTAMP},
+		end_time =
+		#{endTime,jdbcType=TIMESTAMP}
+		where id =
+		#{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectByCarNo" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_family_group_charge
+		where car_no = #{carNo,jdbcType=VARCHAR}
+	</select>
+	<select id="select"
+		parameterType="com.drzk.vo.ParkFamilyGroupCharge"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_family_group_charge
+		<where>
+			<if test="inId != null">
+				in_id = #{inId,jdbcType=INTEGER}
+			</if>
+			<if test="carNo != null">
+				and car_no = #{carNo,jdbcType=VARCHAR}
+			</if>
+			<if test="cardType != null">
+				and card_type = #{cardType,jdbcType=INTEGER}
+			</if>
+			<if test="inTime != null">
+				and in_time = #{inTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="endTime != null">
+				and end_time = #{endTime,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

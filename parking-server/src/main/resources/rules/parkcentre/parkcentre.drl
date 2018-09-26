@@ -1,0 +1,302 @@
+package rules.parkcentre
+
+import com.drzk.common.InOutRealTimeBase.Step;
+import com.drzk.fact.CentreRealTimeBase;
+import com.drzk.common.InOutRealTimeBase;
+import com.drzk.vo.ParkCarIn;
+import java.util.List;
+
+
+global com.drzk.service.IParkingService parkCentreService;
+
+
+//查询匹配的入场记录
+rule "get in record"
+when
+	$parkCentre : CentreRealTimeBase(getNextStep() == Step.START)
+then
+	boolean $isInData =  parkCentreService.getSimilarCar($parkCentre);
+	System.out.println("入场记录:");
+	$parkCentre.setNextStep($isInData ? Step.CARDTYPE : Step.NOINREORD);
+	update($parkCentre);
+end
+
+//无入场记录
+rule "no in record"
+when
+	$parkCentre : CentreRealTimeBase(getNextStep() == Step.NOINREORD)
+then
+    $parkCentre.getStatusMap().put("isSuccess",1);
+	$parkCentre.getStatusMap().put("Msg","未找到入场记录");
+	$parkCentre.setNextStep(Step.END);
+	update($parkCentre);
+end
+
+//获取车辆信息
+rule "get card type"
+when 
+	$parkCentre : CentreRealTimeBase(getNextStep() == Step.CARDTYPE)
+then
+	int $cardType = parkCentreService.getCardTypeInfo($parkCentre);
+	System.out.println("车辆卡类型:"+$cardType);
+	$parkCentre.setNextStep(Step.ISREGULARCAR);
+	update($parkCentre);
+end
+
+//查询是否是固定车 ISREGULARCAR
+rule "is regular car" 
+when
+	$parkCentre : CentreRealTimeBase(getNextStep() == Step.ISREGULARCAR)
+then
+	boolean $isRegularCar = parkCentreService.isRegularCar($parkCentre);
+	System.out.println("是否是固定车:"+$isRegularCar);
+	$parkCentre.setNextStep($isRegularCar? Step.REGULARCAR:Step.ISARREARS);
+	update($parkCentre);
+end
+
+//获取固定车的类型 getRegularCarType
+rule "get regular car type"
+when
+	$parkCentre : CentreRealTimeBase(getNextStep() == Step.REGULARCAR)
+then
+	int $type = parkCentreService.getRegularCarType($parkCentre.getCarRealType());
+	$parkCentre.getStatusMap().put("type",$type);
+	$parkCentre.setNextStep(Step.CHECKEFFECT);
+	update($parkCentre);
+end
+
+	
+//检查有效期
+rule "regular car is overdue"
+when
+	$parkCentre : CentreRealTimeBase(getNextStep() == Step.CHECKEFFECT)
+then
+	Step $cardTypeExpire = parkCentreService.isCardTypeExpireCentre($parkCentre);
+	$parkCentre.setNextStep($cardTypeExpire);
+	update($parkCentre);
+end
+
+
+//===EXPIRE固定车过期 ,  UNDUE未到期  ,TIMENOTALLOW时间段禁止进入, EFFECTIVE有效期内
+//UNDUE未到期 ，TIMENOTALLOW时间段禁止进入  暂时没处理
+
+
+//免费车处理，三种场景，过期，未到有效期，有效期内
+//免费车在有效期内 直接保存记录
+rule "free car effective"
+when
+	//条件：免费车且在有效期内 
+	$parkCentre : CentreRealTimeBase(statusMap["type"]==4,getNextStep() == Step.EFFECTIVE)
+then
+    $parkCentre.getStatusMap().put("isSuccess",1);
+	$parkCentre.getStatusMap().put("Msg","免费车无需缴费");
+	$parkCentre.setNextStep(Step.END); 
+	update($parkCentre);
+end
+
+//免费车未到有效期  按临时车处理
+rule "free car undue"
+when
+	//条件：
+	$parkCentre : CentreRealTimeBase(statusMap["type"]==4,getNextStep() == Step.UNDUE)
+then
+	$parkCentre.setNextStep(Step.ISARREARS);  //计费处理
+	update($parkCentre);
+end
+
+//免费车直过期处理 提示已经过期结束流程
+rule "free car expire"
+when
+	$parkCentre : CentreRealTimeBase(statusMap["type"]==4,getNextStep() == Step.EXPIRE)
+then
+    $parkCentre.getStatusMap().put("isSuccess",1);
+	$parkCentre.getStatusMap().put("Msg","免费车过期");
+	$parkCentre.setNextStep(Step.END); 
+	update($parkCentre);
+end
+
+//储值车在有效期内 直接计费处理
+rule "store car effective"
+when
+	//条件：储值车且在有效期内 
+	$parkCentre : CentreRealTimeBase(statusMap["type"]==5,getNextStep() == Step.EFFECTIVE)
+then
+	$parkCentre.setNextStep(Step.ISARREARS);  //直接计费处理
+	update($parkCentre);
+end
+
+//储值车未到有效期  按临时车处理
+rule "store car undue"
+when
+	//条件：
+	$parkCentre : CentreRealTimeBase(statusMap["type"]==5,getNextStep() == Step.UNDUE)
+then
+	$parkCentre.setNextStep(Step.ISARREARS); 
+	update($parkCentre);
+end
+
+//储值车过期处理 提示已经过期结束流程
+rule "store car expire"
+when
+	$parkCentre : CentreRealTimeBase(statusMap["type"]==5,getNextStep() == Step.EXPIRE)
+then
+    $parkCentre.getStatusMap().put("isSuccess",1);
+	$parkCentre.getStatusMap().put("Msg","储值车过期");
+	$parkCentre.setNextStep(Step.END); 
+	update($parkCentre);
+end
+
+//储值车不在有效期内，按储临车处理
+rule "store car uneffective"
+when
+	$parkCentre : CentreRealTimeBase(statusMap["type"]==5,getNextStep() == Step.UNEFFECTIVE)
+then
+	$parkCentre.setNextStep(Step.ISARREARS); 
+	update($parkCentre);
+end
+
+
+//月卡过期,判断是否当临时卡计费处理
+rule "month car expire"
+when
+	//条件：固定卡类型为月卡且过期 (暂时用type为1表示月卡)
+	$parkCentre : CentreRealTimeBase(statusMap["type"]==1,getNextStep() == Step.EXPIRE)
+then
+	$parkCentre.getStatusMap().put("isSuccess",1);
+	$parkCentre.getStatusMap().put("Msg","月租车过期");
+	$parkCentre.setNextStep(Step.END);
+	update($parkCentre);
+end
+
+//月卡未到有效期,判断是否当临时卡计费处理
+rule "month car undue"
+when
+	//条件：固定卡类型为月卡且未到有效期 (暂时用type为1表示月卡)
+	$parkCentre : CentreRealTimeBase(statusMap["type"]==1,getNextStep() == Step.UNDUE)
+then
+	$parkCentre.setNextStep(Step.ISARREARS); 
+	update($parkCentre);
+end
+
+
+//月卡时段内禁止出入 
+rule "month car timenotallow"
+when
+	$parkCentre : CentreRealTimeBase(statusMap["type"]==1,getNextStep() == Step.TIMENOTALLOW)
+then
+	$parkCentre.getStatusMap().put("isSuccess",1);
+	$parkCentre.getStatusMap().put("Msg","月租车无需缴费");
+	$parkCentre.setNextStep(Step.END);
+	update($parkCentre);
+end
+
+//月卡不在有效期内
+rule "month car uneffective"
+when
+	//条件：固定卡类型为月卡且未到有效期 (暂时用type为1表示月卡)
+	$parkCentre : CentreRealTimeBase(statusMap["type"]==1,getNextStep() == Step.UNEFFECTIVE)
+then
+	$parkCentre.setNextStep(Step.ISARREARS); //按相关的卡类收费
+	update($parkCentre);
+end
+
+//月卡在有效期内，判断是否是家庭组车辆
+rule "is family group"
+when
+	//条件:固定车辆且未过期
+	$parkCentre : CentreRealTimeBase(statusMap["type"]==1,getNextStep() == Step.EFFECTIVE)
+then
+	boolean $familyType = parkCentreService.isFamilyGroup($parkCentre);
+	System.out.println("是否家庭组:"+$familyType);
+	$parkCentre.setNextStep($familyType? Step.FAMILY:Step.MONTHCAR);
+	update($parkCentre);
+end
+
+//月卡在有效期内,没有家庭组，没有月卡受限
+rule "is month car"
+when
+	//条件:固定车辆且未过期
+	$parkCentre : CentreRealTimeBase(getNextStep() == Step.MONTHCAR)
+then
+	$parkCentre.getStatusMap().put("isSuccess",1);
+	$parkCentre.getStatusMap().put("Msg","月租车无需缴费");
+	$parkCentre.setNextStep(Step.END);
+	update($parkCentre);
+end
+
+//家庭组判断当前车辆是临时车出场还是以月租车出场 ，如果以临时车出场全程计费
+rule "family group car is temp"
+when
+	$parkCentre : CentreRealTimeBase(getNextStep() == Step.FAMILY)
+then
+    boolean $familyTemp = parkCentreService.centreFamilyTemp($parkCentre);
+    System.out.println("判断当前车辆是临时车出场还是以月租车出场:"+$familyTemp);
+	$parkCentre.setNextStep($familyTemp? Step.ISARREARS:Step.FAMILYMONTH);
+	update($parkCentre);
+end
+
+//判断家庭的月租车辆是否有临时计费
+rule "family month"
+when
+	//条件:固定车辆且未过期
+	$parkCentre : CentreRealTimeBase(getNextStep() == Step.FAMILYMONTH)
+then
+    boolean $familyTemp = parkCentreService.centreFamilyTemp($parkCentre);
+    System.out.println("判断家庭的月租车辆是否有临时计费:"+$familyTemp);
+	$parkCentre.setNextStep($familyTemp? Step.ISARREARS:Step.MONTHCAR);
+	update($parkCentre);
+end
+
+//检查费用是否结清
+rule "is arrears"
+when
+	$parkCentre : CentreRealTimeBase(getNextStep() == Step.ISARREARS)
+then
+	boolean $isArrears = parkCentreService.isArrears($parkCentre);
+	System.out.println("费用是否结清:"+$isArrears);
+	$parkCentre.setNextStep($isArrears ?Step.NOPAY:Step.ARREARS);
+	update($parkCentre);
+end
+
+//费用结清
+rule "no pay"
+when
+	$parkCentre : CentreRealTimeBase(getNextStep() == Step.NOPAY)
+then
+	$parkCentre.getStatusMap().put("isSuccess",1);
+	$parkCentre.getStatusMap().put("Msg","费用已结清，无需缴费");
+	$parkCentre.setNextStep(Step.END);
+	update($parkCentre);
+end
+
+//判断储值车是否够扣费，如果不够扣费转成储临车处理
+rule "astore car is Sufficient deduction "
+when
+	$parkCentre : CentreRealTimeBase(statusMap["type"]==5, getNextStep() == Step.ARREARS)
+then
+	boolean $result = parkCentreService.storecarCharge($parkCentre);
+	System.out.println("储值车是否够扣费:"+$result);
+	$parkCentre.setNextStep($result? Step.ISNEEDCONFIRM:Step.ISARREARS);
+	update($parkCentre);
+end
+
+rule "arrears "
+when
+	$parkCentre : CentreRealTimeBase(getNextStep() == Step.ARREARS)
+then
+	$parkCentre.getStatusMap().put("isSuccess",0);
+	$parkCentre.setNextStep(Step.END);
+	update($parkCentre);
+end
+
+
+//判断是否推送
+rule "pushToBox"
+when
+	$parkCentre : CentreRealTimeBase(getNextStep() == Step.END)
+then
+	//boolean $voice = parkOutService.parkErrorMessage($parkOut);
+end
+
+
+

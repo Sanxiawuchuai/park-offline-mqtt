@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.YktCardRsmoneyMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.YktCardRsmoney">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="yktid" jdbcType="INTEGER" property="yktid" />
+		<result column="s_type" jdbcType="INTEGER" property="sType" />
+		<result column="front_date" jdbcType="TIMESTAMP" property="frontDate" />
+		<result column="new_start_date" jdbcType="TIMESTAMP" property="newStartDate" />
+		<result column="new_end_date" jdbcType="TIMESTAMP" property="newEndDate" />
+		<result column="balance_money" jdbcType="REAL" property="balanceMoney" />
+		<result column="pay_type" jdbcType="INTEGER" property="payType" />
+		<result column="foregift" jdbcType="REAL" property="foregift" />
+		<result column="before_money" jdbcType="REAL" property="beforeMoney" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		<result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+		<result column="memo" jdbcType="VARCHAR" property="memo" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, yktid, s_type, front_date, new_start_date, new_end_date,
+		balance_money, pay_type,
+		foregift, before_money, create_date, create_user_name, order_no, memo
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from ykt_card_rsmoney
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from ykt_card_rsmoney
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.YktCardRsmoney">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into ykt_card_rsmoney (id, yktid, s_type,
+		front_date, new_start_date, new_end_date,
+		balance_money, pay_type, foregift,
+		before_money, create_date, create_user_name,
+		order_no, memo)
+		values (#{id,jdbcType=INTEGER}, #{yktid,jdbcType=INTEGER},
+		#{sType,jdbcType=INTEGER},
+		#{frontDate,jdbcType=TIMESTAMP}, #{newStartDate,jdbcType=TIMESTAMP}, #{newEndDate,jdbcType=TIMESTAMP},
+		#{balanceMoney,jdbcType=REAL}, #{payType,jdbcType=INTEGER},
+		#{foregift,jdbcType=REAL},
+		#{beforeMoney,jdbcType=REAL}, #{createDate,jdbcType=TIMESTAMP}, #{createUserName,jdbcType=VARCHAR},
+		#{orderNo,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.YktCardRsmoney">
+		insert into ykt_card_rsmoney
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="yktid != null">
+				yktid,
+			</if>
+			<if test="sType != null">
+				s_type,
+			</if>
+			<if test="frontDate != null">
+				front_date,
+			</if>
+			<if test="newStartDate != null">
+				new_start_date,
+			</if>
+			<if test="newEndDate != null">
+				new_end_date,
+			</if>
+			<if test="balanceMoney != null">
+				balance_money,
+			</if>
+			<if test="payType != null">
+				pay_type,
+			</if>
+			<if test="foregift != null">
+				foregift,
+			</if>
+			<if test="beforeMoney != null">
+				before_money,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="createUserName != null">
+				create_user_name,
+			</if>
+			<if test="orderNo != null">
+				order_no,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="yktid != null">
+				#{yktid,jdbcType=INTEGER},
+			</if>
+			<if test="sType != null">
+				#{sType,jdbcType=INTEGER},
+			</if>
+			<if test="frontDate != null">
+				#{frontDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="newStartDate != null">
+				#{newStartDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="newEndDate != null">
+				#{newEndDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="balanceMoney != null">
+				#{balanceMoney,jdbcType=REAL},
+			</if>
+			<if test="payType != null">
+				#{payType,jdbcType=INTEGER},
+			</if>
+			<if test="foregift != null">
+				#{foregift,jdbcType=REAL},
+			</if>
+			<if test="beforeMoney != null">
+				#{beforeMoney,jdbcType=REAL},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				#{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="orderNo != null">
+				#{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.YktCardRsmoney">
+		update ykt_card_rsmoney
+		<set>
+			<if test="yktid != null">
+				yktid = #{yktid,jdbcType=INTEGER},
+			</if>
+			<if test="sType != null">
+				s_type = #{sType,jdbcType=INTEGER},
+			</if>
+			<if test="frontDate != null">
+				front_date = #{frontDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="newStartDate != null">
+				new_start_date = #{newStartDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="newEndDate != null">
+				new_end_date = #{newEndDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="balanceMoney != null">
+				balance_money = #{balanceMoney,jdbcType=REAL},
+			</if>
+			<if test="payType != null">
+				pay_type = #{payType,jdbcType=INTEGER},
+			</if>
+			<if test="foregift != null">
+				foregift = #{foregift,jdbcType=REAL},
+			</if>
+			<if test="beforeMoney != null">
+				before_money = #{beforeMoney,jdbcType=REAL},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				create_user_name = #{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="orderNo != null">
+				order_no = #{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.YktCardRsmoney">
+		update ykt_card_rsmoney
+		set yktid = #{yktid,jdbcType=INTEGER},
+		s_type = #{sType,jdbcType=INTEGER},
+		front_date = #{frontDate,jdbcType=TIMESTAMP},
+		new_start_date = #{newStartDate,jdbcType=TIMESTAMP},
+		new_end_date = #{newEndDate,jdbcType=TIMESTAMP},
+		balance_money = #{balanceMoney,jdbcType=REAL},
+		pay_type = #{payType,jdbcType=INTEGER},
+		foregift = #{foregift,jdbcType=REAL},
+		before_money = #{beforeMoney,jdbcType=REAL},
+		create_date = #{createDate,jdbcType=TIMESTAMP},
+		create_user_name = #{createUserName,jdbcType=VARCHAR},
+		order_no = #{orderNo,jdbcType=VARCHAR},
+		memo = #{memo,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

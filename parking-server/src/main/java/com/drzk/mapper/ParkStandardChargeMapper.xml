@@ -1,0 +1,773 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.ParkStandardChargeMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.ParkStandardCharge">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+		<result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+		<result column="card_type" jdbcType="INTEGER" property="cardType" />
+		<result column="free_time" jdbcType="INTEGER" property="freeTime" />
+		<result column="is_free_time" jdbcType="INTEGER" property="isFreeTime" />
+		<result column="unit_type" jdbcType="INTEGER" property="unitType" />
+		<result column="is_unit_type" jdbcType="INTEGER" property="isUnitType" />
+		<result column="top_money" jdbcType="DOUBLE" property="topMoney" />
+		<result column="ch_hour1" jdbcType="DOUBLE" property="chHour1" />
+		<result column="ch_hour2" jdbcType="DOUBLE" property="chHour2" />
+		<result column="ch_hour3" jdbcType="DOUBLE" property="chHour3" />
+		<result column="ch_hour4" jdbcType="DOUBLE" property="chHour4" />
+		<result column="ch_hour5" jdbcType="DOUBLE" property="chHour5" />
+		<result column="ch_hour6" jdbcType="DOUBLE" property="chHour6" />
+		<result column="ch_hour7" jdbcType="DOUBLE" property="chHour7" />
+		<result column="ch_hour8" jdbcType="DOUBLE" property="chHour8" />
+		<result column="ch_hour9" jdbcType="DOUBLE" property="chHour9" />
+		<result column="ch_hour10" jdbcType="DOUBLE" property="chHour10" />
+		<result column="ch_hour11" jdbcType="DOUBLE" property="chHour11" />
+		<result column="ch_hour12" jdbcType="DOUBLE" property="chHour12" />
+		<result column="ch_hour13" jdbcType="DOUBLE" property="chHour13" />
+		<result column="ch_hour14" jdbcType="DOUBLE" property="chHour14" />
+		<result column="ch_hour15" jdbcType="DOUBLE" property="chHour15" />
+		<result column="ch_hour16" jdbcType="DOUBLE" property="chHour16" />
+		<result column="ch_hour17" jdbcType="DOUBLE" property="chHour17" />
+		<result column="ch_hour18" jdbcType="DOUBLE" property="chHour18" />
+		<result column="ch_hour19" jdbcType="DOUBLE" property="chHour19" />
+		<result column="ch_hour20" jdbcType="DOUBLE" property="chHour20" />
+		<result column="ch_hour21" jdbcType="DOUBLE" property="chHour21" />
+		<result column="ch_hour22" jdbcType="DOUBLE" property="chHour22" />
+		<result column="ch_hour23" jdbcType="DOUBLE" property="chHour23" />
+		<result column="ch_hour24" jdbcType="DOUBLE" property="chHour24" />
+		<result column="a_zero" jdbcType="DOUBLE" property="aZero" />
+		<result column="a_type" jdbcType="INTEGER" property="aType" />
+		<result column="puid" jdbcType="VARCHAR" property="puid" />
+		<result column="del_frag" jdbcType="INTEGER" property="delFrag" />
+		<result column="is_load" jdbcType="INTEGER" property="isLoad" />
+		<result column="is_cross_time" jdbcType="INTEGER" property="isCrossTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, start_time,end_time,card_type, free_time, is_free_time,
+		unit_type,
+		is_unit_type,
+		top_money, ch_hour1,
+		ch_hour2, ch_hour3,
+		ch_hour4,
+		ch_hour5, ch_hour6, ch_hour7, ch_hour8, ch_hour9,
+		ch_hour10,
+		ch_hour11,
+		ch_hour12, ch_hour13, ch_hour14, ch_hour15, ch_hour16,
+		ch_hour17,
+		ch_hour18,
+		ch_hour19, ch_hour20, ch_hour21, ch_hour22,
+		ch_hour23,
+		ch_hour24, a_zero,
+		a_type,puid,del_frag,is_load,is_cross_time
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_standard_charge
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectByCardType" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_standard_charge
+		where card_type =
+		#{cardType,jdbcType=INTEGER}
+	</select>
+
+	
+	<select id="selectByGuid" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_standard_charge
+		where puid=#{puid}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		park_standard_charge
+		where id =
+		#{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.ParkStandardCharge">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into park_standard_charge (id, card_type, free_time,
+		is_free_time, unit_type, is_unit_type,
+		top_money, ch_hour1, ch_hour2,
+		ch_hour3, ch_hour4, ch_hour5,
+		ch_hour6, ch_hour7, ch_hour8,
+		ch_hour9,
+		ch_hour10, ch_hour11,
+		ch_hour12, ch_hour13, ch_hour14,
+		ch_hour15,
+		ch_hour16, ch_hour17,
+		ch_hour18, ch_hour19, ch_hour20,
+		ch_hour21,
+		ch_hour22, ch_hour23,
+		ch_hour24, a_zero, a_type)
+		values
+		(#{id,jdbcType=INTEGER}, #{cardType,jdbcType=INTEGER},
+		#{freeTime,jdbcType=INTEGER},
+		#{isFreeTime,jdbcType=INTEGER},
+		#{unitType,jdbcType=INTEGER}, #{isUnitType,jdbcType=INTEGER},
+		#{topMoney,jdbcType=INTEGER}, #{chHour1,jdbcType=INTEGER},
+		#{chHour2,jdbcType=INTEGER},
+		#{chHour3,jdbcType=INTEGER},
+		#{chHour4,jdbcType=INTEGER}, #{chHour5,jdbcType=INTEGER},
+		#{chHour6,jdbcType=INTEGER}, #{chHour7,jdbcType=INTEGER},
+		#{chHour8,jdbcType=INTEGER},
+		#{chHour9,jdbcType=INTEGER},
+		#{chHour10,jdbcType=INTEGER}, #{chHour11,jdbcType=INTEGER},
+		#{chHour12,jdbcType=INTEGER}, #{chHour13,jdbcType=INTEGER},
+		#{chHour14,jdbcType=INTEGER},
+		#{chHour15,jdbcType=INTEGER},
+		#{chHour16,jdbcType=INTEGER}, #{chHour17,jdbcType=INTEGER},
+		#{chHour18,jdbcType=INTEGER}, #{chHour19,jdbcType=INTEGER},
+		#{chHour20,jdbcType=INTEGER},
+		#{chHour21,jdbcType=INTEGER},
+		#{chHour22,jdbcType=INTEGER}, #{chHour23,jdbcType=INTEGER},
+		#{chHour24,jdbcType=INTEGER}, #{aZero,jdbcType=INTEGER},
+		#{aType,jdbcType=INTEGER})
+	</insert>
+	
+	<insert id="insertSelective" parameterType="com.drzk.vo.ParkStandardCharge">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into park_standard_charge
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="cardType != null">
+				card_type,
+			</if>
+			<if test="freeTime != null">
+				free_time,
+			</if>
+			<if test="isFreeTime != null">
+				is_free_time,
+			</if>
+			<if test="unitType != null">
+				unit_type,
+			</if>
+			<if test="isUnitType != null">
+				is_unit_type,
+			</if>
+			<if test="topMoney != null">
+				top_money,
+			</if>
+			<if test="chHour1 != null">
+				ch_hour1,
+			</if>
+			<if test="chHour2 != null">
+				ch_hour2,
+			</if>
+			<if test="chHour3 != null">
+				ch_hour3,
+			</if>
+			<if test="chHour4 != null">
+				ch_hour4,
+			</if>
+			<if test="chHour5 != null">
+				ch_hour5,
+			</if>
+			<if test="chHour6 != null">
+				ch_hour6,
+			</if>
+			<if test="chHour7 != null">
+				ch_hour7,
+			</if>
+			<if test="chHour8 != null">
+				ch_hour8,
+			</if>
+			<if test="chHour9 != null">
+				ch_hour9,
+			</if>
+			<if test="chHour10 != null">
+				ch_hour10,
+			</if>
+			<if test="chHour11 != null">
+				ch_hour11,
+			</if>
+			<if test="chHour12 != null">
+				ch_hour12,
+			</if>
+			<if test="chHour13 != null">
+				ch_hour13,
+			</if>
+			<if test="chHour14 != null">
+				ch_hour14,
+			</if>
+			<if test="chHour15 != null">
+				ch_hour15,
+			</if>
+			<if test="chHour16 != null">
+				ch_hour16,
+			</if>
+			<if test="chHour17 != null">
+				ch_hour17,
+			</if>
+			<if test="chHour18 != null">
+				ch_hour18,
+			</if>
+			<if test="chHour19 != null">
+				ch_hour19,
+			</if>
+			<if test="chHour20 != null">
+				ch_hour20,
+			</if>
+			<if test="chHour21 != null">
+				ch_hour21,
+			</if>
+			<if test="chHour22 != null">
+				ch_hour22,
+			</if>
+			<if test="chHour23 != null">
+				ch_hour23,
+			</if>
+			<if test="chHour24 != null">
+				ch_hour24,
+			</if>
+			<if test="aZero != null">
+				a_zero,
+			</if>
+			<if test="aType != null">
+				a_type,
+			</if>
+			<if test="puid != null">
+				puid,
+			</if>
+			<if test="delFrag != null">
+				del_frag,
+			</if>
+			<if test="isLoad != null">
+				is_load,
+			</if>
+			<if test="startTime != null">
+				start_time,
+			</if>
+			<if test="endTime != null">
+				end_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="cardType != null">
+				#{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="freeTime != null">
+				#{freeTime,jdbcType=INTEGER},
+			</if>
+			<if test="isFreeTime != null">
+				#{isFreeTime,jdbcType=INTEGER},
+			</if>
+			<if test="unitType != null">
+				#{unitType,jdbcType=INTEGER},
+			</if>
+			<if test="isUnitType != null">
+				#{isUnitType,jdbcType=INTEGER},
+			</if>
+			<if test="topMoney != null">
+				#{topMoney,jdbcType=INTEGER},
+			</if>
+			<if test="chHour1 != null">
+				#{chHour1,jdbcType=INTEGER},
+			</if>
+			<if test="chHour2 != null">
+				#{chHour2,jdbcType=INTEGER},
+			</if>
+			<if test="chHour3 != null">
+				#{chHour3,jdbcType=INTEGER},
+			</if>
+			<if test="chHour4 != null">
+				#{chHour4,jdbcType=INTEGER},
+			</if>
+			<if test="chHour5 != null">
+				#{chHour5,jdbcType=INTEGER},
+			</if>
+			<if test="chHour6 != null">
+				#{chHour6,jdbcType=INTEGER},
+			</if>
+			<if test="chHour7 != null">
+				#{chHour7,jdbcType=INTEGER},
+			</if>
+			<if test="chHour8 != null">
+				#{chHour8,jdbcType=INTEGER},
+			</if>
+			<if test="chHour9 != null">
+				#{chHour9,jdbcType=INTEGER},
+			</if>
+			<if test="chHour10 != null">
+				#{chHour10,jdbcType=INTEGER},
+			</if>
+			<if test="chHour11 != null">
+				#{chHour11,jdbcType=INTEGER},
+			</if>
+			<if test="chHour12 != null">
+				#{chHour12,jdbcType=INTEGER},
+			</if>
+			<if test="chHour13 != null">
+				#{chHour13,jdbcType=INTEGER},
+			</if>
+			<if test="chHour14 != null">
+				#{chHour14,jdbcType=INTEGER},
+			</if>
+			<if test="chHour15 != null">
+				#{chHour15,jdbcType=INTEGER},
+			</if>
+			<if test="chHour16 != null">
+				#{chHour16,jdbcType=INTEGER},
+			</if>
+			<if test="chHour17 != null">
+				#{chHour17,jdbcType=INTEGER},
+			</if>
+			<if test="chHour18 != null">
+				#{chHour18,jdbcType=INTEGER},
+			</if>
+			<if test="chHour19 != null">
+				#{chHour19,jdbcType=INTEGER},
+			</if>
+			<if test="chHour20 != null">
+				#{chHour20,jdbcType=INTEGER},
+			</if>
+			<if test="chHour21 != null">
+				#{chHour21,jdbcType=INTEGER},
+			</if>
+			<if test="chHour22 != null">
+				#{chHour22,jdbcType=INTEGER},
+			</if>
+			<if test="chHour23 != null">
+				#{chHour23,jdbcType=INTEGER},
+			</if>
+			<if test="chHour24 != null">
+				#{chHour24,jdbcType=INTEGER},
+			</if>
+			<if test="aZero != null">
+				#{aZero,jdbcType=INTEGER},
+			</if>
+			<if test="aType != null">
+				#{aType,jdbcType=INTEGER},
+			</if>
+			<if test="puid != null">
+				#{puid,jdbcType=INTEGER},
+			</if>
+			<if test="delFrag != null">
+				#{delFrag,jdbcType=VARCHAR},
+			</if>
+			<if test="isLoad != null">
+				#{isLoad,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+		     #{startTime,jdbcType=VARCHAR},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateParkStandard" parameterType="com.drzk.vo.ParkStandardCharge">
+		update park_standard_charge
+		<set>
+			<if test="cardType != null">
+				card_type = #{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="freeTime != null">
+				free_time = #{freeTime,jdbcType=INTEGER},
+			</if>
+			<if test="isFreeTime != null">
+				is_free_time = #{isFreeTime,jdbcType=INTEGER},
+			</if>
+			<if test="unitType != null">
+				unit_type = #{unitType,jdbcType=INTEGER},
+			</if>
+			<if test="isUnitType != null">
+				is_unit_type = #{isUnitType,jdbcType=INTEGER},
+			</if>
+			<if test="topMoney != null">
+				top_money = #{topMoney,jdbcType=INTEGER},
+			</if>
+			<if test="chHour1 != null">
+				ch_hour1 = #{chHour1,jdbcType=INTEGER},
+			</if>
+			<if test="chHour2 != null">
+				ch_hour2 = #{chHour2,jdbcType=INTEGER},
+			</if>
+			<if test="chHour3 != null">
+				ch_hour3 = #{chHour3,jdbcType=INTEGER},
+			</if>
+			<if test="chHour4 != null">
+				ch_hour4 = #{chHour4,jdbcType=INTEGER},
+			</if>
+			<if test="chHour5 != null">
+				ch_hour5 = #{chHour5,jdbcType=INTEGER},
+			</if>
+			<if test="chHour6 != null">
+				ch_hour6 = #{chHour6,jdbcType=INTEGER},
+			</if>
+			<if test="chHour7 != null">
+				ch_hour7 = #{chHour7,jdbcType=INTEGER},
+			</if>
+			<if test="chHour8 != null">
+				ch_hour8 = #{chHour8,jdbcType=INTEGER},
+			</if>
+			<if test="chHour9 != null">
+				ch_hour9 = #{chHour9,jdbcType=INTEGER},
+			</if>
+			<if test="chHour10 != null">
+				ch_hour10 = #{chHour10,jdbcType=INTEGER},
+			</if>
+			<if test="chHour11 != null">
+				ch_hour11 = #{chHour11,jdbcType=INTEGER},
+			</if>
+			<if test="chHour12 != null">
+				ch_hour12 = #{chHour12,jdbcType=INTEGER},
+			</if>
+			<if test="chHour13 != null">
+				ch_hour13 = #{chHour13,jdbcType=INTEGER},
+			</if>
+			<if test="chHour14 != null">
+				ch_hour14 = #{chHour14,jdbcType=INTEGER},
+			</if>
+			<if test="chHour15 != null">
+				ch_hour15 = #{chHour15,jdbcType=INTEGER},
+			</if>
+			<if test="chHour16 != null">
+				ch_hour16 = #{chHour16,jdbcType=INTEGER},
+			</if>
+			<if test="chHour17 != null">
+				ch_hour17 = #{chHour17,jdbcType=INTEGER},
+			</if>
+			<if test="chHour18 != null">
+				ch_hour18 = #{chHour18,jdbcType=INTEGER},
+			</if>
+			<if test="chHour19 != null">
+				ch_hour19 = #{chHour19,jdbcType=INTEGER},
+			</if>
+			<if test="chHour20 != null">
+				ch_hour20 = #{chHour20,jdbcType=INTEGER},
+			</if>
+			<if test="chHour21 != null">
+				ch_hour21 = #{chHour21,jdbcType=INTEGER},
+			</if>
+			<if test="chHour22 != null">
+				ch_hour22 = #{chHour22,jdbcType=INTEGER},
+			</if>
+			<if test="chHour23 != null">
+				ch_hour23 = #{chHour23,jdbcType=INTEGER},
+			</if>
+			<if test="chHour24 != null">
+				ch_hour24 = #{chHour24,jdbcType=INTEGER},
+			</if>
+			<if test="aZero != null">
+				a_zero = #{aZero,jdbcType=INTEGER},
+			</if>
+			<if test="aType != null">
+				a_type = #{aType,jdbcType=INTEGER},
+			</if>
+			<if test="delFrag != null">
+				del_frag=#{delFrag,jdbcType=VARCHAR},
+			</if>
+			<if test="isLoad != null">
+				is_load=#{isLoad,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">  
+		      start_time=#{startTime,jdbcType=VARCHAR},
+			</if>
+			<if test="endTime != null">
+			 end_time=#{endTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where puid = #{puid,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.ParkStandardCharge">
+		update park_standard_charge
+		<set>
+			<if test="cardType != null">
+				card_type = #{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="freeTime != null">
+				free_time = #{freeTime,jdbcType=INTEGER},
+			</if>
+			<if test="isFreeTime != null">
+				is_free_time = #{isFreeTime,jdbcType=INTEGER},
+			</if>
+			<if test="unitType != null">
+				unit_type = #{unitType,jdbcType=INTEGER},
+			</if>
+			<if test="isUnitType != null">
+				is_unit_type = #{isUnitType,jdbcType=INTEGER},
+			</if>
+			<if test="topMoney != null">
+				top_money = #{topMoney,jdbcType=INTEGER},
+			</if>
+			<if test="chHour1 != null">
+				ch_hour1 = #{chHour1,jdbcType=INTEGER},
+			</if>
+			<if test="chHour2 != null">
+				ch_hour2 = #{chHour2,jdbcType=INTEGER},
+			</if>
+			<if test="chHour3 != null">
+				ch_hour3 = #{chHour3,jdbcType=INTEGER},
+			</if>
+			<if test="chHour4 != null">
+				ch_hour4 = #{chHour4,jdbcType=INTEGER},
+			</if>
+			<if test="chHour5 != null">
+				ch_hour5 = #{chHour5,jdbcType=INTEGER},
+			</if>
+			<if test="chHour6 != null">
+				ch_hour6 = #{chHour6,jdbcType=INTEGER},
+			</if>
+			<if test="chHour7 != null">
+				ch_hour7 = #{chHour7,jdbcType=INTEGER},
+			</if>
+			<if test="chHour8 != null">
+				ch_hour8 = #{chHour8,jdbcType=INTEGER},
+			</if>
+			<if test="chHour9 != null">
+				ch_hour9 = #{chHour9,jdbcType=INTEGER},
+			</if>
+			<if test="chHour10 != null">
+				ch_hour10 = #{chHour10,jdbcType=INTEGER},
+			</if>
+			<if test="chHour11 != null">
+				ch_hour11 = #{chHour11,jdbcType=INTEGER},
+			</if>
+			<if test="chHour12 != null">
+				ch_hour12 = #{chHour12,jdbcType=INTEGER},
+			</if>
+			<if test="chHour13 != null">
+				ch_hour13 = #{chHour13,jdbcType=INTEGER},
+			</if>
+			<if test="chHour14 != null">
+				ch_hour14 = #{chHour14,jdbcType=INTEGER},
+			</if>
+			<if test="chHour15 != null">
+				ch_hour15 = #{chHour15,jdbcType=INTEGER},
+			</if>
+			<if test="chHour16 != null">
+				ch_hour16 = #{chHour16,jdbcType=INTEGER},
+			</if>
+			<if test="chHour17 != null">
+				ch_hour17 = #{chHour17,jdbcType=INTEGER},
+			</if>
+			<if test="chHour18 != null">
+				ch_hour18 = #{chHour18,jdbcType=INTEGER},
+			</if>
+			<if test="chHour19 != null">
+				ch_hour19 = #{chHour19,jdbcType=INTEGER},
+			</if>
+			<if test="chHour20 != null">
+				ch_hour20 = #{chHour20,jdbcType=INTEGER},
+			</if>
+			<if test="chHour21 != null">
+				ch_hour21 = #{chHour21,jdbcType=INTEGER},
+			</if>
+			<if test="chHour22 != null">
+				ch_hour22 = #{chHour22,jdbcType=INTEGER},
+			</if>
+			<if test="chHour23 != null">
+				ch_hour23 = #{chHour23,jdbcType=INTEGER},
+			</if>
+			<if test="chHour24 != null">
+				ch_hour24 = #{chHour24,jdbcType=INTEGER},
+			</if>
+			<if test="aZero != null">
+				a_zero = #{aZero,jdbcType=INTEGER},
+			</if>
+			<if test="aType != null">
+				a_type = #{aType,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.ParkStandardCharge">
+		update
+		park_standard_charge
+		set card_type =
+		#{cardType,jdbcType=INTEGER},
+		free_time = #{freeTime,jdbcType=INTEGER},
+		is_free_time =
+		#{isFreeTime,jdbcType=INTEGER},
+		unit_type =
+		#{unitType,jdbcType=INTEGER},
+		is_unit_type =
+		#{isUnitType,jdbcType=INTEGER},
+		top_money =
+		#{topMoney,jdbcType=INTEGER},
+		ch_hour1 = #{chHour1,jdbcType=INTEGER},
+		ch_hour2 = #{chHour2,jdbcType=INTEGER},
+		ch_hour3 =
+		#{chHour3,jdbcType=INTEGER},
+		ch_hour4 = #{chHour4,jdbcType=INTEGER},
+		ch_hour5 = #{chHour5,jdbcType=INTEGER},
+		ch_hour6 =
+		#{chHour6,jdbcType=INTEGER},
+		ch_hour7 = #{chHour7,jdbcType=INTEGER},
+		ch_hour8 = #{chHour8,jdbcType=INTEGER},
+		ch_hour9 =
+		#{chHour9,jdbcType=INTEGER},
+		ch_hour10 = #{chHour10,jdbcType=INTEGER},
+		ch_hour11 = #{chHour11,jdbcType=INTEGER},
+		ch_hour12 =
+		#{chHour12,jdbcType=INTEGER},
+		ch_hour13 = #{chHour13,jdbcType=INTEGER},
+		ch_hour14 = #{chHour14,jdbcType=INTEGER},
+		ch_hour15 =
+		#{chHour15,jdbcType=INTEGER},
+		ch_hour16 = #{chHour16,jdbcType=INTEGER},
+		ch_hour17 = #{chHour17,jdbcType=INTEGER},
+		ch_hour18 =
+		#{chHour18,jdbcType=INTEGER},
+		ch_hour19 = #{chHour19,jdbcType=INTEGER},
+		ch_hour20 = #{chHour20,jdbcType=INTEGER},
+		ch_hour21 =
+		#{chHour21,jdbcType=INTEGER},
+		ch_hour22 = #{chHour22,jdbcType=INTEGER},
+		ch_hour23 = #{chHour23,jdbcType=INTEGER},
+		ch_hour24 =
+		#{chHour24,jdbcType=INTEGER},
+		a_zero = #{aZero,jdbcType=INTEGER},
+		a_type =
+		#{aType,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectByCondition" parameterType="com.drzk.vo.ParkStandardCharge"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_standard_charge
+		<where>
+			<if test="cardType != null">
+				card_type = #{cardType,jdbcType=INTEGER}
+			</if>
+			<if test="freeTime != null">
+				and free_time = #{freeTime,jdbcType=INTEGER}
+			</if>
+			<if test="isFreeTime != null">
+				and is_free_time = #{isFreeTime,jdbcType=INTEGER}
+			</if>
+			<if test="unitType != null">
+				and unit_type = #{unitType,jdbcType=INTEGER}
+			</if>
+			<if test="isUnitType != null">
+				and is_unit_type = #{isUnitType,jdbcType=INTEGER}
+			</if>
+			<if test="topMoney != null">
+				and top_money = #{topMoney,jdbcType=INTEGER}
+			</if>
+			<if test="chHour1 != null">
+				and ch_hour1 = #{chHour1,jdbcType=INTEGER}
+			</if>
+			<if test="chHour2 != null">
+				and ch_hour2 = #{chHour2,jdbcType=INTEGER}
+			</if>
+			<if test="chHour3 != null">
+				and ch_hour3 = #{chHour3,jdbcType=INTEGER}
+			</if>
+			<if test="chHour4 != null">
+				and ch_hour4 = #{chHour4,jdbcType=INTEGER}
+			</if>
+			<if test="chHour5 != null">
+				and ch_hour5 = #{chHour5,jdbcType=INTEGER}
+			</if>
+			<if test="chHour6 != null">
+				and ch_hour6 = #{chHour6,jdbcType=INTEGER}
+			</if>
+			<if test="chHour7 != null">
+				and ch_hour7 = #{chHour7,jdbcType=INTEGER}
+			</if>
+			<if test="chHour8 != null">
+				and ch_hour8 = #{chHour8,jdbcType=INTEGER}
+			</if>
+			<if test="chHour9 != null">
+				and ch_hour9 = #{chHour9,jdbcType=INTEGER}
+			</if>
+			<if test="chHour10 != null">
+				and ch_hour10 = #{chHour10,jdbcType=INTEGER}
+			</if>
+			<if test="chHour11 != null">
+				and ch_hour11 = #{chHour11,jdbcType=INTEGER}
+			</if>
+			<if test="chHour12 != null">
+				and ch_hour12 = #{chHour12,jdbcType=INTEGER}
+			</if>
+			<if test="chHour13 != null">
+				and ch_hour13 = #{chHour13,jdbcType=INTEGER}
+			</if>
+			<if test="chHour14 != null">
+				and ch_hour14 = #{chHour14,jdbcType=INTEGER}
+			</if>
+			<if test="chHour15 != null">
+				and ch_hour15 = #{chHour15,jdbcType=INTEGER}
+			</if>
+			<if test="chHour16 != null">
+				and ch_hour16 = #{chHour16,jdbcType=INTEGER}
+			</if>
+			<if test="chHour17 != null">
+				and ch_hour17 = #{chHour17,jdbcType=INTEGER}
+			</if>
+			<if test="chHour18 != null">
+				and ch_hour18 = #{chHour18,jdbcType=INTEGER}
+			</if>
+			<if test="chHour19 != null">
+				and ch_hour19 = #{chHour19,jdbcType=INTEGER}
+			</if>
+			<if test="chHour20 != null">
+				and ch_hour20 = #{chHour20,jdbcType=INTEGER}
+			</if>
+			<if test="chHour21 != null">
+				and ch_hour21 = #{chHour21,jdbcType=INTEGER}
+			</if>
+			<if test="chHour22 != null">
+				and ch_hour22 = #{chHour22,jdbcType=INTEGER}
+			</if>
+			<if test="chHour23 != null">
+				and ch_hour23 = #{chHour23,jdbcType=INTEGER}
+			</if>
+			<if test="chHour24 != null">
+				and ch_hour24 = #{chHour24,jdbcType=INTEGER}
+			</if>
+			<if test="aZero != null">
+				and a_zero = #{aZero,jdbcType=INTEGER}
+			</if>
+			<if test="aType != null">
+				and a_type = #{aType,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+	<select id="selectGroupByCardType" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		(select
+		<include refid="Base_Column_List" />
+		from park_standard_charge ORDER BY end_time desc ) as a GROUP BY
+		card_type
+	</select>
+
+	<select id="selectDSTop" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_standard_charge
+		where is_load =0 or is_load is null limit 100
+	</select>
+
+	<update id="updateDSStatus">
+		update park_standard_charge
+		set is_load = #{status}
+		where puid in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+</mapper>

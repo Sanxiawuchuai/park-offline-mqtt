@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.YktLoginMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.YktLogin">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="LogDate" jdbcType="TIMESTAMP" property="logdate" />
+		<result column="UserName" jdbcType="VARCHAR" property="username" />
+		<result column="Computer" jdbcType="VARCHAR" property="computer" />
+		<result column="LogObj" jdbcType="VARCHAR" property="logobj" />
+		<result column="LogMod" jdbcType="VARCHAR" property="logmod" />
+		<result column="LogCon" jdbcType="VARCHAR" property="logcon" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, LogDate, UserName, Computer, LogObj, LogMod, LogCon
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from ykt_login
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from ykt_login
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.YktLogin">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into ykt_login (id, LogDate, UserName,
+		Computer, LogObj, LogMod,
+		LogCon)
+		values (#{id,jdbcType=INTEGER}, #{logdate,jdbcType=TIMESTAMP},
+		#{username,jdbcType=VARCHAR},
+		#{computer,jdbcType=VARCHAR}, #{logobj,jdbcType=VARCHAR}, #{logmod,jdbcType=VARCHAR},
+		#{logcon,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.YktLogin">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into ykt_login
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="logdate != null">
+				LogDate,
+			</if>
+			<if test="username != null">
+				UserName,
+			</if>
+			<if test="computer != null">
+				Computer,
+			</if>
+			<if test="logobj != null">
+				LogObj,
+			</if>
+			<if test="logmod != null">
+				LogMod,
+			</if>
+			<if test="logcon != null">
+				LogCon,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="logdate != null">
+				#{logdate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="username != null">
+				#{username,jdbcType=VARCHAR},
+			</if>
+			<if test="computer != null">
+				#{computer,jdbcType=VARCHAR},
+			</if>
+			<if test="logobj != null">
+				#{logobj,jdbcType=VARCHAR},
+			</if>
+			<if test="logmod != null">
+				#{logmod,jdbcType=VARCHAR},
+			</if>
+			<if test="logcon != null">
+				#{logcon,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.YktLogin">
+		update ykt_login
+		<set>
+			<if test="logdate != null">
+				LogDate = #{logdate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="username != null">
+				UserName = #{username,jdbcType=VARCHAR},
+			</if>
+			<if test="computer != null">
+				Computer = #{computer,jdbcType=VARCHAR},
+			</if>
+			<if test="logobj != null">
+				LogObj = #{logobj,jdbcType=VARCHAR},
+			</if>
+			<if test="logmod != null">
+				LogMod = #{logmod,jdbcType=VARCHAR},
+			</if>
+			<if test="logcon != null">
+				LogCon = #{logcon,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.YktLogin">
+		update ykt_login
+		set LogDate = #{logdate,jdbcType=TIMESTAMP},
+		UserName = #{username,jdbcType=VARCHAR},
+		Computer = #{computer,jdbcType=VARCHAR},
+		LogObj = #{logobj,jdbcType=VARCHAR},
+		LogMod = #{logmod,jdbcType=VARCHAR},
+		LogCon = #{logcon,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.ParkDisDetailMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.ParkDisDetail">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="out_type" jdbcType="INTEGER" property="outType" />
+		<result column="discount_id" jdbcType="VARCHAR" property="discountId" />
+		<result column="card_id" jdbcType="VARCHAR" property="cardId" />
+		<result column="out_time" jdbcType="TIMESTAMP" property="outTime" />
+		<result column="discount_time" jdbcType="TIMESTAMP" property="discountTime" />
+		<result column="dis_amount" jdbcType="REAL" property="disAmount" />
+		<result column="dis_type" jdbcType="INTEGER" property="disType" />
+		<result column="online_id" jdbcType="VARCHAR" property="onlineId" />
+		<result column="puid" jdbcType="VARCHAR" property="puid" />
+		<result column="del_frag" jdbcType="INTEGER" property="delFrag" />
+		<result column="is_load" jdbcType="INTEGER" property="isLoad" />
+		<result column="car_no" jdbcType="VARCHAR" property="carNo" />
+		<result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, out_type, discount_id, card_id, out_time, discount_time, dis_amount,
+		dis_type,
+		online_id,puid,del_frag,is_load,car_no,in_time
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_dis_detail
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectByRecond" parameterType="com.drzk.vo.ParkDisDetail"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_dis_detail
+		<where>
+			<if test="outType != null">
+				out_type = #{outType,jdbcType=INTEGER}
+			</if>
+			<if test="discountId != null">
+				and discount_id = #{discountId,jdbcType=VARCHAR}
+			</if>
+			<if test="cardId != null">
+				and card_id = #{cardId,jdbcType=VARCHAR}
+			</if>
+			<if test="outTime != null">
+				and out_time = #{outTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="discountTime != null">
+				and discount_time = #{discountTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="disAmount != null">
+				and dis_amount = #{disAmount,jdbcType=REAL}
+			</if>
+			<if test="disType != null">
+				and dis_type = #{disType,jdbcType=INTEGER}
+			</if>
+			<if test="onlineId != null">
+				and online_id = #{onlineId,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from park_dis_detail
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.ParkDisDetail">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into park_dis_detail (id, out_type, discount_id,
+		card_id, out_time, discount_time,
+		dis_amount, dis_type, online_id,car_no,in_time
+		)
+		values (#{id,jdbcType=INTEGER}, #{outType,jdbcType=INTEGER},
+		#{discountId,jdbcType=VARCHAR},
+		#{cardId,jdbcType=VARCHAR}, #{outTime,jdbcType=TIMESTAMP}, #{discountTime,jdbcType=TIMESTAMP},
+		#{disAmount,jdbcType=REAL}, #{disType,jdbcType=INTEGER},
+		#{onlineId,jdbcType=VARCHAR},#{carNo,jdbcType=VARCHAR},#{inTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.ParkDisDetail">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into park_dis_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="outType != null">
+				out_type,
+			</if>
+			<if test="discountId != null">
+				discount_id,
+			</if>
+			<if test="cardId != null">
+				card_id,
+			</if>
+			<if test="outTime != null">
+				out_time,
+			</if>
+			<if test="discountTime != null">
+				discount_time,
+			</if>
+			<if test="disAmount != null">
+				dis_amount,
+			</if>
+			<if test="disType != null">
+				dis_type,
+			</if>
+			<if test="onlineId != null">
+				online_id,
+			</if>
+			<if test="carNo != null">
+				car_no,
+			</if>
+			<if test="inTime != null">
+				in_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="outType != null">
+				#{outType,jdbcType=INTEGER},
+			</if>
+			<if test="discountId != null">
+				#{discountId,jdbcType=VARCHAR},
+			</if>
+			<if test="cardId != null">
+				#{cardId,jdbcType=VARCHAR},
+			</if>
+			<if test="outTime != null">
+				#{outTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="discountTime != null">
+				#{discountTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="disAmount != null">
+				#{disAmount,jdbcType=REAL},
+			</if>
+			<if test="disType != null">
+				#{disType,jdbcType=INTEGER},
+			</if>
+			<if test="onlineId != null">
+				#{onlineId,jdbcType=VARCHAR},
+			</if>
+			<if test="carNo != null">
+				#{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="inTime != null">
+				#{inTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.ParkDisDetail">
+		update park_dis_detail
+		<set>
+			<if test="outType != null">
+				out_type = #{outType,jdbcType=INTEGER},
+			</if>
+			<if test="discountId != null">
+				discount_id = #{discountId,jdbcType=VARCHAR},
+			</if>
+			<if test="cardId != null">
+				card_id = #{cardId,jdbcType=VARCHAR},
+			</if>
+			<if test="outTime != null">
+				out_time = #{outTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="discountTime != null">
+				discount_time = #{discountTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="disAmount != null">
+				dis_amount = #{disAmount,jdbcType=REAL},
+			</if>
+			<if test="disType != null">
+				dis_type = #{disType,jdbcType=INTEGER},
+			</if>
+			<if test="onlineId != null">
+				online_id = #{onlineId,jdbcType=VARCHAR},
+			</if>
+			<if test="carNo != null">
+				car_no = #{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="inTime != null">
+				in_time = #{inTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.ParkDisDetail">
+		update park_dis_detail
+		set out_type = #{outType,jdbcType=INTEGER},
+		discount_id = #{discountId,jdbcType=VARCHAR},
+		card_id = #{cardId,jdbcType=VARCHAR},
+		out_time = #{outTime,jdbcType=TIMESTAMP},
+		discount_time = #{discountTime,jdbcType=TIMESTAMP},
+		dis_amount = #{disAmount,jdbcType=REAL},
+		dis_type = #{disType,jdbcType=INTEGER},
+		online_id = #{onlineId,jdbcType=VARCHAR},
+		car_no = #{carNO,jdbcType=VARCHAR},
+		in_time = #{inTime,jdbcType=TIMESTAMP},
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectDSTop" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_dis_detail
+		where is_load =0 or is_load is null limit 100
+	</select>
+	<update id="updateDSStatus">
+		update park_dis_detail
+		set is_load = #{status}
+		where puid in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+</mapper>

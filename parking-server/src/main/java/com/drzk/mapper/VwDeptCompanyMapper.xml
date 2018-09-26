@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.VwDeptCompanyMapper">
+  <resultMap id="BaseResultMap" type="com.drzk.vo.VwDeptCompany">
+    <result column="dept_id" jdbcType="INTEGER" property="deptId" />
+    <result column="dept_puid" jdbcType="VARCHAR" property="deptPuid" />
+    <result column="dept_name" jdbcType="VARCHAR" property="deptName" />
+    <result column="dept_parentid" jdbcType="INTEGER" property="deptParentid" />
+    <result column="dept_org_id" jdbcType="VARCHAR" property="deptOrgId" />
+    <result column="dept_update_flag" jdbcType="INTEGER" property="deptUpdateFlag" />
+    <result column="dept_is_load" jdbcType="INTEGER" property="deptIsLoad" />
+    <result column="comp_id" jdbcType="INTEGER" property="compId" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="company_cuid" jdbcType="VARCHAR" property="companyCuid" />
+    <result column="company_addr" jdbcType="VARCHAR" property="companyAddr" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="comp_phone" jdbcType="VARCHAR" property="compPhone" />
+    <result column="legel_person" jdbcType="VARCHAR" property="legelPerson" />
+    <result column="dept_parent_puid" jdbcType="VARCHAR" property="deptParentPuid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+  dept_id,dept_puid,dept_name,dept_parentid,dept_org_id,dept_update_flag,
+  dept_is_load,comp_id,company_name,company_cuid,company_addr,email,comp_phone,
+  legel_person,dept_parent_puid
+  </sql>
+  <insert id="insert" parameterType="com.drzk.vo.VwDeptCompany">
+    insert into vw_dept_company (dept_id, dept_puid, dept_name, 
+      dept_parentid, dept_org_id, dept_update_flag, 
+      dept_is_load, comp_id, company_name, 
+      company_cuid, company_addr, email, 
+      comp_phone, legel_person, dept_parent_puid
+      )
+    values (#{deptId,jdbcType=INTEGER}, #{deptPuid,jdbcType=VARCHAR}, #{deptName,jdbcType=VARCHAR}, 
+      #{deptParentid,jdbcType=INTEGER}, #{deptOrgId,jdbcType=VARCHAR}, #{deptUpdateFlag,jdbcType=INTEGER}, 
+      #{deptIsLoad,jdbcType=INTEGER}, #{compId,jdbcType=INTEGER}, #{companyName,jdbcType=VARCHAR}, 
+      #{companyCuid,jdbcType=VARCHAR}, #{companyAddr,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{compPhone,jdbcType=VARCHAR}, #{legelPerson,jdbcType=VARCHAR}, #{deptParentPuid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.drzk.vo.VwDeptCompany">
+    insert into vw_dept_company
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deptId != null">
+        dept_id,
+      </if>
+      <if test="deptPuid != null">
+        dept_puid,
+      </if>
+      <if test="deptName != null">
+        dept_name,
+      </if>
+      <if test="deptParentid != null">
+        dept_parentid,
+      </if>
+      <if test="deptOrgId != null">
+        dept_org_id,
+      </if>
+      <if test="deptUpdateFlag != null">
+        dept_update_flag,
+      </if>
+      <if test="deptIsLoad != null">
+        dept_is_load,
+      </if>
+      <if test="compId != null">
+        comp_id,
+      </if>
+      <if test="companyName != null">
+        company_name,
+      </if>
+      <if test="companyCuid != null">
+        company_cuid,
+      </if>
+      <if test="companyAddr != null">
+        company_addr,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="compPhone != null">
+        comp_phone,
+      </if>
+      <if test="legelPerson != null">
+        legel_person,
+      </if>
+      <if test="deptParentPuid != null">
+        dept_parent_puid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deptId != null">
+        #{deptId,jdbcType=INTEGER},
+      </if>
+      <if test="deptPuid != null">
+        #{deptPuid,jdbcType=VARCHAR},
+      </if>
+      <if test="deptName != null">
+        #{deptName,jdbcType=VARCHAR},
+      </if>
+      <if test="deptParentid != null">
+        #{deptParentid,jdbcType=INTEGER},
+      </if>
+      <if test="deptOrgId != null">
+        #{deptOrgId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptUpdateFlag != null">
+        #{deptUpdateFlag,jdbcType=INTEGER},
+      </if>
+      <if test="deptIsLoad != null">
+        #{deptIsLoad,jdbcType=INTEGER},
+      </if>
+      <if test="compId != null">
+        #{compId,jdbcType=INTEGER},
+      </if>
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyCuid != null">
+        #{companyCuid,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAddr != null">
+        #{companyAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="compPhone != null">
+        #{compPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="legelPerson != null">
+        #{legelPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="deptParentPuid != null">
+        #{deptParentPuid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id ="selectTopDS" resultMap="BaseResultMap">
+  select 
+  <include refid="Base_Column_List" />
+  from vw_dept_company
+  where dept_is_load =0  or dept_is_load is null
+  limit 100
+  </select>
+
+
+</mapper>

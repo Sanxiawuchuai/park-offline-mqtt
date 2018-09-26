@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:kie="http://drools.org/schema/kie-spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
+        http://drools.org/schema/kie-spring http://drools.org/schema/kie-spring.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	<kie:kmodule id="kmodule">
+		<kie:kbase name="parkcentre" packages="rules.parkcentre">
+			<kie:ksession name="ksession_centre" />
+		</kie:kbase>
+		<kie:kbase name="parkin" packages="rules.parkin">
+			<kie:ksession name="ksession_parkin" />
+		</kie:kbase>
+		<kie:kbase name="parkout" packages="rules.parkout">
+			<kie:ksession name="ksession_parkout" />
+		</kie:kbase>
+	</kie:kmodule>
+	 
+	<!--  <context:component-scan base-package="com.drzk.kie.*"/>-->
+    <bean id="kieAnnotationPostProcessor" class="org.kie.spring.annotations.KModuleAnnotationPostProcessor"/>
+	
+
+</beans>  

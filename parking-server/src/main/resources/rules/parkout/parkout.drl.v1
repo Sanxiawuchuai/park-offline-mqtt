@@ -1,0 +1,211 @@
+package rules.parkout
+import com.drzk.fact.OutRealTimeBase;
+import com.drzk.common.InOutRealTimeBase;
+import com.drzk.vo.ParkCarIn;
+import java.util.List;
+global com.drzk.service.IParkingService parkOutService
+
+
+//判断大小车场
+rule "is small park"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()==0,!statusMap.containsKey("isSmallPark"))
+then
+	boolean $isSmallPark=parkOutService.isSmallPark($parkOut.getConIndex());//
+	System.out.println("判断大小车场:"+$isSmallPark);
+	modify($parkOut){getStatusMap().put("isSmallPark",$isSmallPark)}
+end
+
+//是否是特种车或者黑名单(因为数据在一张表，所以统一获取)
+rule "is special or black car"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()==0,!statusMap.containsKey("specialOrBlackCar"))
+then
+	int $specialOrBlackCar = parkOutService.getSpecialOrBlackCar($parkOut.getCarNo());
+	modify($parkOut){getStatusMap().put("specialOrBlackCar",$specialOrBlackCar)}
+end
+
+//是否是特种车辆
+rule "is special car"
+no-loop true
+when 
+	$parkOut : OutRealTimeBase(getFlag()==0,!statusMap.containsKey("isSpecialCar"),statusMap.containsKey("specialOrBlackCar"),statusMap["specialOrBlackCar"]==InOutRealTimeBase.CAR_SPECIAL)
+then
+	//boolean $isSpecialCar = parkOutService.isSpecialCar($parkOut.getCarNo());
+	System.out.println("特种车辆");
+	modify($parkOut){getStatusMap().put("isSpecialCar",true),setFlag(InOutRealTimeBase.FLAG_ALLOW_IN)}
+end
+
+//是否是黑名单
+rule "is black list"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()==0,!statusMap.containsKey("isBlackList"),statusMap.containsKey("specialOrBlackCar"),statusMap["specialOrBlackCar"]==InOutRealTimeBase.CAR_BLACK_LIST)
+then
+	//boolean $isBlackList = parkOutService.isBlackList($parkOut.getCarNo());
+	System.out.println("是黑名单");
+	modify($parkOut){getStatusMap().put("isBlackList",true),setFlag(InOutRealTimeBase.FLAG_BLACK_LIST)}
+end
+
+//获取车辆的类型
+rule "get car type"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()==0,!statusMap.containsKey("cardType"))
+then
+	int $cardType = (int)parkOutService.getCardType($parkOut.getCarNo());
+	System.out.println("车辆的类型:"+$cardType);
+	modify($parkOut){getStatusMap().put("cardType",$cardType),setCardType($cardType)}
+end
+
+//是否是固定车
+rule "is regular car"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()==0,!statusMap.containsKey("isRegularCar"))
+then
+	boolean $isRegularCar = parkOutService.isRegularCar($parkOut.getCardType());
+	System.out.println("是否是固定车:"+$isRegularCar);
+	modify($parkOut){getStatusMap().put("isRegularCar",$isRegularCar)}
+end
+
+//是否过期
+rule "is card type expire"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()==0,!statusMap.containsKey("isCardTypeExpire"),statusMap.containsKey("isRegularCar"),statusMap["isRegularCar"]==true)
+then
+	boolean $isCardTypeExpire = parkOutService.isCardTypeExpire($parkOut.getCardType(),$parkOut.getCarNo());
+	System.out.println("是否过期:"+$isCardTypeExpire);
+	modify($parkOut){getStatusMap().put("isCardTypeExpire",$isCardTypeExpire),setFlag($isCardTypeExpire? InOutRealTimeBase.FLAG_CARD_EXPIRE:0)}
+end
+
+//检查通道权限
+rule "is car type channel power"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()==0,!statusMap.containsKey("isCarTypeChannelPower"))
+then
+	boolean $isCarTypeChannelPower = parkOutService.isCarTypeChannelPower($parkOut.getCarNo(),$parkOut.getCardType(),$parkOut.getConIndex());
+	System.out.println("通道权限:"+$isCarTypeChannelPower);
+	modify($parkOut){getStatusMap().put("isCarTypeChannelPower",$isCarTypeChannelPower),setFlag($isCarTypeChannelPower? InOutRealTimeBase.FLAG_ALLOW_IN:InOutRealTimeBase.FLAG_NO_POWER)}
+end
+
+//检查是否有入场记录
+rule "has parking in record"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()==InOutRealTimeBase.FLAG_ALLOW_IN,!statusMap.containsKey("hasParkingInRecord"))
+then
+	ParkCarIn $hasParkingInRecord = parkOutService.hasParkInRecord($parkOut.getCarNo());
+	System.out.println("入场记录:"+$hasParkingInRecord);
+	modify($parkOut){setInModel($hasParkingInRecord),getStatusMap().put("hasParkingInRecord",$hasParkingInRecord),setFlag($hasParkingInRecord==null? InOutRealTimeBase.FLAG_NO_RECORD:InOutRealTimeBase.FLAG_HAS_RECORD)}
+end
+
+//获取相似车牌
+rule "get similar carno"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()==InOutRealTimeBase.FLAG_NO_RECORD,!statusMap.containsKey("similarCarno"))
+then
+	List<ParkCarIn> $similarCarNo = parkOutService.getSimilarCar($parkOut.getCarNo());
+	System.out.println("获取相似车牌");
+	modify($parkOut){getStatusMap().put("similarCarno",$similarCarNo)}
+end
+
+//将相似车牌发送给岗亭
+rule "send similar carno"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()==InOutRealTimeBase.FLAG_NO_RECORD,!statusMap.containsKey("sendSimilarCarno"))
+then
+	parkOutService.sendSimilarCar((List<ParkCarIn>)$parkOut.getStatusMap().get("similarCarno"));
+	System.out.println("发送相似车牌");
+end
+
+//检查费用是否结清
+rule "is arrears"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()==InOutRealTimeBase.FLAG_HAS_RECORD,!statusMap.containsKey("isArrears"))
+then
+	boolean $isArrears = parkOutService.isArrears($parkOut);
+	System.out.println("费用是否结清:"+$isArrears);
+	modify($parkOut){getStatusMap().put("isArrears",$isArrears),setFlag($isArrears? InOutRealTimeBase.FLAG_NO_ARREARS:InOutRealTimeBase.FLAG_ARREARS)}
+end
+
+//将欠费情况发送给岗亭
+rule "send arrears to local"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()==InOutRealTimeBase.FLAG_ARREARS,!statusMap.containsKey("sendArrearsToLocal"))
+then
+	parkOutService.sendArrearsToLocal($parkOut.getConIndex());
+	System.out.println("发送欠费情况");
+end
+	
+
+//出场是否需要确认
+rule "is need confirm"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()==InOutRealTimeBase.FLAG_NO_ARREARS,!statusMap.containsKey("isNeedConfirm"))
+then
+	boolean $isNeedConfirm = parkOutService.isNeedConfirm();
+	System.out.println("是否需要确认:"+$isNeedConfirm);
+	modify($parkOut){getStatusMap().put("isNeedConfirm",$isNeedConfirm),setFlag($isNeedConfirm?InOutRealTimeBase.FLAG_NEED_CONFIRM:InOutRealTimeBase.FLAG_NOT_NEED_CONFIRM)}
+end
+
+//通知岗亭确认开闸
+rule "notify confirm"
+no-loop true
+when 
+	$parkOut : OutRealTimeBase(getFlag()==InOutRealTimeBase.FLAG_NEED_CONFIRM,!statusMap.containsKey("notifyConfirm"))
+then
+	parkOutService.isNeedConfirm();
+	System.out.println("通知岗亭确认");
+	modify($parkOut){getStatusMap().put("notifyConfirm",true)}
+end
+
+//岗亭是否取消
+rule "is cancel"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()==InOutRealTimeBase.FLAG_NEED_CONFIRM,statusMap.containsKey("isCancel"),statusMap.containsKey("notifyConfirm"),statusMap["notifyConfirm"]==true)
+then
+	boolean $isCancel = (boolean)$parkOut.getStatusMap().get("isCancel");
+	System.out.println("岗亭是否取消:"+$isCancel);
+	modify($parkOut){setFlag($isCancel? InOutRealTimeBase.FLAG_YES:InOutRealTimeBase.FLAG_CANCEL)}
+end
+
+//播报语音
+rule "broadcast voice"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()!=InOutRealTimeBase.FLAG_DEFAULT)
+then
+	System.out.println("播报语音");
+	parkOutService.broadcastVoice($parkOut.getFlag(),$parkOut.getConIndex());
+end
+
+//保存记录
+rule "save record"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()==InOutRealTimeBase.FLAG_NOT_NEED_CONFIRM || getFlag()==InOutRealTimeBase.FLAG_YES)
+then
+	System.out.println("保存记录");
+	parkOutService.saveParkOutRecord($parkOut);	
+end
+
+//开闸
+rule "open"
+no-loop true
+when
+	$parkOut : OutRealTimeBase(getFlag()==InOutRealTimeBase.FLAG_NOT_NEED_CONFIRM || getFlag()==InOutRealTimeBase.FLAG_YES)
+then
+	System.out.println("开闸");
+	parkOutService.open($parkOut.getConIndex());
+end

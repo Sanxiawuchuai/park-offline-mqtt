@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.ParkTrafficStatisticsMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.ParkTrafficStatistics">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="s_date" jdbcType="DATE" property="sDate" />
+		<result column="s_time" jdbcType="INTEGER" property="sTime" />
+		<result column="hand_gate" jdbcType="INTEGER" property="handGate" />
+		<result column="computer_gate" jdbcType="INTEGER" property="computerGate" />
+		<result column="month_card_in_a" jdbcType="INTEGER" property="monthCardInA" />
+		<result column="month_card_out_a" jdbcType="INTEGER" property="monthCardOutA" />
+		<result column="month_card_in_b" jdbcType="INTEGER" property="monthCardInB" />
+		<result column="month_card_out_b" jdbcType="INTEGER" property="monthCardOutB" />
+		<result column="month_card_in_c" jdbcType="INTEGER" property="monthCardInC" />
+		<result column="month_card_out_c" jdbcType="INTEGER" property="monthCardOutC" />
+		<result column="month_card_in_d" jdbcType="INTEGER" property="monthCardInD" />
+		<result column="month_card_out_d" jdbcType="INTEGER" property="monthCardOutD" />
+		<result column="month_tmp_in_a" jdbcType="INTEGER" property="monthTmpInA" />
+		<result column="month_tmp_out_a" jdbcType="INTEGER" property="monthTmpOutA" />
+		<result column="month_tmp_in_b" jdbcType="INTEGER" property="monthTmpInB" />
+		<result column="month_tmp_out_b" jdbcType="INTEGER" property="monthTmpOutB" />
+		<result column="month_tmp_in_c" jdbcType="INTEGER" property="monthTmpInC" />
+		<result column="month_tmp_out_c" jdbcType="INTEGER" property="monthTmpOutC" />
+		<result column="month_tmp_in_d" jdbcType="INTEGER" property="monthTmpInD" />
+		<result column="month_tmp_out_d" jdbcType="INTEGER" property="monthTmpOutD" />
+		<result column="temp_card_in_a" jdbcType="INTEGER" property="tempCardInA" />
+		<result column="temp_card_out_a" jdbcType="INTEGER" property="tempCardOutA" />
+		<result column="temp_card_in_b" jdbcType="INTEGER" property="tempCardInB" />
+		<result column="temp_card_out_b" jdbcType="INTEGER" property="tempCardOutB" />
+		<result column="temp_card_in_c" jdbcType="INTEGER" property="tempCardInC" />
+		<result column="temp_card_out_c" jdbcType="INTEGER" property="tempCardOutC" />
+		<result column="temp_card_in_d" jdbcType="INTEGER" property="tempCardInD" />
+		<result column="temp_card_out_d" jdbcType="INTEGER" property="tempCardOutD" />
+		<result column="temp_free_in_card" jdbcType="INTEGER" property="tempFreeInCard" />
+		<result column="temp_free_out_card" jdbcType="INTEGER"
+			property="tempFreeOutCard" />
+		<result column="free_card_in_a" jdbcType="INTEGER" property="freeCardInA" />
+		<result column="free_card_out_a" jdbcType="INTEGER" property="freeCardOutA" />
+		<result column="free_card_in_b" jdbcType="INTEGER" property="freeCardInB" />
+		<result column="free_card_out_b" jdbcType="INTEGER" property="freeCardOutB" />
+		<result column="stored_card_in_a" jdbcType="INTEGER" property="storedCardInA" />
+		<result column="stored_card_out_a" jdbcType="INTEGER" property="storedCardOutA" />
+		<result column="stored_card_in_b" jdbcType="INTEGER" property="storedCardInB" />
+		<result column="stored_card_out_b" jdbcType="INTEGER" property="storedCardOutB" />
+		<result column="stored_card_in_c" jdbcType="INTEGER" property="storedCardInC" />
+		<result column="stored_card_out_c" jdbcType="INTEGER" property="storedCardOutC" />
+		<result column="stored_card_in_d" jdbcType="INTEGER" property="storedCardInD" />
+		<result column="stored_card_out_d" jdbcType="INTEGER" property="storedCardOutD" />
+		<result column="stored_temp_in_a" jdbcType="INTEGER" property="storedTempInA" />
+		<result column="stored_temp_out_a" jdbcType="INTEGER" property="storedTempOutA" />
+		<result column="stored_temp_in_b" jdbcType="INTEGER" property="storedTempInB" />
+		<result column="stored_temp_out_b" jdbcType="INTEGER" property="storedTempOutB" />
+		<result column="stored_temp_in_c" jdbcType="INTEGER" property="storedTempInC" />
+		<result column="stored_temp_out_c" jdbcType="INTEGER" property="storedTempOutC" />
+		<result column="stored_temp_in_d" jdbcType="INTEGER" property="storedTempInD" />
+		<result column="stored_temp_out_d" jdbcType="INTEGER" property="storedTempOutD" />
+		<result column="all_in_count" jdbcType="INTEGER" property="allInCount" />
+		<result column="all_out_count" jdbcType="INTEGER" property="allOutCount" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, s_date, s_time, hand_gate, computer_gate, month_card_in_a,
+		month_card_out_a,
+		month_card_in_b, month_card_out_b, month_card_in_c, month_card_out_c, month_card_in_d,
+		month_card_out_d, month_tmp_in_a, month_tmp_out_a, month_tmp_in_b,
+		month_tmp_out_b,
+		month_tmp_in_c, month_tmp_out_c, month_tmp_in_d, month_tmp_out_d, temp_card_in_a,
+		temp_card_out_a, temp_card_in_b, temp_card_out_b, temp_card_in_c,
+		temp_card_out_c,
+		temp_card_in_d, temp_card_out_d, temp_free_in_card, temp_free_out_card,
+		free_card_in_a,
+		free_card_out_a, free_card_in_b, free_card_out_b, stored_card_in_a, stored_card_out_a,
+		stored_card_in_b, stored_card_out_b, stored_card_in_c,
+		stored_card_out_c, stored_card_in_d,
+		stored_card_out_d, stored_temp_in_a, stored_temp_out_a, stored_temp_in_b,
+		stored_temp_out_b,
+		stored_temp_in_c, stored_temp_out_c, stored_temp_in_d, stored_temp_out_d, all_in_count,
+		all_out_count
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_traffic_statistics
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from park_traffic_statistics
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.ParkTrafficStatistics">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into park_traffic_statistics (id, s_date, s_time,
+		hand_gate, computer_gate, month_card_in_a,
+		month_card_out_a, month_card_in_b, month_card_out_b,
+		month_card_in_c, month_card_out_c, month_card_in_d,
+		month_card_out_d, month_tmp_in_a, month_tmp_out_a,
+		month_tmp_in_b, month_tmp_out_b, month_tmp_in_c,
+		month_tmp_out_c, month_tmp_in_d, month_tmp_out_d,
+		temp_card_in_a, temp_card_out_a, temp_card_in_b,
+		temp_card_out_b, temp_card_in_c, temp_card_out_c,
+		temp_card_in_d, temp_card_out_d, temp_free_in_card,
+		temp_free_out_card, free_card_in_a, free_card_out_a,
+		free_card_in_b, free_card_out_b, stored_card_in_a,
+		stored_card_out_a, stored_card_in_b, stored_card_out_b,
+		stored_card_in_c, stored_card_out_c, stored_card_in_d,
+		stored_card_out_d, stored_temp_in_a, stored_temp_out_a,
+		stored_temp_in_b, stored_temp_out_b, stored_temp_in_c,
+		stored_temp_out_c, stored_temp_in_d, stored_temp_out_d,
+		all_in_count, all_out_count)
+		values (#{id,jdbcType=INTEGER}, #{sDate,jdbcType=DATE},
+		#{sTime,jdbcType=INTEGER},
+		#{handGate,jdbcType=INTEGER}, #{computerGate,jdbcType=INTEGER}, #{monthCardInA,jdbcType=INTEGER},
+		#{monthCardOutA,jdbcType=INTEGER}, #{monthCardInB,jdbcType=INTEGER},
+		#{monthCardOutB,jdbcType=INTEGER},
+		#{monthCardInC,jdbcType=INTEGER}, #{monthCardOutC,jdbcType=INTEGER}, #{monthCardInD,jdbcType=INTEGER},
+		#{monthCardOutD,jdbcType=INTEGER}, #{monthTmpInA,jdbcType=INTEGER},
+		#{monthTmpOutA,jdbcType=INTEGER},
+		#{monthTmpInB,jdbcType=INTEGER}, #{monthTmpOutB,jdbcType=INTEGER}, #{monthTmpInC,jdbcType=INTEGER},
+		#{monthTmpOutC,jdbcType=INTEGER}, #{monthTmpInD,jdbcType=INTEGER},
+		#{monthTmpOutD,jdbcType=INTEGER},
+		#{tempCardInA,jdbcType=INTEGER}, #{tempCardOutA,jdbcType=INTEGER}, #{tempCardInB,jdbcType=INTEGER},
+		#{tempCardOutB,jdbcType=INTEGER}, #{tempCardInC,jdbcType=INTEGER},
+		#{tempCardOutC,jdbcType=INTEGER},
+		#{tempCardInD,jdbcType=INTEGER}, #{tempCardOutD,jdbcType=INTEGER}, #{tempFreeInCard,jdbcType=INTEGER},
+		#{tempFreeOutCard,jdbcType=INTEGER}, #{freeCardInA,jdbcType=INTEGER},
+		#{freeCardOutA,jdbcType=INTEGER},
+		#{freeCardInB,jdbcType=INTEGER}, #{freeCardOutB,jdbcType=INTEGER}, #{storedCardInA,jdbcType=INTEGER},
+		#{storedCardOutA,jdbcType=INTEGER}, #{storedCardInB,jdbcType=INTEGER},
+		#{storedCardOutB,jdbcType=INTEGER},
+		#{storedCardInC,jdbcType=INTEGER}, #{storedCardOutC,jdbcType=INTEGER},
+		#{storedCardInD,jdbcType=INTEGER},
+		#{storedCardOutD,jdbcType=INTEGER}, #{storedTempInA,jdbcType=INTEGER},
+		#{storedTempOutA,jdbcType=INTEGER},
+		#{storedTempInB,jdbcType=INTEGER}, #{storedTempOutB,jdbcType=INTEGER},
+		#{storedTempInC,jdbcType=INTEGER},
+		#{storedTempOutC,jdbcType=INTEGER}, #{storedTempInD,jdbcType=INTEGER},
+		#{storedTempOutD,jdbcType=INTEGER},
+		#{allInCount,jdbcType=INTEGER}, #{allOutCount,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.ParkTrafficStatistics">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into park_traffic_statistics
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="sDate != null">
+				s_date,
+			</if>
+			<if test="sTime != null">
+				s_time,
+			</if>
+			<if test="handGate != null">
+				hand_gate,
+			</if>
+			<if test="computerGate != null">
+				computer_gate,
+			</if>
+			<if test="monthCardInA != null">
+				month_card_in_a,
+			</if>
+			<if test="monthCardOutA != null">
+				month_card_out_a,
+			</if>
+			<if test="monthCardInB != null">
+				month_card_in_b,
+			</if>
+			<if test="monthCardOutB != null">
+				month_card_out_b,
+			</if>
+			<if test="monthCardInC != null">
+				month_card_in_c,
+			</if>
+			<if test="monthCardOutC != null">
+				month_card_out_c,
+			</if>
+			<if test="monthCardInD != null">
+				month_card_in_d,
+			</if>
+			<if test="monthCardOutD != null">
+				month_card_out_d,
+			</if>
+			<if test="monthTmpInA != null">
+				month_tmp_in_a,
+			</if>
+			<if test="monthTmpOutA != null">
+				month_tmp_out_a,
+			</if>
+			<if test="monthTmpInB != null">
+				month_tmp_in_b,
+			</if>
+			<if test="monthTmpOutB != null">
+				month_tmp_out_b,
+			</if>
+			<if test="monthTmpInC != null">
+				month_tmp_in_c,
+			</if>
+			<if test="monthTmpOutC != null">
+				month_tmp_out_c,
+			</if>
+			<if test="monthTmpInD != null">
+				month_tmp_in_d,
+			</if>
+			<if test="monthTmpOutD != null">
+				month_tmp_out_d,
+			</if>
+			<if test="tempCardInA != null">
+				temp_card_in_a,
+			</if>
+			<if test="tempCardOutA != null">
+				temp_card_out_a,
+			</if>
+			<if test="tempCardInB != null">
+				temp_card_in_b,
+			</if>
+			<if test="tempCardOutB != null">
+				temp_card_out_b,
+			</if>
+			<if test="tempCardInC != null">
+				temp_card_in_c,
+			</if>
+			<if test="tempCardOutC != null">
+				temp_card_out_c,
+			</if>
+			<if test="tempCardInD != null">
+				temp_card_in_d,
+			</if>
+			<if test="tempCardOutD != null">
+				temp_card_out_d,
+			</if>
+			<if test="tempFreeInCard != null">
+				temp_free_in_card,
+			</if>
+			<if test="tempFreeOutCard != null">
+				temp_free_out_card,
+			</if>
+			<if test="freeCardInA != null">
+				free_card_in_a,
+			</if>
+			<if test="freeCardOutA != null">
+				free_card_out_a,
+			</if>
+			<if test="freeCardInB != null">
+				free_card_in_b,
+			</if>
+			<if test="freeCardOutB != null">
+				free_card_out_b,
+			</if>
+			<if test="storedCardInA != null">
+				stored_card_in_a,
+			</if>
+			<if test="storedCardOutA != null">
+				stored_card_out_a,
+			</if>
+			<if test="storedCardInB != null">
+				stored_card_in_b,
+			</if>
+			<if test="storedCardOutB != null">
+				stored_card_out_b,
+			</if>
+			<if test="storedCardInC != null">
+				stored_card_in_c,
+			</if>
+			<if test="storedCardOutC != null">
+				stored_card_out_c,
+			</if>
+			<if test="storedCardInD != null">
+				stored_card_in_d,
+			</if>
+			<if test="storedCardOutD != null">
+				stored_card_out_d,
+			</if>
+			<if test="storedTempInA != null">
+				stored_temp_in_a,
+			</if>
+			<if test="storedTempOutA != null">
+				stored_temp_out_a,
+			</if>
+			<if test="storedTempInB != null">
+				stored_temp_in_b,
+			</if>
+			<if test="storedTempOutB != null">
+				stored_temp_out_b,
+			</if>
+			<if test="storedTempInC != null">
+				stored_temp_in_c,
+			</if>
+			<if test="storedTempOutC != null">
+				stored_temp_out_c,
+			</if>
+			<if test="storedTempInD != null">
+				stored_temp_in_d,
+			</if>
+			<if test="storedTempOutD != null">
+				stored_temp_out_d,
+			</if>
+			<if test="allInCount != null">
+				all_in_count,
+			</if>
+			<if test="allOutCount != null">
+				all_out_count,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="sDate != null">
+				#{sDate,jdbcType=DATE},
+			</if>
+			<if test="sTime != null">
+				#{sTime,jdbcType=INTEGER},
+			</if>
+			<if test="handGate != null">
+				#{handGate,jdbcType=INTEGER},
+			</if>
+			<if test="computerGate != null">
+				#{computerGate,jdbcType=INTEGER},
+			</if>
+			<if test="monthCardInA != null">
+				#{monthCardInA,jdbcType=INTEGER},
+			</if>
+			<if test="monthCardOutA != null">
+				#{monthCardOutA,jdbcType=INTEGER},
+			</if>
+			<if test="monthCardInB != null">
+				#{monthCardInB,jdbcType=INTEGER},
+			</if>
+			<if test="monthCardOutB != null">
+				#{monthCardOutB,jdbcType=INTEGER},
+			</if>
+			<if test="monthCardInC != null">
+				#{monthCardInC,jdbcType=INTEGER},
+			</if>
+			<if test="monthCardOutC != null">
+				#{monthCardOutC,jdbcType=INTEGER},
+			</if>
+			<if test="monthCardInD != null">
+				#{monthCardInD,jdbcType=INTEGER},
+			</if>
+			<if test="monthCardOutD != null">
+				#{monthCardOutD,jdbcType=INTEGER},
+			</if>
+			<if test="monthTmpInA != null">
+				#{monthTmpInA,jdbcType=INTEGER},
+			</if>
+			<if test="monthTmpOutA != null">
+				#{monthTmpOutA,jdbcType=INTEGER},
+			</if>
+			<if test="monthTmpInB != null">
+				#{monthTmpInB,jdbcType=INTEGER},
+			</if>
+			<if test="monthTmpOutB != null">
+				#{monthTmpOutB,jdbcType=INTEGER},
+			</if>
+			<if test="monthTmpInC != null">
+				#{monthTmpInC,jdbcType=INTEGER},
+			</if>
+			<if test="monthTmpOutC != null">
+				#{monthTmpOutC,jdbcType=INTEGER},
+			</if>
+			<if test="monthTmpInD != null">
+				#{monthTmpInD,jdbcType=INTEGER},
+			</if>
+			<if test="monthTmpOutD != null">
+				#{monthTmpOutD,jdbcType=INTEGER},
+			</if>
+			<if test="tempCardInA != null">
+				#{tempCardInA,jdbcType=INTEGER},
+			</if>
+			<if test="tempCardOutA != null">
+				#{tempCardOutA,jdbcType=INTEGER},
+			</if>
+			<if test="tempCardInB != null">
+				#{tempCardInB,jdbcType=INTEGER},
+			</if>
+			<if test="tempCardOutB != null">
+				#{tempCardOutB,jdbcType=INTEGER},
+			</if>
+			<if test="tempCardInC != null">
+				#{tempCardInC,jdbcType=INTEGER},
+			</if>
+			<if test="tempCardOutC != null">
+				#{tempCardOutC,jdbcType=INTEGER},
+			</if>
+			<if test="tempCardInD != null">
+				#{tempCardInD,jdbcType=INTEGER},
+			</if>
+			<if test="tempCardOutD != null">
+				#{tempCardOutD,jdbcType=INTEGER},
+			</if>
+			<if test="tempFreeInCard != null">
+				#{tempFreeInCard,jdbcType=INTEGER},
+			</if>
+			<if test="tempFreeOutCard != null">
+				#{tempFreeOutCard,jdbcType=INTEGER},
+			</if>
+			<if test="freeCardInA != null">
+				#{freeCardInA,jdbcType=INTEGER},
+			</if>
+			<if test="freeCardOutA != null">
+				#{freeCardOutA,jdbcType=INTEGER},
+			</if>
+			<if test="freeCardInB != null">
+				#{freeCardInB,jdbcType=INTEGER},
+			</if>
+			<if test="freeCardOutB != null">
+				#{freeCardOutB,jdbcType=INTEGER},
+			</if>
+			<if test="storedCardInA != null">
+				#{storedCardInA,jdbcType=INTEGER},
+			</if>
+			<if test="storedCardOutA != null">
+				#{storedCardOutA,jdbcType=INTEGER},
+			</if>
+			<if test="storedCardInB != null">
+				#{storedCardInB,jdbcType=INTEGER},
+			</if>
+			<if test="storedCardOutB != null">
+				#{storedCardOutB,jdbcType=INTEGER},
+			</if>
+			<if test="storedCardInC != null">
+				#{storedCardInC,jdbcType=INTEGER},
+			</if>
+			<if test="storedCardOutC != null">
+				#{storedCardOutC,jdbcType=INTEGER},
+			</if>
+			<if test="storedCardInD != null">
+				#{storedCardInD,jdbcType=INTEGER},
+			</if>
+			<if test="storedCardOutD != null">
+				#{storedCardOutD,jdbcType=INTEGER},
+			</if>
+			<if test="storedTempInA != null">
+				#{storedTempInA,jdbcType=INTEGER},
+			</if>
+			<if test="storedTempOutA != null">
+				#{storedTempOutA,jdbcType=INTEGER},
+			</if>
+			<if test="storedTempInB != null">
+				#{storedTempInB,jdbcType=INTEGER},
+			</if>
+			<if test="storedTempOutB != null">
+				#{storedTempOutB,jdbcType=INTEGER},
+			</if>
+			<if test="storedTempInC != null">
+				#{storedTempInC,jdbcType=INTEGER},
+			</if>
+			<if test="storedTempOutC != null">
+				#{storedTempOutC,jdbcType=INTEGER},
+			</if>
+			<if test="storedTempInD != null">
+				#{storedTempInD,jdbcType=INTEGER},
+			</if>
+			<if test="storedTempOutD != null">
+				#{storedTempOutD,jdbcType=INTEGER},
+			</if>
+			<if test="allInCount != null">
+				#{allInCount,jdbcType=INTEGER},
+			</if>
+			<if test="allOutCount != null">
+				#{allOutCount,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.ParkTrafficStatistics">
+		update park_traffic_statistics
+		<set>
+			<if test="sDate != null">
+				s_date = #{sDate,jdbcType=DATE},
+			</if>
+			<if test="sTime != null">
+				s_time = #{sTime,jdbcType=INTEGER},
+			</if>
+			<if test="handGate != null">
+				hand_gate = #{handGate,jdbcType=INTEGER},
+			</if>
+			<if test="computerGate != null">
+				computer_gate = #{computerGate,jdbcType=INTEGER},
+			</if>
+			<if test="monthCardInA != null">
+				month_card_in_a = #{monthCardInA,jdbcType=INTEGER},
+			</if>
+			<if test="monthCardOutA != null">
+				month_card_out_a = #{monthCardOutA,jdbcType=INTEGER},
+			</if>
+			<if test="monthCardInB != null">
+				month_card_in_b = #{monthCardInB,jdbcType=INTEGER},
+			</if>
+			<if test="monthCardOutB != null">
+				month_card_out_b = #{monthCardOutB,jdbcType=INTEGER},
+			</if>
+			<if test="monthCardInC != null">
+				month_card_in_c = #{monthCardInC,jdbcType=INTEGER},
+			</if>
+			<if test="monthCardOutC != null">
+				month_card_out_c = #{monthCardOutC,jdbcType=INTEGER},
+			</if>
+			<if test="monthCardInD != null">
+				month_card_in_d = #{monthCardInD,jdbcType=INTEGER},
+			</if>
+			<if test="monthCardOutD != null">
+				month_card_out_d = #{monthCardOutD,jdbcType=INTEGER},
+			</if>
+			<if test="monthTmpInA != null">
+				month_tmp_in_a = #{monthTmpInA,jdbcType=INTEGER},
+			</if>
+			<if test="monthTmpOutA != null">
+				month_tmp_out_a = #{monthTmpOutA,jdbcType=INTEGER},
+			</if>
+			<if test="monthTmpInB != null">
+				month_tmp_in_b = #{monthTmpInB,jdbcType=INTEGER},
+			</if>
+			<if test="monthTmpOutB != null">
+				month_tmp_out_b = #{monthTmpOutB,jdbcType=INTEGER},
+			</if>
+			<if test="monthTmpInC != null">
+				month_tmp_in_c = #{monthTmpInC,jdbcType=INTEGER},
+			</if>
+			<if test="monthTmpOutC != null">
+				month_tmp_out_c = #{monthTmpOutC,jdbcType=INTEGER},
+			</if>
+			<if test="monthTmpInD != null">
+				month_tmp_in_d = #{monthTmpInD,jdbcType=INTEGER},
+			</if>
+			<if test="monthTmpOutD != null">
+				month_tmp_out_d = #{monthTmpOutD,jdbcType=INTEGER},
+			</if>
+			<if test="tempCardInA != null">
+				temp_card_in_a = #{tempCardInA,jdbcType=INTEGER},
+			</if>
+			<if test="tempCardOutA != null">
+				temp_card_out_a = #{tempCardOutA,jdbcType=INTEGER},
+			</if>
+			<if test="tempCardInB != null">
+				temp_card_in_b = #{tempCardInB,jdbcType=INTEGER},
+			</if>
+			<if test="tempCardOutB != null">
+				temp_card_out_b = #{tempCardOutB,jdbcType=INTEGER},
+			</if>
+			<if test="tempCardInC != null">
+				temp_card_in_c = #{tempCardInC,jdbcType=INTEGER},
+			</if>
+			<if test="tempCardOutC != null">
+				temp_card_out_c = #{tempCardOutC,jdbcType=INTEGER},
+			</if>
+			<if test="tempCardInD != null">
+				temp_card_in_d = #{tempCardInD,jdbcType=INTEGER},
+			</if>
+			<if test="tempCardOutD != null">
+				temp_card_out_d = #{tempCardOutD,jdbcType=INTEGER},
+			</if>
+			<if test="tempFreeInCard != null">
+				temp_free_in_card = #{tempFreeInCard,jdbcType=INTEGER},
+			</if>
+			<if test="tempFreeOutCard != null">
+				temp_free_out_card = #{tempFreeOutCard,jdbcType=INTEGER},
+			</if>
+			<if test="freeCardInA != null">
+				free_card_in_a = #{freeCardInA,jdbcType=INTEGER},
+			</if>
+			<if test="freeCardOutA != null">
+				free_card_out_a = #{freeCardOutA,jdbcType=INTEGER},
+			</if>
+			<if test="freeCardInB != null">
+				free_card_in_b = #{freeCardInB,jdbcType=INTEGER},
+			</if>
+			<if test="freeCardOutB != null">
+				free_card_out_b = #{freeCardOutB,jdbcType=INTEGER},
+			</if>
+			<if test="storedCardInA != null">
+				stored_card_in_a = #{storedCardInA,jdbcType=INTEGER},
+			</if>
+			<if test="storedCardOutA != null">
+				stored_card_out_a = #{storedCardOutA,jdbcType=INTEGER},
+			</if>
+			<if test="storedCardInB != null">
+				stored_card_in_b = #{storedCardInB,jdbcType=INTEGER},
+			</if>
+			<if test="storedCardOutB != null">
+				stored_card_out_b = #{storedCardOutB,jdbcType=INTEGER},
+			</if>
+			<if test="storedCardInC != null">
+				stored_card_in_c = #{storedCardInC,jdbcType=INTEGER},
+			</if>
+			<if test="storedCardOutC != null">
+				stored_card_out_c = #{storedCardOutC,jdbcType=INTEGER},
+			</if>
+			<if test="storedCardInD != null">
+				stored_card_in_d = #{storedCardInD,jdbcType=INTEGER},
+			</if>
+			<if test="storedCardOutD != null">
+				stored_card_out_d = #{storedCardOutD,jdbcType=INTEGER},
+			</if>
+			<if test="storedTempInA != null">
+				stored_temp_in_a = #{storedTempInA,jdbcType=INTEGER},
+			</if>
+			<if test="storedTempOutA != null">
+				stored_temp_out_a = #{storedTempOutA,jdbcType=INTEGER},
+			</if>
+			<if test="storedTempInB != null">
+				stored_temp_in_b = #{storedTempInB,jdbcType=INTEGER},
+			</if>
+			<if test="storedTempOutB != null">
+				stored_temp_out_b = #{storedTempOutB,jdbcType=INTEGER},
+			</if>
+			<if test="storedTempInC != null">
+				stored_temp_in_c = #{storedTempInC,jdbcType=INTEGER},
+			</if>
+			<if test="storedTempOutC != null">
+				stored_temp_out_c = #{storedTempOutC,jdbcType=INTEGER},
+			</if>
+			<if test="storedTempInD != null">
+				stored_temp_in_d = #{storedTempInD,jdbcType=INTEGER},
+			</if>
+			<if test="storedTempOutD != null">
+				stored_temp_out_d = #{storedTempOutD,jdbcType=INTEGER},
+			</if>
+			<if test="allInCount != null">
+				all_in_count = #{allInCount,jdbcType=INTEGER},
+			</if>
+			<if test="allOutCount != null">
+				all_out_count = #{allOutCount,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.ParkTrafficStatistics">
+		update park_traffic_statistics
+		set s_date = #{sDate,jdbcType=DATE},
+		s_time = #{sTime,jdbcType=INTEGER},
+		hand_gate = #{handGate,jdbcType=INTEGER},
+		computer_gate = #{computerGate,jdbcType=INTEGER},
+		month_card_in_a = #{monthCardInA,jdbcType=INTEGER},
+		month_card_out_a = #{monthCardOutA,jdbcType=INTEGER},
+		month_card_in_b = #{monthCardInB,jdbcType=INTEGER},
+		month_card_out_b = #{monthCardOutB,jdbcType=INTEGER},
+		month_card_in_c = #{monthCardInC,jdbcType=INTEGER},
+		month_card_out_c = #{monthCardOutC,jdbcType=INTEGER},
+		month_card_in_d = #{monthCardInD,jdbcType=INTEGER},
+		month_card_out_d = #{monthCardOutD,jdbcType=INTEGER},
+		month_tmp_in_a = #{monthTmpInA,jdbcType=INTEGER},
+		month_tmp_out_a = #{monthTmpOutA,jdbcType=INTEGER},
+		month_tmp_in_b = #{monthTmpInB,jdbcType=INTEGER},
+		month_tmp_out_b = #{monthTmpOutB,jdbcType=INTEGER},
+		month_tmp_in_c = #{monthTmpInC,jdbcType=INTEGER},
+		month_tmp_out_c = #{monthTmpOutC,jdbcType=INTEGER},
+		month_tmp_in_d = #{monthTmpInD,jdbcType=INTEGER},
+		month_tmp_out_d = #{monthTmpOutD,jdbcType=INTEGER},
+		temp_card_in_a = #{tempCardInA,jdbcType=INTEGER},
+		temp_card_out_a = #{tempCardOutA,jdbcType=INTEGER},
+		temp_card_in_b = #{tempCardInB,jdbcType=INTEGER},
+		temp_card_out_b = #{tempCardOutB,jdbcType=INTEGER},
+		temp_card_in_c = #{tempCardInC,jdbcType=INTEGER},
+		temp_card_out_c = #{tempCardOutC,jdbcType=INTEGER},
+		temp_card_in_d = #{tempCardInD,jdbcType=INTEGER},
+		temp_card_out_d = #{tempCardOutD,jdbcType=INTEGER},
+		temp_free_in_card = #{tempFreeInCard,jdbcType=INTEGER},
+		temp_free_out_card = #{tempFreeOutCard,jdbcType=INTEGER},
+		free_card_in_a = #{freeCardInA,jdbcType=INTEGER},
+		free_card_out_a = #{freeCardOutA,jdbcType=INTEGER},
+		free_card_in_b = #{freeCardInB,jdbcType=INTEGER},
+		free_card_out_b = #{freeCardOutB,jdbcType=INTEGER},
+		stored_card_in_a = #{storedCardInA,jdbcType=INTEGER},
+		stored_card_out_a = #{storedCardOutA,jdbcType=INTEGER},
+		stored_card_in_b = #{storedCardInB,jdbcType=INTEGER},
+		stored_card_out_b = #{storedCardOutB,jdbcType=INTEGER},
+		stored_card_in_c = #{storedCardInC,jdbcType=INTEGER},
+		stored_card_out_c = #{storedCardOutC,jdbcType=INTEGER},
+		stored_card_in_d = #{storedCardInD,jdbcType=INTEGER},
+		stored_card_out_d = #{storedCardOutD,jdbcType=INTEGER},
+		stored_temp_in_a = #{storedTempInA,jdbcType=INTEGER},
+		stored_temp_out_a = #{storedTempOutA,jdbcType=INTEGER},
+		stored_temp_in_b = #{storedTempInB,jdbcType=INTEGER},
+		stored_temp_out_b = #{storedTempOutB,jdbcType=INTEGER},
+		stored_temp_in_c = #{storedTempInC,jdbcType=INTEGER},
+		stored_temp_out_c = #{storedTempOutC,jdbcType=INTEGER},
+		stored_temp_in_d = #{storedTempInD,jdbcType=INTEGER},
+		stored_temp_out_d = #{storedTempOutD,jdbcType=INTEGER},
+		all_in_count = #{allInCount,jdbcType=INTEGER},
+		all_out_count = #{allOutCount,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

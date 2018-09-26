@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.VwParkCarchargeMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.VwParkCarcharge">
+		<result column="box_id" jdbcType="INTEGER" property="boxId" />
+		<result column="card_id" jdbcType="VARCHAR" property="cardId" />
+		<result column="card_no" jdbcType="VARCHAR" property="cardNo" />
+		<result column="car_no" jdbcType="VARCHAR" property="carNo" />
+		<result column="card_type" jdbcType="INTEGER" property="cardType" />
+		<result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+		<result column="out_time" jdbcType="TIMESTAMP" property="outTime" />
+		<result column="user_name" jdbcType="VARCHAR" property="userName" />
+		<result column="pay_charge" jdbcType="REAL" property="payCharge" />
+		<result column="account_charge" jdbcType="REAL" property="accountCharge" />
+		<result column="dis_amount" jdbcType="DOUBLE" property="disAmount" />
+		<result column="free_amount" jdbcType="DOUBLE" property="freeAmount" />
+		<result column="card_type_name" jdbcType="VARCHAR" property="cardTypeName" />
+		<result column="free_name" jdbcType="VARCHAR" property="freeName" />
+		<result column="charge_type" jdbcType="VARCHAR" property="chargeType" />
+		<result column="in_pic" jdbcType="VARCHAR" property="inPic" />
+		<result column="out_pic" jdbcType="VARCHAR" property="outPic" />
+		<result column="pay_type" jdbcType="VARCHAR" property="payType" />
+		<result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+		<result column="balance_money" jdbcType="REAL" property="balanceMoney" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		box_id,card_id,card_no,car_no,card_type,in_time,out_time,user_name,pay_charge,
+		account_charge,dis_amount,free_amount,card_type_name,free_name,charge_type,
+		in_pic,out_pic,pay_type,order_num,balance_money
+	</sql>
+	<insert id="insert" parameterType="com.drzk.vo.VwParkCarcharge">
+		insert into vw_park_carcharge (box_id, card_id, card_no,
+		car_no, card_type, in_time,
+		out_time, user_name, pay_charge,
+		account_charge, dis_amount, free_amount,
+		card_type_name, free_name, charge_type,
+		in_pic, out_pic, pay_type,
+		order_num, balance_money)
+		values (#{boxId,jdbcType=INTEGER}, #{cardId,jdbcType=VARCHAR},
+		#{cardNo,jdbcType=VARCHAR},
+		#{carNo,jdbcType=VARCHAR}, #{cardType,jdbcType=INTEGER}, #{inTime,jdbcType=TIMESTAMP},
+		#{outTime,jdbcType=TIMESTAMP}, #{userName,jdbcType=VARCHAR},
+		#{payCharge,jdbcType=REAL},
+		#{accountCharge,jdbcType=REAL}, #{disAmount,jdbcType=DOUBLE}, #{freeAmount,jdbcType=DOUBLE},
+		#{cardTypeName,jdbcType=VARCHAR}, #{freeName,jdbcType=VARCHAR},
+		#{chargeType,jdbcType=VARCHAR},
+		#{inPic,jdbcType=VARCHAR}, #{outPic,jdbcType=VARCHAR}, #{payType,jdbcType=VARCHAR},
+		#{orderNum,jdbcType=VARCHAR}, #{balanceMoney,jdbcType=REAL})
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.VwParkCarcharge">
+		insert into vw_park_carcharge
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="boxId != null">
+				box_id,
+			</if>
+			<if test="cardId != null">
+				card_id,
+			</if>
+			<if test="cardNo != null">
+				card_no,
+			</if>
+			<if test="carNo != null">
+				car_no,
+			</if>
+			<if test="cardType != null">
+				card_type,
+			</if>
+			<if test="inTime != null">
+				in_time,
+			</if>
+			<if test="outTime != null">
+				out_time,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="payCharge != null">
+				pay_charge,
+			</if>
+			<if test="accountCharge != null">
+				account_charge,
+			</if>
+			<if test="disAmount != null">
+				dis_amount,
+			</if>
+			<if test="freeAmount != null">
+				free_amount,
+			</if>
+			<if test="cardTypeName != null">
+				card_type_name,
+			</if>
+			<if test="freeName != null">
+				free_name,
+			</if>
+			<if test="chargeType != null">
+				charge_type,
+			</if>
+			<if test="inPic != null">
+				in_pic,
+			</if>
+			<if test="outPic != null">
+				out_pic,
+			</if>
+			<if test="payType != null">
+				pay_type,
+			</if>
+			<if test="orderNum != null">
+				order_num,
+			</if>
+			<if test="balanceMoney != null">
+				balance_money,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="boxId != null">
+				#{boxId,jdbcType=INTEGER},
+			</if>
+			<if test="cardId != null">
+				#{cardId,jdbcType=VARCHAR},
+			</if>
+			<if test="cardNo != null">
+				#{cardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="carNo != null">
+				#{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				#{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="inTime != null">
+				#{inTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="outTime != null">
+				#{outTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="payCharge != null">
+				#{payCharge,jdbcType=REAL},
+			</if>
+			<if test="accountCharge != null">
+				#{accountCharge,jdbcType=REAL},
+			</if>
+			<if test="disAmount != null">
+				#{disAmount,jdbcType=DOUBLE},
+			</if>
+			<if test="freeAmount != null">
+				#{freeAmount,jdbcType=DOUBLE},
+			</if>
+			<if test="cardTypeName != null">
+				#{cardTypeName,jdbcType=VARCHAR},
+			</if>
+			<if test="freeName != null">
+				#{freeName,jdbcType=VARCHAR},
+			</if>
+			<if test="chargeType != null">
+				#{chargeType,jdbcType=VARCHAR},
+			</if>
+			<if test="inPic != null">
+				#{inPic,jdbcType=VARCHAR},
+			</if>
+			<if test="outPic != null">
+				#{outPic,jdbcType=VARCHAR},
+			</if>
+			<if test="payType != null">
+				#{payType,jdbcType=VARCHAR},
+			</if>
+			<if test="orderNum != null">
+				#{orderNum,jdbcType=VARCHAR},
+			</if>
+			<if test="balanceMoney != null">
+				#{balanceMoney,jdbcType=REAL},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectByCarNo" parameterType="java.lang.String"
+		resultType="java.math.BigDecimal">
+		SELECT SUM(IFNULL(pay_charge,0)) AS PayCharge FROM vw_park_carcharge
+		WHERE RIGHT(car_no,6) =SUBSTRING(carNo,LENGTH(carNo)-7)
+		AND DATE(out_time) = CURDATE()
+	</select>
+
+</mapper>

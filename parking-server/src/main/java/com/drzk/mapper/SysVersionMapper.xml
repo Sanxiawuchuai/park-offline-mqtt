@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.SysVersionMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.SysVersion">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="v_soft" jdbcType="VARCHAR" property="vSoft" />
+		<result column="v_type" jdbcType="INTEGER" property="vType" />
+		<result column="pulish_date" jdbcType="TIMESTAMP" property="pulishDate" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+		<result column="memo" jdbcType="VARCHAR" property="memo" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, v_soft, v_type, pulish_date, create_date, update_date, memo
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_version
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from sys_version
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.SysVersion">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into sys_version (id, v_soft, v_type,
+		pulish_date, create_date, update_date,
+		memo)
+		values (#{id,jdbcType=INTEGER}, #{vSoft,jdbcType=VARCHAR},
+		#{vType,jdbcType=INTEGER},
+		#{pulishDate,jdbcType=TIMESTAMP}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP},
+		#{memo,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.SysVersion">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into sys_version
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="vSoft != null">
+				v_soft,
+			</if>
+			<if test="vType != null">
+				v_type,
+			</if>
+			<if test="pulishDate != null">
+				pulish_date,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="updateDate != null">
+				update_date,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="vSoft != null">
+				#{vSoft,jdbcType=VARCHAR},
+			</if>
+			<if test="vType != null">
+				#{vType,jdbcType=INTEGER},
+			</if>
+			<if test="pulishDate != null">
+				#{pulishDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.SysVersion">
+		update sys_version
+		<set>
+			<if test="vSoft != null">
+				v_soft = #{vSoft,jdbcType=VARCHAR},
+			</if>
+			<if test="vType != null">
+				v_type = #{vType,jdbcType=INTEGER},
+			</if>
+			<if test="pulishDate != null">
+				pulish_date = #{pulishDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateDate != null">
+				update_date = #{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="memo != null">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.SysVersion">
+		update sys_version
+		set v_soft = #{vSoft,jdbcType=VARCHAR},
+		v_type = #{vType,jdbcType=INTEGER},
+		pulish_date = #{pulishDate,jdbcType=TIMESTAMP},
+		create_date = #{createDate,jdbcType=TIMESTAMP},
+		update_date = #{updateDate,jdbcType=TIMESTAMP},
+		memo = #{memo,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.VwDisCountInfoMapper">
+  <resultMap id="BaseResultMap" type="com.drzk.vo.VwDisCountInfo">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="out_type" jdbcType="INTEGER" property="outType" />
+    <result column="discount_id" jdbcType="INTEGER" property="discountId" />
+    <result column="card_id" jdbcType="VARCHAR" property="cardId" />
+    <result column="out_time" jdbcType="TIMESTAMP" property="outTime" />
+    <result column="discount_time" jdbcType="TIMESTAMP" property="discountTime" />
+    <result column="dis_amount" jdbcType="REAL" property="disAmount" />
+    <result column="dis_type" jdbcType="INTEGER" property="disType" />
+    <result column="online_id" jdbcType="VARCHAR" property="onlineId" />
+    <result column="puid" jdbcType="VARCHAR" property="puid" />
+    <result column="is_load" jdbcType="INTEGER" property="isLoad" />
+    <result column="del_frag" jdbcType="INTEGER" property="delFrag" />
+    <result column="car_no" jdbcType="VARCHAR" property="carNo" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="discount_name" jdbcType="VARCHAR" property="discountName" />
+    <result column="discount_type" jdbcType="INTEGER" property="discountType" />
+    <result column="discount_amount" jdbcType="REAL" property="discountAmount" />
+    <result column="dis_info_id" jdbcType="INTEGER" property="disInfoId" />
+    <result column="dis_info_puid" jdbcType="VARCHAR" property="disInfoPuid" />
+    <result column="eq_id" jdbcType="INTEGER" property="eqId" />
+    <result column="eq_name" jdbcType="VARCHAR" property="eqName" />
+    <result column="client_no" jdbcType="VARCHAR" property="clientNo" />
+    <result column="euid" jdbcType="VARCHAR" property="euid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+		id,out_type,discount_id,card_id,out_time,discount_time,dis_amount,
+		dis_type,online_id,puid,is_load,del_frag,car_no,in_time,discount_name,
+		discount_type,discount_amount,dis_info_id,dis_info_puid,eq_id,
+		eq_name,client_no,euid
+	</sql>
+  <insert id="insert" parameterType="com.drzk.vo.VwDisCountInfo">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into vw_dis_count_Info (out_type, discount_id, card_id, 
+      out_time, discount_time, dis_amount, 
+      dis_type, online_id, puid, 
+      is_load, del_frag, car_no, 
+      in_time, discount_name, discount_type, 
+      discount_amount, dis_info_id, dis_info_puid, 
+      eq_id, eq_name, client_no, 
+      euid)
+    values (#{outType,jdbcType=INTEGER}, #{discountId,jdbcType=INTEGER}, #{cardId,jdbcType=VARCHAR}, 
+      #{outTime,jdbcType=TIMESTAMP}, #{discountTime,jdbcType=TIMESTAMP}, #{disAmount,jdbcType=REAL}, 
+      #{disType,jdbcType=INTEGER}, #{onlineId,jdbcType=VARCHAR}, #{puid,jdbcType=VARCHAR}, 
+      #{isLoad,jdbcType=INTEGER}, #{delFrag,jdbcType=INTEGER}, #{carNo,jdbcType=VARCHAR}, 
+      #{inTime,jdbcType=TIMESTAMP}, #{discountName,jdbcType=VARCHAR}, #{discountType,jdbcType=INTEGER}, 
+      #{discountAmount,jdbcType=REAL}, #{disInfoId,jdbcType=INTEGER}, #{disInfoPuid,jdbcType=VARCHAR}, 
+      #{eqId,jdbcType=INTEGER}, #{eqName,jdbcType=VARCHAR}, #{clientNo,jdbcType=VARCHAR}, 
+      #{euid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.drzk.vo.VwDisCountInfo">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into vw_dis_count_Info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="outType != null">
+        out_type,
+      </if>
+      <if test="discountId != null">
+        discount_id,
+      </if>
+      <if test="cardId != null">
+        card_id,
+      </if>
+      <if test="outTime != null">
+        out_time,
+      </if>
+      <if test="discountTime != null">
+        discount_time,
+      </if>
+      <if test="disAmount != null">
+        dis_amount,
+      </if>
+      <if test="disType != null">
+        dis_type,
+      </if>
+      <if test="onlineId != null">
+        online_id,
+      </if>
+      <if test="puid != null">
+        puid,
+      </if>
+      <if test="isLoad != null">
+        is_load,
+      </if>
+      <if test="delFrag != null">
+        del_frag,
+      </if>
+      <if test="carNo != null">
+        car_no,
+      </if>
+      <if test="inTime != null">
+        in_time,
+      </if>
+      <if test="discountName != null">
+        discount_name,
+      </if>
+      <if test="discountType != null">
+        discount_type,
+      </if>
+      <if test="discountAmount != null">
+        discount_amount,
+      </if>
+      <if test="disInfoId != null">
+        dis_info_id,
+      </if>
+      <if test="disInfoPuid != null">
+        dis_info_puid,
+      </if>
+      <if test="eqId != null">
+        eq_id,
+      </if>
+      <if test="eqName != null">
+        eq_name,
+      </if>
+      <if test="clientNo != null">
+        client_no,
+      </if>
+      <if test="euid != null">
+        euid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="outType != null">
+        #{outType,jdbcType=INTEGER},
+      </if>
+      <if test="discountId != null">
+        #{discountId,jdbcType=INTEGER},
+      </if>
+      <if test="cardId != null">
+        #{cardId,jdbcType=VARCHAR},
+      </if>
+      <if test="outTime != null">
+        #{outTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="discountTime != null">
+        #{discountTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="disAmount != null">
+        #{disAmount,jdbcType=REAL},
+      </if>
+      <if test="disType != null">
+        #{disType,jdbcType=INTEGER},
+      </if>
+      <if test="onlineId != null">
+        #{onlineId,jdbcType=VARCHAR},
+      </if>
+      <if test="puid != null">
+        #{puid,jdbcType=VARCHAR},
+      </if>
+      <if test="isLoad != null">
+        #{isLoad,jdbcType=INTEGER},
+      </if>
+      <if test="delFrag != null">
+        #{delFrag,jdbcType=INTEGER},
+      </if>
+      <if test="carNo != null">
+        #{carNo,jdbcType=VARCHAR},
+      </if>
+      <if test="inTime != null">
+        #{inTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="discountName != null">
+        #{discountName,jdbcType=VARCHAR},
+      </if>
+      <if test="discountType != null">
+        #{discountType,jdbcType=INTEGER},
+      </if>
+      <if test="discountAmount != null">
+        #{discountAmount,jdbcType=REAL},
+      </if>
+      <if test="disInfoId != null">
+        #{disInfoId,jdbcType=INTEGER},
+      </if>
+      <if test="disInfoPuid != null">
+        #{disInfoPuid,jdbcType=VARCHAR},
+      </if>
+      <if test="eqId != null">
+        #{eqId,jdbcType=INTEGER},
+      </if>
+      <if test="eqName != null">
+        #{eqName,jdbcType=VARCHAR},
+      </if>
+      <if test="clientNo != null">
+        #{clientNo,jdbcType=VARCHAR},
+      </if>
+      <if test="euid != null">
+        #{euid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectTopDS" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from vw_dis_count_Info
+		where is_load =0 or is_load is null limit 100
+	</select>
+	
+
+</mapper>

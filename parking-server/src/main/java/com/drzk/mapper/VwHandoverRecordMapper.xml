@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.VwHandoverRecordMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.VwHandoverRecord">
+		<result column="box_id" jdbcType="INTEGER" property="boxId" />
+		<result column="box_name" jdbcType="VARCHAR" property="boxName" />
+		<result column="login_date" jdbcType="TIMESTAMP" property="loginDate" />
+		<result column="relief_date" jdbcType="TIMESTAMP" property="reliefDate" />
+		<result column="user_name" jdbcType="VARCHAR" property="userName" />
+		<result column="relief_user_name" jdbcType="VARCHAR" property="reliefUserName" />
+		<result column="hand_gate" jdbcType="INTEGER" property="handGate" />
+		<result column="temp_car_in" jdbcType="INTEGER" property="tempCarIn" />
+		<result column="temp_car_out" jdbcType="INTEGER" property="tempCarOut" />
+		<result column="free_charge" jdbcType="REAL" property="freeCharge" />
+		<result column="dis_sum" jdbcType="INTEGER" property="disSum" />
+		<result column="dis_charge" jdbcType="REAL" property="disCharge" />
+		<result column="cash_charge" jdbcType="REAL" property="cashCharge" />
+		<result column="wechat_charge" jdbcType="REAL" property="wechatCharge" />
+		<result column="alipay_charge" jdbcType="REAL" property="alipayCharge" />
+		<result column="unionpay_chagre" jdbcType="REAL" property="unionpayChagre" />
+		<result column="thirdpay_charge" jdbcType="REAL" property="thirdpayCharge" />
+		<result column="account" jdbcType="REAL" property="account" />
+		<result column="total_charge" jdbcType="DOUBLE" property="totalCharge" />
+	</resultMap>
+	<insert id="insert" parameterType="com.drzk.vo.VwHandoverRecord">
+		insert into vw_handover_record (box_id, box_name, login_date,
+		relief_date, user_name, relief_user_name,
+		hand_gate, temp_car_in, temp_car_out,
+		free_charge, dis_sum, dis_charge,
+		cash_charge, wechat_charge, alipay_charge,
+		unionpay_chagre, thirdpay_charge, account,
+		total_charge)
+		values (#{boxId,jdbcType=INTEGER}, #{boxName,jdbcType=VARCHAR},
+		#{loginDate,jdbcType=TIMESTAMP},
+		#{reliefDate,jdbcType=TIMESTAMP}, #{userName,jdbcType=VARCHAR}, #{reliefUserName,jdbcType=VARCHAR},
+		#{handGate,jdbcType=INTEGER}, #{tempCarIn,jdbcType=INTEGER},
+		#{tempCarOut,jdbcType=INTEGER},
+		#{freeCharge,jdbcType=REAL}, #{disSum,jdbcType=INTEGER}, #{disCharge,jdbcType=REAL},
+		#{cashCharge,jdbcType=REAL}, #{wechatCharge,jdbcType=REAL},
+		#{alipayCharge,jdbcType=REAL},
+		#{unionpayChagre,jdbcType=REAL}, #{thirdpayCharge,jdbcType=REAL}, #{account,jdbcType=REAL},
+		#{totalCharge,jdbcType=DOUBLE})
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.VwHandoverRecord">
+		insert into vw_handover_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="boxId != null">
+				box_id,
+			</if>
+			<if test="boxName != null">
+				box_name,
+			</if>
+			<if test="loginDate != null">
+				login_date,
+			</if>
+			<if test="reliefDate != null">
+				relief_date,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="reliefUserName != null">
+				relief_user_name,
+			</if>
+			<if test="handGate != null">
+				hand_gate,
+			</if>
+			<if test="tempCarIn != null">
+				temp_car_in,
+			</if>
+			<if test="tempCarOut != null">
+				temp_car_out,
+			</if>
+			<if test="freeCharge != null">
+				free_charge,
+			</if>
+			<if test="disSum != null">
+				dis_sum,
+			</if>
+			<if test="disCharge != null">
+				dis_charge,
+			</if>
+			<if test="cashCharge != null">
+				cash_charge,
+			</if>
+			<if test="wechatCharge != null">
+				wechat_charge,
+			</if>
+			<if test="alipayCharge != null">
+				alipay_charge,
+			</if>
+			<if test="unionpayChagre != null">
+				unionpay_chagre,
+			</if>
+			<if test="thirdpayCharge != null">
+				thirdpay_charge,
+			</if>
+			<if test="account != null">
+				account,
+			</if>
+			<if test="totalCharge != null">
+				total_charge,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="boxId != null">
+				#{boxId,jdbcType=INTEGER},
+			</if>
+			<if test="boxName != null">
+				#{boxName,jdbcType=VARCHAR},
+			</if>
+			<if test="loginDate != null">
+				#{loginDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="reliefDate != null">
+				#{reliefDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="reliefUserName != null">
+				#{reliefUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="handGate != null">
+				#{handGate,jdbcType=INTEGER},
+			</if>
+			<if test="tempCarIn != null">
+				#{tempCarIn,jdbcType=INTEGER},
+			</if>
+			<if test="tempCarOut != null">
+				#{tempCarOut,jdbcType=INTEGER},
+			</if>
+			<if test="freeCharge != null">
+				#{freeCharge,jdbcType=REAL},
+			</if>
+			<if test="disSum != null">
+				#{disSum,jdbcType=INTEGER},
+			</if>
+			<if test="disCharge != null">
+				#{disCharge,jdbcType=REAL},
+			</if>
+			<if test="cashCharge != null">
+				#{cashCharge,jdbcType=REAL},
+			</if>
+			<if test="wechatCharge != null">
+				#{wechatCharge,jdbcType=REAL},
+			</if>
+			<if test="alipayCharge != null">
+				#{alipayCharge,jdbcType=REAL},
+			</if>
+			<if test="unionpayChagre != null">
+				#{unionpayChagre,jdbcType=REAL},
+			</if>
+			<if test="thirdpayCharge != null">
+				#{thirdpayCharge,jdbcType=REAL},
+			</if>
+			<if test="account != null">
+				#{account,jdbcType=REAL},
+			</if>
+			<if test="totalCharge != null">
+				#{totalCharge,jdbcType=DOUBLE},
+			</if>
+		</trim>
+	</insert>
+</mapper>

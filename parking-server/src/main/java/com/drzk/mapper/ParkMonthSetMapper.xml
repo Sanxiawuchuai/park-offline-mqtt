@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.ParkMonthSetMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.ParkMonthSet">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="account_type" jdbcType="INTEGER" property="accountType" />
+		<result column="s_type" jdbcType="INTEGER" property="sType" />
+		<result column="charge_money" jdbcType="REAL" property="chargeMoney" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		<result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+		<result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName" />
+		<result column="memo" jdbcType="VARCHAR" property="memo" />
+		<result column="is_load" jdbcType="INTEGER" property="isLoad" />
+		<result column="puid" jdbcType="VARCHAR" property="puid" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, account_type, s_type, charge_money, create_date, create_user_name,
+		modify_date,
+		modify_user_name, memo,is_load,puid
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_month_set
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from park_month_set
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.drzk.vo.ParkMonthSet">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into park_month_set (id, account_type, s_type,
+		charge_money, create_date, create_user_name,
+		modify_date, modify_user_name, memo,puid
+		)
+		values (#{id,jdbcType=INTEGER}, #{accountType,jdbcType=INTEGER},
+		#{sType,jdbcType=INTEGER},
+		#{chargeMoney,jdbcType=REAL}, #{createDate,jdbcType=TIMESTAMP}, #{createUserName,jdbcType=VARCHAR},
+		#{modifyDate,jdbcType=TIMESTAMP}, #{modifyUserName,jdbcType=VARCHAR},
+		#{memo,jdbcType=VARCHAR},#{puid,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.ParkMonthSet">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into park_month_set
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="accountType != null">
+				account_type,
+			</if>
+			<if test="sType != null">
+				s_type,
+			</if>
+			<if test="chargeMoney != null">
+				charge_money,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="createUserName != null">
+				create_user_name,
+			</if>
+			<if test="modifyDate != null">
+				modify_date,
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="isLoad != null">
+				is_load,
+			</if>
+			<if test="puid != null">
+				puid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="accountType != null">
+				#{accountType,jdbcType=INTEGER},
+			</if>
+			<if test="sType != null">
+				#{sType,jdbcType=INTEGER},
+			</if>
+			<if test="chargeMoney != null">
+				#{chargeMoney,jdbcType=REAL},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				#{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				#{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				#{modifyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="isLoad != null">
+				#{isLoad,jdbcType=VARCHAR},
+			</if>
+			<if test="puid != null">
+				#{puid,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.drzk.vo.ParkMonthSet">
+		update park_month_set
+		<set>
+			<if test="accountType != null">
+				account_type = #{accountType,jdbcType=INTEGER},
+			</if>
+			<if test="sType != null">
+				s_type = #{sType,jdbcType=INTEGER},
+			</if>
+			<if test="chargeMoney != null">
+				charge_money = #{chargeMoney,jdbcType=REAL},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				create_user_name = #{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updatePrimaryKey" parameterType="com.drzk.vo.ParkMonthSet">
+		update park_month_set
+		<set>
+			<if test="accountType != null">
+				account_type = #{accountType,jdbcType=TINYINT},
+			</if>
+			<if test="sType != null">
+				s_type = #{sType,jdbcType=TINYINT},
+			</if>
+			<if test="chargeMoney != null">
+				charge_money = #{chargeMoney,jdbcType=REAL},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUserName != null">
+				create_user_name = #{createUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null">
+				modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyUserName != null">
+				modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="isLoad != null">
+			is_load=#{isLoad,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where puid = #{puid,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateByPrimaryKey" parameterType="com.drzk.vo.ParkMonthSet">
+		update park_month_set
+		set account_type = #{accountType,jdbcType=INTEGER},
+		s_type = #{sType,jdbcType=INTEGER},
+		charge_money = #{chargeMoney,jdbcType=REAL},
+		create_date = #{createDate,jdbcType=TIMESTAMP},
+		create_user_name = #{createUserName,jdbcType=VARCHAR},
+		modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+		modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+		memo = #{memo,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateDSStatusFalied">
+		update park_month_set
+		set is_load =#{status}
+		where puid in 
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+	<select id="selectTopDS" resultType="com.drzk.vo.ParkMonthSet">
+		 select t.puid,t.account_type accountType,t.s_type sType,t.charge_money chargeMoney,t.memo,t.is_load isLoad,
+		 	t1.a_custname cardTypeName from park_month_set t
+ 		inner join park_account_type t1 on t.account_type=t1.a_type
+		where t.is_load =0
+	</select>
+
+	<select id="selectByGuid" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_month_set
+		where puid =#{puid,jdbcType=VARCHAR}
+	</select>
+
+
+</mapper>

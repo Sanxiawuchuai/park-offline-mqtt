@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.VwParkCarInMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.VwParkCarIn">
+		<result column="id" jdbcType="INTEGER" property="id" />
+		<result column="guid" jdbcType="VARCHAR" property="guid" />
+		<result column="card_id" jdbcType="VARCHAR" property="cardId" />
+		<result column="c_flag" jdbcType="INTEGER" property="cFlag" />
+		<result column="card_no" jdbcType="VARCHAR" property="cardNo" />
+		<result column="card_type" jdbcType="INTEGER" property="cardType" />
+		<result column="emp_name" jdbcType="VARCHAR" property="empName" />
+		<result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+		<result column="in_user_name" jdbcType="VARCHAR" property="inUserName" />
+		<result column="car_no" jdbcType="VARCHAR" property="carNo" />
+		<result column="assistant_car_no" jdbcType="VARCHAR" property="assistantCarNo" />
+		<result column="in_pic" jdbcType="VARCHAR" property="inPic" />
+		<result column="back_in_pic" jdbcType="VARCHAR" property="backInPic" />
+		<result column="small_pic" jdbcType="VARCHAR" property="smallPic" />
+		<result column="assistant_small_pic" jdbcType="VARCHAR"
+			property="assistantSmallPic" />
+		<result column="car_no_type" jdbcType="INTEGER" property="carNoType" />
+		<result column="small" jdbcType="INTEGER" property="small" />
+		<result column="discount_no" jdbcType="INTEGER" property="discountNo" />
+		<result column="type_id" jdbcType="INTEGER" property="typeId" />
+		<result column="discount_time" jdbcType="TIMESTAMP" property="discountTime" />
+		<result column="makeup" jdbcType="INTEGER" property="makeup" />
+		<result column="makeup_user_name" jdbcType="VARCHAR" property="makeupUserName" />
+		<result column="is_locked" jdbcType="INTEGER" property="isLocked" />
+		<result column="in_way" jdbcType="INTEGER" property="inWay" />
+		<result column="in_Way_name" jdbcType="VARCHAR" property="inWayName" />
+		<result column="a_custname" jdbcType="VARCHAR" property="aCustname" />
+		<result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,guid,c_flag,card_id,c_flag,card_no,card_type,emp_name,in_time,in_user_name,
+		car_no,assistant_car_no,in_pic,back_in_pic,small_pic,assistant_small_pic,car_no_type,
+		small,discount_no,type_id,discount_time,makeup,makeup_user_name,is_locked,in_way,
+		in_Way_name,a_custname,is_delete
+	</sql>
+
+	<insert id="insert" parameterType="com.drzk.vo.VwParkCarIn">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into vw_park_car_in (id, guid, card_id,
+		c_flag, card_no, card_type,
+		emp_name, in_time, in_user_name,
+		car_no, assistant_car_no, in_pic,
+		back_in_pic, small_pic, assistant_small_pic,
+		car_no_type, small, discount_no,
+		type_id, discount_time, makeup,
+		makeup_user_name, is_locked, in_way,
+		in_Way_name, a_custname,is_delete)
+		values (#{id,jdbcType=INTEGER}, #{guid,jdbcType=VARCHAR},
+		#{cardId,jdbcType=VARCHAR},
+		#{cFlag,jdbcType=INTEGER}, #{cardNo,jdbcType=VARCHAR}, #{cardType,jdbcType=INTEGER},
+		#{empName,jdbcType=VARCHAR}, #{inTime,jdbcType=TIMESTAMP},
+		#{inUserName,jdbcType=VARCHAR},
+		#{carNo,jdbcType=VARCHAR}, #{assistantCarNo,jdbcType=VARCHAR}, #{inPic,jdbcType=VARCHAR},
+		#{backInPic,jdbcType=VARCHAR}, #{smallPic,jdbcType=VARCHAR},
+		#{assistantSmallPic,jdbcType=VARCHAR},
+		#{carNoType,jdbcType=INTEGER}, #{small,jdbcType=INTEGER}, #{discountNo,jdbcType=INTEGER},
+		#{typeId,jdbcType=INTEGER}, #{discountTime,jdbcType=TIMESTAMP},
+		#{makeup,jdbcType=INTEGER},
+		#{makeupUserName,jdbcType=VARCHAR}, #{isLocked,jdbcType=INTEGER}, #{inWay,jdbcType=INTEGER},
+		#{inWayName,jdbcType=VARCHAR}, #{aCustname,jdbcType=VARCHAR},#{isDelete,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.VwParkCarIn">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into vw_park_car_in
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="guid != null">
+				guid,
+			</if>
+			<if test="cardId != null">
+				card_id,
+			</if>
+			<if test="cFlag != null">
+				c_flag,
+			</if>
+			<if test="cardNo != null">
+				card_no,
+			</if>
+			<if test="cardType != null">
+				card_type,
+			</if>
+			<if test="empName != null">
+				emp_name,
+			</if>
+			<if test="inTime != null">
+				in_time,
+			</if>
+			<if test="inUserName != null">
+				in_user_name,
+			</if>
+			<if test="carNo != null">
+				car_no,
+			</if>
+			<if test="assistantCarNo != null">
+				assistant_car_no,
+			</if>
+			<if test="inPic != null">
+				in_pic,
+			</if>
+			<if test="backInPic != null">
+				back_in_pic,
+			</if>
+			<if test="smallPic != null">
+				small_pic,
+			</if>
+			<if test="assistantSmallPic != null">
+				assistant_small_pic,
+			</if>
+			<if test="carNoType != null">
+				car_no_type,
+			</if>
+			<if test="small != null">
+				small,
+			</if>
+			<if test="discountNo != null">
+				discount_no,
+			</if>
+			<if test="typeId != null">
+				type_id,
+			</if>
+			<if test="discountTime != null">
+				discount_time,
+			</if>
+			<if test="makeup != null">
+				makeup,
+			</if>
+			<if test="makeupUserName != null">
+				makeup_user_name,
+			</if>
+			<if test="isLocked != null">
+				is_locked,
+			</if>
+			<if test="inWay != null">
+				in_way,
+			</if>
+			<if test="inWayName != null">
+				in_Way_name,
+			</if>
+			<if test="aCustname != null">
+				a_custname,
+			</if>
+			<if test="isDelete != null">
+			is_delete,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="guid != null">
+				#{guid,jdbcType=VARCHAR},
+			</if>
+			<if test="cardId != null">
+				#{cardId,jdbcType=VARCHAR},
+			</if>
+			<if test="cFlag != null">
+				#{cFlag,jdbcType=INTEGER},
+			</if>
+			<if test="cardNo != null">
+				#{cardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				#{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="empName != null">
+				#{empName,jdbcType=VARCHAR},
+			</if>
+			<if test="inTime != null">
+				#{inTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="inUserName != null">
+				#{inUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="carNo != null">
+				#{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="assistantCarNo != null">
+				#{assistantCarNo,jdbcType=VARCHAR},
+			</if>
+			<if test="inPic != null">
+				#{inPic,jdbcType=VARCHAR},
+			</if>
+			<if test="backInPic != null">
+				#{backInPic,jdbcType=VARCHAR},
+			</if>
+			<if test="smallPic != null">
+				#{smallPic,jdbcType=VARCHAR},
+			</if>
+			<if test="assistantSmallPic != null">
+				#{assistantSmallPic,jdbcType=VARCHAR},
+			</if>
+			<if test="carNoType != null">
+				#{carNoType,jdbcType=INTEGER},
+			</if>
+			<if test="small != null">
+				#{small,jdbcType=INTEGER},
+			</if>
+			<if test="discountNo != null">
+				#{discountNo,jdbcType=INTEGER},
+			</if>
+			<if test="typeId != null">
+				#{typeId,jdbcType=INTEGER},
+			</if>
+			<if test="discountTime != null">
+				#{discountTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="makeup != null">
+				#{makeup,jdbcType=INTEGER},
+			</if>
+			<if test="makeupUserName != null">
+				#{makeupUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="isLocked != null">
+				#{isLocked,jdbcType=INTEGER},
+			</if>
+			<if test="inWay != null">
+				#{inWay,jdbcType=INTEGER},
+			</if>
+			<if test="inWayName != null">
+				#{inWayName,jdbcType=VARCHAR},
+			</if>
+			<if test="aCustname != null">
+				#{aCustname,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null">
+			#{isDelete,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<select id="GetByCarNo" parameterType="java.lang.String"  resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from vw_park_car_in
+		where car_no LIKE  CONCAT('%', #{carNo}, '%')
+		ORDER BY in_time DESC LIMIT 20
+	</select>
+	<select id="GetByNull" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from vw_park_car_in
+		where is_delete =0 or is_delete is null
+		ORDER BY in_time DESC LIMIT 20
+	</select>
+
+</mapper>

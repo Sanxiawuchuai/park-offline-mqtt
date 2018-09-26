@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.drzk.mapper.VwAbandonRecordMapper">
+	<resultMap id="BaseResultMap" type="com.drzk.vo.VwAbandonRecord">
+		<result column="id" jdbcType="INTEGER" property="id" />
+		<result column="in_mach_no" jdbcType="INTEGER" property="inMachNo" />
+		<result column="out_mach_no" jdbcType="INTEGER" property="outMachNo" />
+		<result column="ykt_id" jdbcType="INTEGER" property="yktId" />
+		<result column="card_id" jdbcType="VARCHAR" property="cardId" />
+		<result column="c_flag" jdbcType="INTEGER" property="cFlag" />
+		<result column="card_no" jdbcType="VARCHAR" property="cardNo" />
+		<result column="car_no" jdbcType="VARCHAR" property="carNo" />
+		<result column="car_no_type" jdbcType="INTEGER" property="carNoType" />
+		<result column="card_type" jdbcType="INTEGER" property="cardType" />
+		<result column="free_type" jdbcType="INTEGER" property="freeType" />
+		<result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+		<result column="in_pic" jdbcType="VARCHAR" property="inPic" />
+		<result column="in_user_name" jdbcType="VARCHAR" property="inUserName" />
+		<result column="out_time" jdbcType="TIMESTAMP" property="outTime" />
+		<result column="out_pic" jdbcType="VARCHAR" property="outPic" />
+		<result column="out_user_name" jdbcType="VARCHAR" property="outUserName" />
+		<result column="zj_pic" jdbcType="VARCHAR" property="zjPic" />
+		<result column="pay_charge" jdbcType="REAL" property="payCharge" />
+		<result column="balance_money" jdbcType="REAL" property="balanceMoney" />
+		<result column="discount_no" jdbcType="INTEGER" property="discountNo" />
+		<result column="type_id" jdbcType="INTEGER" property="typeId" />
+		<result column="discount_time" jdbcType="TIMESTAMP" property="discountTime" />
+		<result column="dis_amount" jdbcType="DOUBLE" property="disAmount" />
+		<result column="account_charge" jdbcType="REAL" property="accountCharge" />
+		<result column="memo" jdbcType="VARCHAR" property="memo" />
+		<result column="free_amount" jdbcType="DOUBLE" property="freeAmount" />
+		<result column="in_channel_name" jdbcType="VARCHAR" property="inChannelName" />
+		<result column="out_channel_name" jdbcType="VARCHAR" property="outChannelName" />
+		<result column="card_type_name" jdbcType="VARCHAR" property="cardTypeName" />
+		<result column="free_name" jdbcType="VARCHAR" property="freeName" />
+		<result column="out_way" jdbcType="INTEGER" property="outWay" />
+		<result column="out_way_name" jdbcType="VARCHAR" property="outWayName" />
+	</resultMap>
+	<insert id="insert" parameterType="com.drzk.vo.VwAbandonRecord">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into vw_abandon_record (id, in_mach_no, out_mach_no,
+		ykt_id, card_id, c_flag,
+		card_no, car_no, car_no_type,
+		card_type, free_type, in_time,
+		in_pic, in_user_name, out_time,
+		out_pic, out_user_name, zj_pic,
+		pay_charge, balance_money, discount_no,
+		type_id, discount_time, dis_amount,
+		account_charge, memo, free_amount,
+		in_channel_name, out_channel_name, card_type_name,
+		free_name, out_way, out_way_name
+		)
+		values (#{id,jdbcType=INTEGER}, #{inMachNo,jdbcType=INTEGER},
+		#{outMachNo,jdbcType=INTEGER},
+		#{yktId,jdbcType=INTEGER}, #{cardId,jdbcType=VARCHAR}, #{cFlag,jdbcType=INTEGER},
+		#{cardNo,jdbcType=VARCHAR}, #{carNo,jdbcType=VARCHAR},
+		#{carNoType,jdbcType=INTEGER},
+		#{cardType,jdbcType=INTEGER}, #{freeType,jdbcType=INTEGER}, #{inTime,jdbcType=TIMESTAMP},
+		#{inPic,jdbcType=VARCHAR}, #{inUserName,jdbcType=VARCHAR},
+		#{outTime,jdbcType=TIMESTAMP},
+		#{outPic,jdbcType=VARCHAR}, #{outUserName,jdbcType=VARCHAR}, #{zjPic,jdbcType=VARCHAR},
+		#{payCharge,jdbcType=REAL}, #{balanceMoney,jdbcType=REAL},
+		#{discountNo,jdbcType=INTEGER},
+		#{typeId,jdbcType=INTEGER}, #{discountTime,jdbcType=TIMESTAMP}, #{disAmount,jdbcType=DOUBLE},
+		#{accountCharge,jdbcType=REAL}, #{memo,jdbcType=VARCHAR},
+		#{freeAmount,jdbcType=DOUBLE},
+		#{inChannelName,jdbcType=VARCHAR}, #{outChannelName,jdbcType=VARCHAR}, #{cardTypeName,jdbcType=VARCHAR},
+		#{freeName,jdbcType=VARCHAR}, #{outWay,jdbcType=INTEGER},
+		#{outWayName,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.drzk.vo.VwAbandonRecord">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into vw_abandon_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			<if test="inMachNo != null">
+				in_mach_no,
+			</if>
+			<if test="outMachNo != null">
+				out_mach_no,
+			</if>
+			<if test="yktId != null">
+				ykt_id,
+			</if>
+			<if test="cardId != null">
+				card_id,
+			</if>
+			<if test="cFlag != null">
+				c_flag,
+			</if>
+			<if test="cardNo != null">
+				card_no,
+			</if>
+			<if test="carNo != null">
+				car_no,
+			</if>
+			<if test="carNoType != null">
+				car_no_type,
+			</if>
+			<if test="cardType != null">
+				card_type,
+			</if>
+			<if test="freeType != null">
+				free_type,
+			</if>
+			<if test="inTime != null">
+				in_time,
+			</if>
+			<if test="inPic != null">
+				in_pic,
+			</if>
+			<if test="inUserName != null">
+				in_user_name,
+			</if>
+			<if test="outTime != null">
+				out_time,
+			</if>
+			<if test="outPic != null">
+				out_pic,
+			</if>
+			<if test="outUserName != null">
+				out_user_name,
+			</if>
+			<if test="zjPic != null">
+				zj_pic,
+			</if>
+			<if test="payCharge != null">
+				pay_charge,
+			</if>
+			<if test="balanceMoney != null">
+				balance_money,
+			</if>
+			<if test="discountNo != null">
+				discount_no,
+			</if>
+			<if test="typeId != null">
+				type_id,
+			</if>
+			<if test="discountTime != null">
+				discount_time,
+			</if>
+			<if test="disAmount != null">
+				dis_amount,
+			</if>
+			<if test="accountCharge != null">
+				account_charge,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="freeAmount != null">
+				free_amount,
+			</if>
+			<if test="inChannelName != null">
+				in_channel_name,
+			</if>
+			<if test="outChannelName != null">
+				out_channel_name,
+			</if>
+			<if test="cardTypeName != null">
+				card_type_name,
+			</if>
+			<if test="freeName != null">
+				free_name,
+			</if>
+			<if test="outWay != null">
+				out_way,
+			</if>
+			<if test="outWayName != null">
+				out_way_name,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=INTEGER},
+			<if test="inMachNo != null">
+				#{inMachNo,jdbcType=INTEGER},
+			</if>
+			<if test="outMachNo != null">
+				#{outMachNo,jdbcType=INTEGER},
+			</if>
+			<if test="yktId != null">
+				#{yktId,jdbcType=INTEGER},
+			</if>
+			<if test="cardId != null">
+				#{cardId,jdbcType=VARCHAR},
+			</if>
+			<if test="cFlag != null">
+				#{cFlag,jdbcType=INTEGER},
+			</if>
+			<if test="cardNo != null">
+				#{cardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="carNo != null">
+				#{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="carNoType != null">
+				#{carNoType,jdbcType=INTEGER},
+			</if>
+			<if test="cardType != null">
+				#{cardType,jdbcType=INTEGER},
+			</if>
+			<if test="freeType != null">
+				#{freeType,jdbcType=INTEGER},
+			</if>
+			<if test="inTime != null">
+				#{inTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="inPic != null">
+				#{inPic,jdbcType=VARCHAR},
+			</if>
+			<if test="inUserName != null">
+				#{inUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="outTime != null">
+				#{outTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="outPic != null">
+				#{outPic,jdbcType=VARCHAR},
+			</if>
+			<if test="outUserName != null">
+				#{outUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="zjPic != null">
+				#{zjPic,jdbcType=VARCHAR},
+			</if>
+			<if test="payCharge != null">
+				#{payCharge,jdbcType=REAL},
+			</if>
+			<if test="balanceMoney != null">
+				#{balanceMoney,jdbcType=REAL},
+			</if>
+			<if test="discountNo != null">
+				#{discountNo,jdbcType=INTEGER},
+			</if>
+			<if test="typeId != null">
+				#{typeId,jdbcType=INTEGER},
+			</if>
+			<if test="discountTime != null">
+				#{discountTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="disAmount != null">
+				#{disAmount,jdbcType=DOUBLE},
+			</if>
+			<if test="accountCharge != null">
+				#{accountCharge,jdbcType=REAL},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="freeAmount != null">
+				#{freeAmount,jdbcType=DOUBLE},
+			</if>
+			<if test="inChannelName != null">
+				#{inChannelName,jdbcType=VARCHAR},
+			</if>
+			<if test="outChannelName != null">
+				#{outChannelName,jdbcType=VARCHAR},
+			</if>
+			<if test="cardTypeName != null">
+				#{cardTypeName,jdbcType=VARCHAR},
+			</if>
+			<if test="freeName != null">
+				#{freeName,jdbcType=VARCHAR},
+			</if>
+			<if test="outWay != null">
+				#{outWay,jdbcType=INTEGER},
+			</if>
+			<if test="outWayName != null">
+				#{outWayName,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+</mapper>
