@@ -5,9 +5,10 @@ import java.io.Serializable;
 /**
  * 2018/6/23 cx
  */
-public class MqttPayloadVo<T> implements Serializable {
+public class MqttPayloadVo<T>{
 
-    //头信息
+
+	//头信息
     private MqttHeadVo head;
 
     //发送内容

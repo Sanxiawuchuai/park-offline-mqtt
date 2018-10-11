@@ -296,5 +296,10 @@
         where cuid = #{cuid}
     </update>
 
+    <select id="selectByUuid" parameterType="java.lang.String" resultType="com.drzk.vo.ParkCamSet">
+        select cuid
+        from park_cam_set
+        where del_frag =0 and cuid=#{cuid}
+    </select>
 
 </mapper>

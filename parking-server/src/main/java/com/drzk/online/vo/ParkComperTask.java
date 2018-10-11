@@ -1,8 +1,14 @@
 package com.drzk.online.vo;
 
-public class ParkComperTask 
+import java.io.Serializable;
+
+public class ParkComperTask implements Serializable 
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8732803797641792167L;
 	private String objectId;
 	private String macAddress;
 	private String comperIp;

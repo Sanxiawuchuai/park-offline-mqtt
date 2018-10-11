@@ -24,8 +24,8 @@ public interface ParkCarInMapper {
     
     List<ParkCarIn> getNewNopNo();
     
-    ParkCarIn selectTop(ParkCarIn obj);
-    
+    ParkCarIn selectTopAll(ParkCarIn obj);
+    ParkCarIn selectTop(@Param("carNo") String carNo, @Param("small") int small);
     int updateByPrimaryKeySelective(ParkCarIn record);
 
     int updateByPrimaryKey(ParkCarIn record);
@@ -48,9 +48,7 @@ public interface ParkCarInMapper {
     
     /** 查询同一家庭组车辆的入场信息*/
     ParkCarIn selectParkInByGroup(Map<String,Object> condition);
-    
-    
-    
+
     
     
     /** 获取100条未上传的数据 */
@@ -67,5 +65,8 @@ public interface ParkCarInMapper {
     
     /** 获取删除后同步到云端成功之后的数据 */
 //    List<String> selectDSDelete();
+
+    /** 更新图片上传状态为0 未上传 1 上传成功 2上传失败*/
+    int updateUploadImgStatus(@Param("status") Integer status,@Param("list") List<String> list);
     
 }

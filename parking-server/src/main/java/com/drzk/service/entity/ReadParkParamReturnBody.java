@@ -1,6 +1,15 @@
 package com.drzk.service.entity;
+
+import java.io.Serializable;
+
 //2.10. 读取车场系统参数返回实体
-public class ReadParkParamReturnBody  extends SuperBody{
+public class ReadParkParamReturnBody implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4429570578039389261L;
+	private String uId;
 	private String temporaryCarWorkingModel;//临时车工作模式 00-自动，01-确认
 	private String storedValueCarWorkingModel;//储值车工作模式 00-自动，01-确认
 	private String vipCarWorkingModel;//免费车工作模式 00-自动， 01-在线
@@ -113,6 +122,12 @@ public class ReadParkParamReturnBody  extends SuperBody{
 	}
 	public void setMonthOverDays(String monthOverDays) {
 		this.monthOverDays = monthOverDays;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	private String noCarNoPass;//无牌车通行 00,禁止 1，允许出入场,02 取卡入场，3 票入场，4-扫码入场
 	private String qRCode;//月租车工作模式 00-自动，01-在线，02-受控

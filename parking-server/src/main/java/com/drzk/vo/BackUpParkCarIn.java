@@ -1,8 +1,12 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class BackUpParkCarIn {
+public class BackUpParkCarIn implements Serializable {
+
+	private static final long serialVersionUID = 4002082936874442358L;
+
 	private Integer id;
 
     private String guid;
@@ -57,9 +61,10 @@ public class BackUpParkCarIn {
 
     private Integer inWay;
 
-    private Integer isLoad;
+    private Integer isLoad=0;
 
-    private Integer isDelete;
+    private Integer isDelete=0;
+    private Integer isImgUpload=0;
 
     public Integer getId() {
         return id;
@@ -291,5 +296,13 @@ public class BackUpParkCarIn {
 
     public void setIsDelete(Integer isDelete) {
         this.isDelete = isDelete;
+    }
+
+    public Integer getIsImgUpload() {
+        return isImgUpload;
+    }
+
+    public void setIsImgUpload(Integer isImgUpload) {
+        this.isImgUpload = isImgUpload;
     }
 }

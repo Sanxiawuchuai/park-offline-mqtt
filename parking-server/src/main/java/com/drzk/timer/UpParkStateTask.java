@@ -30,7 +30,7 @@ import java.util.List;
  * @see
  */
 @Component
-@Scope("singleton")
+@Scope("prototype")
 public class UpParkStateTask implements Runnable {
 	private static Logger logger = Logger.getLogger("userLog");
 	@Autowired
@@ -158,8 +158,8 @@ public class UpParkStateTask implements Runnable {
 				GlobalPark.parkDeviceStatus.add(record); 
 			}
 			
-		} catch (Exception e) {
-			LoggerUntils.error(logger, e);
+		} catch (Exception ex) {
+			logger.error("硬件状态更新:",ex);
 		}finally {
 			//	收到心跳后需要给硬件回复
 			//uploadStatusReply(head.getReplyTopic(),parkStateBody.getuId());
@@ -207,13 +207,13 @@ public class UpParkStateTask implements Runnable {
 		MainBoardMessage<ReplyHead, GetOfflineReturnBody> replyVo = MainBoardSdk.sendAndGet(equipmentID, "readRecordCount", getOfflineRecord,
 				GetOfflineReturnBody.class);
 		if(replyVo != null) {
+			if(replyVo.getBody().getRecordNo()==null)return; //记录为null
 			int recordNum = Integer.parseInt(replyVo.getBody().getRecordNo());
 			//循环取脱机记录
 			for(int i = 0;i < recordNum; i++) {
 				GetParkRecordBody getParkRecord = new GetParkRecordBody();
 				MainBoardMessage<ReplyHead, GetOfflineRecordReturnBody> replyRecord = MainBoardSdk.sendAndGet(equipmentID, "getParkingRecord", getParkRecord,
 						GetOfflineRecordReturnBody.class);
-				
 				if(replyRecord != null) {
 					GetOfflineRecordReturnBody recordBody = replyRecord.getBody();
 					String recordType = recordBody.getRecordType();
@@ -294,11 +294,8 @@ public class UpParkStateTask implements Runnable {
 			condition.setInTime(body.getInTime());
 			List<ParkCarOut> out = parkOutMapper.selectByCondition(condition);
 			if (out == null || out.size() == 0) {
-				ParkCarIn inCondition = new ParkCarIn();
 				String rCarNo = body.getCarNo().trim().substring(1);
-				inCondition.setCarNo(rCarNo);
-				inCondition.setSmall(small);
-				ParkCarIn in = parkInMapper.selectTop(inCondition);
+				ParkCarIn in = parkInMapper.selectTop(rCarNo,small);
 				if (in != null) {
 					Date time = in.getInTime();
 					// 如果数据库中的记录入场时间在当前记录的时间之前
@@ -337,9 +334,7 @@ public class UpParkStateTask implements Runnable {
 			outChannelType=channel.getInOut();
 			ParkCarIn condition = new ParkCarIn();
 			String rCarNo = body.getCarNo().trim().substring(1);
-			condition.setCarNo(rCarNo);
-			condition.setSmall( small);
-			ParkCarIn modelGet = parkCarInMapper.selectTop(condition);
+			ParkCarIn modelGet = parkCarInMapper.selectTop(rCarNo,small);
 			if (modelGet != null) { // 存在入场记录
 				ParkChannelSet parkChannelset = ParkMethod.getChannelSetByControlIndex(
 						modelGet.getMachNo() == null ? 0 : modelGet.getMachNo().byteValue());

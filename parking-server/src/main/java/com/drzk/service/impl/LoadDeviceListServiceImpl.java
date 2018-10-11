@@ -10,7 +10,6 @@ import com.drzk.service.entity.LoadUserMsgBodyReturn;
 import com.drzk.service.entity.MainBoardMessage;
 import com.drzk.service.entity.ReplyHead;
 import com.drzk.utils.GlobalPark;
-import com.drzk.utils.LoggerUntils;
 import com.drzk.vo.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,17 +67,31 @@ public class LoadDeviceListServiceImpl implements ILoadDeviceListService {
 	@Override
 	public void getWorkStation() {
 		try {
+			Vector<ParkLocalSet> localList = GlobalPark.parkLocalSet;
+			GlobalPark.parkLocalSet.clear();
 			Vector<ParkLocalSet> localSetList = localSetMapper.selectAllLocalSet();
 			GlobalPark.parkLocalSet.addAll(localSetList);
 			Date tDate=new Date();//当前时间
 			for(int i=0;i< GlobalPark.parkLocalSet.size(); i++) {
+				
+				for(ParkLocalSet local:localList)
+				{
+					if(local.getEquipmentID() != null )//已经登录的岗亭EquipmentID肯定不是空
+					{
+						if(local.getLuid().equals(GlobalPark.parkLocalSet.get(i).getLuid()))//luid相同 说明是同一个岗亭
+						{
+							GlobalPark.parkLocalSet.get(i).setEquipmentID(local.getEquipmentID());
+							break;
+						}
+					}
+				}
 				ParkSumUser model = new ParkSumUser();
 				model.setBoxId(GlobalPark.parkLocalSet.get(i).getBoxId());
-				List<ParkSumUser> parkSumUserList = parkSumUserMapper.selectByCondition(model);
-				if(parkSumUserList != null && parkSumUserList.size() > 0) { //存在记录
-					if(parkSumUserList.get(0).getReliefUserName() == null) { //有一条记录
-						GlobalPark.parkLocalSet.get(i).setLoginName(parkSumUserList.get(0).getUserName());
-						GlobalPark.parkLocalSet.get(i).setLoginDate(parkSumUserList.get(0).getLoginDate());;
+			    ParkSumUser sumUser = parkSumUserMapper.selectByUser(model);
+				if(sumUser != null ) { //存在记录
+					if(sumUser.getReliefUserName() == null) { //有一条记录
+						GlobalPark.parkLocalSet.get(i).setLoginName(sumUser.getUserName());
+						GlobalPark.parkLocalSet.get(i).setLoginDate(sumUser.getLoginDate());;
 					}else { //
 						ParkSumUser modelmody = new ParkSumUser();
 						modelmody.setBoxId(GlobalPark.parkLocalSet.get(i).getBoxId());
@@ -181,54 +194,58 @@ public class LoadDeviceListServiceImpl implements ILoadDeviceListService {
 			condition.setSign(0);
 			// 查询有改变的内容
 			List<YktCardIssueRel> cardRel = cardIssueRelMapper.selectByCondition(condition);
-			for (YktCardIssueRel yktCardIssueRel : cardRel) {
-				Integer yktId = yktCardIssueRel.getYktId();// 一卡通id
-				Integer macNo = yktCardIssueRel.getMachNo(); // 控制器机号
-				if (macNo == null) {
-					return;
-				}
-				// 查询一卡通信息
-				VwParkCarIsuse parkCardCondition = new VwParkCarIsuse();
-				parkCardCondition.setId(yktId);
-				VwParkCarIsuse result = vwParkCarIsuseMapper.selectMonthCar(parkCardCondition);
-				LoadUserMsgBody userMsgBody = new LoadUserMsgBody();
+			if(cardRel!=null&&cardRel.size()>0) {
+				for (YktCardIssueRel yktCardIssueRel : cardRel) {
+					Integer yktId = yktCardIssueRel.getYktId();// 一卡通id
+					Integer macNo = yktCardIssueRel.getMachNo(); // 控制器机号
+					if (macNo == null) {
+						return;
+					}
+					// 查询一卡通信息
+					VwParkCarIsuse parkCardCondition = new VwParkCarIsuse();
+					parkCardCondition.setId(yktId);
+					VwParkCarIsuse result = vwParkCarIsuseMapper.selectMonthCar(parkCardCondition);
+					LoadUserMsgBody userMsgBody = new LoadUserMsgBody();
 
-				userMsgBody.setCarType(result.getCardType().toString());
-				userMsgBody.setCarNo(result.getCarNo());
-				userMsgBody.setUserTimeStart(result.getStartDate());
-				userMsgBody.setUserTimeEnd(result.getEndDate());
-				userMsgBody.setStoredValue(result.getBalanceMoney().toString());
-				userMsgBody.setListType("0");
+					userMsgBody.setCarType(result.getCardType().toString());
+					userMsgBody.setCarNo(result.getCarNo());
+					userMsgBody.setUserTimeStart(result.getStartDate());
+					userMsgBody.setUserTimeEnd(result.getEndDate());
+					userMsgBody.setStoredValue(result.getBalanceMoney().toString());
+					userMsgBody.setListType("0");
 
-				ParkChannelSet channel = ParkMethod.getChannelSetByControlIndex(macNo);
+					ParkChannelSet channel = ParkMethod.getChannelSetByControlIndex(macNo);
 
-				if (channel == null || !channel.isOnline()) {
-					break;
-				}
+					if (channel == null || !channel.isOnline()) {
+						break;
+					}
 
-				int status = result.getStatus();// 0正常、1正在挂失、2已挂失、3正在解挂、4已补卡、5挂失退款、6已销户
-				String method = "loadUserInfo";
-				if (status == 6) {
-					method = "deleteUserInfo";
-				}
-				// 下发硬件
-				MainBoardMessage<ReplyHead, LoadUserMsgBodyReturn> replyVo = MainBoardSdk.sendAndGet(channel.getDsn(),
-						method, userMsgBody, LoadUserMsgBodyReturn.class);
-				if (replyVo != null) {
-					if (method == "deleteUserInfo") {// 删除记录无需判断状态
-						yktCardIssueRel.setSign(1);
-						cardIssueRelMapper.updateByPrimaryKey(yktCardIssueRel);
-					} else { // 正常授权需要判断状态
-						if ("0".equals(replyVo.getHead().getStatus())) {
-							// 修改标志位
+					int status = result.getStatus();// 0正常、1正在挂失、2已挂失、3正在解挂、4已补卡、5挂失退款、6已销户
+					String method = "loadUserInfo";
+					if (status == 6) {
+						method = "deleteUserInfo";
+					}
+					// 下发硬件
+					MainBoardMessage<ReplyHead, LoadUserMsgBodyReturn> replyVo = MainBoardSdk.sendAndGet(channel.getDsn(),
+							method, userMsgBody, LoadUserMsgBodyReturn.class);
+					if (replyVo != null) {
+						if (method == "deleteUserInfo") {// 删除记录无需判断状态
 							yktCardIssueRel.setSign(1);
 							cardIssueRelMapper.updateByPrimaryKey(yktCardIssueRel);
+						} else { // 正常授权需要判断状态
+							if ("0".equals(replyVo.getHead().getStatus())) {
+								// 修改标志位
+								yktCardIssueRel.setSign(1);
+								cardIssueRelMapper.updateByPrimaryKey(yktCardIssueRel);
+							}
 						}
+					} else {
+						continue;
 					}
 				}
 			}
 		} catch (Exception e) {
-			LoggerUntils.error(logger, e);
+			logger.error("加载用户数据到岗亭:",e);
 		}
 	}
 }

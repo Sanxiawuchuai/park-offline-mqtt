@@ -1,8 +1,24 @@
 package com.drzk.service.entity;
+
+import java.io.Serializable;
+
 ////2.1. 广播读取设备信息返回实体
-public class BroadcastReadDeviceMsgReturnBody  extends SuperBody{
+public class BroadcastReadDeviceMsgReturnBody  implements Serializable{
+
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1025857992133031725L;
+	private String uId;
 	private String equipmentModel;//设备型号
 	private String equipmentIP;//设备IP
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
+	}
 	private String equipmentName;//设备名称
 	private String equipmentID;//设备编号
 	private String equipmentVersion;//设备版本号

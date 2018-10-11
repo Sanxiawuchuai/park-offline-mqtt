@@ -1,6 +1,7 @@
 package com.drzk.online.vo;
 
-public class ComputerVO extends SuperBody
+
+public class ComputerVO extends OnlineBody
 {
 
 	private String ipAddress;

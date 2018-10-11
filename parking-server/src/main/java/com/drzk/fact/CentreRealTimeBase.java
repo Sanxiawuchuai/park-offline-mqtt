@@ -1,7 +1,5 @@
 package com.drzk.fact;
 
-import java.io.Serializable;
-
 import com.drzk.charge.vo.PaymentVo;
 import com.drzk.vo.ParkCarIn;
 import com.drzk.vo.ParkCentralCharge;
@@ -14,8 +12,7 @@ import com.drzk.vo.ParkCentralCharge;
  * @since JDK 1.8
  * @see
  */
-public class CentreRealTimeBase extends AbsRealTimeBase implements Serializable{
-	private static final long serialVersionUID = -7429192659978166868L;
+public class CentreRealTimeBase extends AbsRealTimeBase {
 	
 	private ParkCarIn inRecord; //用来存储对应的入场记录
 	private PaymentVo payMentVo = new PaymentVo(); //收费对象

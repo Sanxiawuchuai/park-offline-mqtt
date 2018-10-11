@@ -1,6 +1,7 @@
 
 package com.drzk.charge.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,7 +13,9 @@ import java.util.Date;
  * @since JDK 1.8
  * @see
  */
-public class PaymentVo {
+public class PaymentVo implements Serializable {
+	private static final long serialVersionUID = -4024430627336353443L;
+
 	/** 车牌号*/
 	private String carNo;
 	

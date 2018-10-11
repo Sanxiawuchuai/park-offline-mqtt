@@ -1,8 +1,14 @@
 package com.drzk.online.vo;
 
-public class YunScanCodeInModel
+import java.io.Serializable;
+
+public class YunScanCodeInModel implements Serializable
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3862372264367070707L;
 	private Integer channelType;
 	private String entryTime;
 	private String carNo;

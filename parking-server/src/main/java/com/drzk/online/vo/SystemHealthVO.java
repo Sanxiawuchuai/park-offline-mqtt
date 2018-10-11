@@ -1,11 +1,17 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf
  * 系统健康信息
  */
-public class SystemHealthVO {
-	 private Integer id;//编号
+public class SystemHealthVO implements Serializable {
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2951560990635619126L;
+	private Integer id;//编号
      private String comperIp;//电脑IP
      private String comCPU;//电脑CPU使用率
      private String network;//电脑网络

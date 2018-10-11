@@ -17,7 +17,7 @@ when
 	$parkOut : OutRealTimeBase(getNextStep() == Step.START)
 then
 	boolean $isSmallPark=parkOutService.isSmallPark($parkOut);
-	System.out.println("判断大小车场:"+$isSmallPark);
+	//System.out.println("判断大小车场:"+$isSmallPark);
 	$parkOut.setNextStep(Step.GETCARTYPE);  
 	update($parkOut);
 end
@@ -29,7 +29,7 @@ when
 	$parkOut : OutRealTimeBase(getNextStep() == Step.GETCARTYPE)
 then
 	Step $carType = parkOutService.getSpecialOrBlackCar($parkOut);
-	System.out.println("车辆类型:"+$carType);
+	//System.out.println("车辆类型:"+$carType);
 	$parkOut.setNextStep($carType);
 	update($parkOut);
 end
@@ -42,7 +42,7 @@ when
 then
 	parkOutService.open($parkOut.getChannelSet().getDsn()); //开闸
 	parkOutService.broadcastVoice($parkOut);//报语音
-	System.out.println("特种车处理:开闸->播报语音");
+	//System.out.println("特种车处理:开闸->播报语音");
 	modify($parkOut){getStatusMap().put("isSuccess",0)}
 	$parkOut.setNextStep(Step.END);
 	update($parkOut);
@@ -54,7 +54,7 @@ when
 	$parkOut : OutRealTimeBase(getNextStep() == Step.BLACKLIST)
 then
 	parkOutService.broadcastVoice($parkOut);//报语音
-	System.out.println("黑名单处理:播报语音");
+	//System.out.println("黑名单处理:播报语音");
 	modify($parkOut){getStatusMap().put("isSuccess",1)}
 	modify($parkOut){getStatusMap().put("Msg","黑名单")}
 	$parkOut.setNextStep(Step.END);
@@ -77,7 +77,7 @@ when
 	$parkOut : OutRealTimeBase(getNextStep() == Step.NULL)
 then
 	int $cardType = parkOutService.getCardTypeInfo($parkOut);
-	System.out.println("车辆卡类型:"+$cardType);
+	//System.out.println("车辆卡类型:"+$cardType);
 	$parkOut.setNextStep(Step.FINDINREORD);
 	update($parkOut);
 end
@@ -88,7 +88,7 @@ when
 	$parkOut : OutRealTimeBase(getNextStep() == Step.FINDINREORD)
 then
 	List<ParkCarIn> $inList =  parkOutService.getSimilarCar($parkOut);
-	System.out.println("入场记录:"+$inList.size());
+	//System.out.println("入场记录:"+$inList.size());
 	$parkOut.setNextStep($inList.size() ==1 ? Step.ISREGULARCAR : Step.MONTHMOREOUT);
 	update($parkOut);
 end
@@ -99,7 +99,7 @@ when
 	$parkOut : OutRealTimeBase(getNextStep() == Step.MONTHMOREOUT) //固定车多进多出标
 then
 	boolean $more= parkOutService.isMonthMoreOut($parkOut);
-	System.out.println("判断多进多出:"+$more);
+	//System.out.println("判断多进多出:"+$more);
 	$parkOut.setNextStep($more? Step.ISREGULARCAR:Step.SENDSIMILAR);
 	update($parkOut);
 end
@@ -111,7 +111,7 @@ when
 then
     parkOutService.broadcastVoice($parkOut);//发送请稍后
 	parkOutService.sendSimilarCar($parkOut);
-	System.out.println("发送相似车牌");
+	//System.out.println("发送相似车牌");
 	$parkOut.setNextStep(Step.END);
 	update($parkOut);
 end
@@ -122,7 +122,7 @@ when
 	$parkOut : OutRealTimeBase(getNextStep() == Step.ISREGULARCAR)
 then
 	boolean $isRegularCar = parkOutService.isRegularCar($parkOut);
-	System.out.println("是否是固定车:"+$isRegularCar);
+	//System.out.println("是否是固定车:"+$isRegularCar);
 	$parkOut.setNextStep($isRegularCar? Step.REGULARCAR:Step.TEMPCAR);
 	update($parkOut);
 end	
@@ -166,7 +166,7 @@ when
 	$parkOut : OutRealTimeBase(getNextStep() == Step.ISLOCK)
 then
 	boolean $isLock = parkOutService.isLock($parkOut.getCarNo());
-	System.out.println("是否锁车:"+$isLock);
+	//System.out.println("是否锁车:"+$isLock);
 	$parkOut.setNextStep($isLock? Step.LOCK:Step.UNLOCK);
 	update($parkOut);
 end
@@ -177,7 +177,7 @@ when
 	$parkOut : OutRealTimeBase(getNextStep() == Step.LOCK)
 then
 	parkOutService.broadcastVoice($parkOut);//报语音
-	System.out.println("车辆被锁");
+	//System.out.println("车辆被锁");
 	$parkOut.getStatusMap().put("isSuccess",1);
 	$parkOut.getStatusMap().put("Msg","车辆被锁");
 	$parkOut.setNextStep(Step.END);
@@ -312,7 +312,7 @@ when
 then
 	parkOutService.broadcastVoice($parkOut);//报语音
 	$parkOut.getStatusMap().put("isSuccess",1);
-	$parkOut.getStatusMap().put("Msg","时段内禁止出入场");
+	$parkOut.getStatusMap().put("Msg","固定车时间段禁止进出场");
 	$parkOut.setNextStep(Step.END);
 	update($parkOut);
 end
@@ -334,7 +334,7 @@ when
 	$parkOut : OutRealTimeBase(statusMap["type"]==1,getNextStep() == Step.EFFECTIVE)
 then
 	boolean $familyType = parkOutService.isFamilyGroup($parkOut);
-	System.out.println("是否家庭组:"+$familyType);
+	//System.out.println("是否家庭组:"+$familyType);
 	$parkOut.getStatusMap().put("familyType",$familyType);
 	$parkOut.setNextStep($familyType? Step.FAMILY:Step.ISNEEDCONFIRM);
 	update($parkOut);
@@ -380,7 +380,7 @@ when
 	$parkOut : OutRealTimeBase(getNextStep() == Step.CHECKTEMPPOWER)
 then
 	boolean $isChannelPower = parkOutService.isCarTypeChannelPower($parkOut);
-	System.out.println("通道权限:"+$isChannelPower);
+	//System.out.println("通道权限:"+$isChannelPower);
 	$parkOut.setNextStep($isChannelPower? Step.ISARREARS:Step.NOTEMPPOWER);
 	update($parkOut);
 end
@@ -392,7 +392,7 @@ when
 then
 	//临时车无通道权限报语音
 	parkOutService.broadcastVoice($parkOut);//报语音
-	System.out.println("无临时车通道权限");
+	//System.out.println("无临时车通道权限");
 	modify($parkOut){getStatusMap().put("isSuccess",1)}
 	modify($parkOut){getStatusMap().put("Msg","没有通道权限")}
 	$parkOut.setNextStep(Step.END);
@@ -405,7 +405,7 @@ when
 	$parkOut : OutRealTimeBase(getNextStep() == Step.ISARREARS)
 then
 	boolean $isArrears = parkOutService.isArrears($parkOut);
-	System.out.println("费用是否结清:"+$isArrears);
+	//System.out.println("费用是否结清:"+$isArrears);
 	parkOutService.broadcastVoice($parkOut);//报语音
 	$parkOut.setNextStep(Step.ARREARS);
 	update($parkOut);
@@ -417,7 +417,7 @@ when
 	$parkOut : OutRealTimeBase(statusMap["type"]==5, getNextStep() == Step.ARREARS)
 then
 	boolean $result = parkOutService.storecarCharge($parkOut);
-	System.out.println("储值车是否够扣费:"+$result);
+	//System.out.println("储值车是否够扣费:"+$result);
 	$parkOut.setNextStep($result? Step.ISNEEDCONFIRM:Step.ISARREARS);
 	update($parkOut);
 end
@@ -427,8 +427,8 @@ rule "arrears "
 when
 	$parkOut : OutRealTimeBase(getNextStep() == Step.ARREARS)
 then
-    System.out.println("欠费:");
-	$parkOut.setNextStep(Step.NEEDCONFIRM);
+    //System.out.println("欠费:");
+	$parkOut.setNextStep(Step.ISNEEDCONFIRM);
 	update($parkOut);
 end
 
@@ -450,7 +450,7 @@ when
 	$parkOut : OutRealTimeBase(getNextStep() == Step.NEEDCONFIRM)
 then
 	parkOutService.boxOutIsOpen($parkOut);
-	System.out.println("通知岗亭确认");
+	//System.out.println("通知岗亭确认");
 	$parkOut.setNextStep(Step.END);
 	update($parkOut);
 end
@@ -460,10 +460,10 @@ rule "not need confirm"
 when 
 	$parkOut : OutRealTimeBase(getNextStep() == Step.SAVE)
 then
-	System.out.println("保存记录");
+	//System.out.println("保存记录");
 	parkOutService.saveParkOutRecord($parkOut);	
 	parkOutService.sendParkCarOutRecordToBox($parkOut);
-	System.out.println("推送流水");
+	//System.out.println("推送流水");
 	$parkOut.setNextStep(Step.OPEN);
 	update($parkOut);
 end
@@ -473,7 +473,7 @@ rule "open"
 when
 	$parkOut : OutRealTimeBase(getNextStep() == Step.OPEN)
 then
-	System.out.println("开闸");
+	//System.out.println("开闸");
 	parkOutService.open($parkOut.getChannelSet().getDsn());
 	parkOutService.pushChargeData($parkOut);
 	$parkOut.setNextStep(Step.VOICE);
@@ -488,7 +488,7 @@ when
 then
 	parkOutService.broadcastVoice($parkOut);//报语音
 	$parkOut.setNextStep(Step.END);
-	System.out.println("报语音");
+	//System.out.println("报语音");
 	update($parkOut);
 end
 	

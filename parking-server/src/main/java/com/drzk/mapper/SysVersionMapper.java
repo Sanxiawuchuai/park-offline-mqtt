@@ -1,17 +1,21 @@
 package com.drzk.mapper;
 
 import com.drzk.vo.SysVersion;
+import org.apache.ibatis.annotations.Param;
 
 public interface SysVersionMapper {
-    int deleteByPrimaryKey(Integer id);
+    int delete(Integer id);
 
     int insert(SysVersion record);
 
-    int insertSelective(SysVersion record);
+    SysVersion findById(Integer id);
 
-    SysVersion selectByPrimaryKey(Integer id);
+    int update(SysVersion record);
 
-    int updateByPrimaryKeySelective(SysVersion record);
-
-    int updateByPrimaryKey(SysVersion record);
+    /**
+     * 查询版本号是否存在
+     * @param vSoft
+     * @return
+     */
+    SysVersion getVerBySoft(@Param("vSoft") String vSoft);
 }

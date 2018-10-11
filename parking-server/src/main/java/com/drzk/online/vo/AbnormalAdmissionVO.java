@@ -1,11 +1,17 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf
  * 异常入场信息
  */
-public class AbnormalAdmissionVO {
-	 private Integer carInExceptionId; //编号
+public class AbnormalAdmissionVO implements Serializable {
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = -78579750069823643L;
+	private Integer carInExceptionId; //编号
      private String cardId;//卡ID（7Byte）
      private String cardNo;//卡编号
      private String empName;//车主名称

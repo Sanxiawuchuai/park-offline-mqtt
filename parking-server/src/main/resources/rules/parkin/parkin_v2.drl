@@ -34,9 +34,10 @@ when
 	$parkIn : InRealTimeBase(getNextStep() == Step.BLACKLIST)
 then
 	parkInService.broadcastVoice($parkIn);//报语音
-	System.out.println("黑名单处理:播报语音");
+	//System.out.println("黑名单处理:播报语音");
 	$parkIn.getStatusMap().put("isSuccess",1);
-	$parkIn.getStatusMap().put("Msg","黑名单");
+	$parkIn.getStatusMap().put("Msg","黑名单禁止通行");
+	System.out.println("黑名单禁止通行");
 	$parkIn.setNextStep(Step.END);
 	update($parkIn);
 end
@@ -46,6 +47,7 @@ rule "free car"
 when 
 	$parkIn : InRealTimeBase(getNextStep() == Step.FREECAR)
 then
+	boolean $isSmallPark=parkInService.isSmallPark($parkIn);
 	$parkIn.setNextStep(Step.ISNEEDCONFIRM);
 	update($parkIn);
 end
@@ -67,7 +69,7 @@ when
 	$parkIn : InRealTimeBase(getNextStep() == Step.ISFULLIN)
 then
 	boolean $isFullPass = parkInService.isParkFullPass($parkIn.getCarRealType());
-	System.out.println("满位允许入场:"+$isFullPass);
+	//System.out.println("满位允许入场:"+$isFullPass);
 	$parkIn.setNextStep($isFullPass? Step.FULLALLOWIN:Step.FULLNOTALLOWIN);
 	update($parkIn);
 end
@@ -100,7 +102,7 @@ when
 	$parkIn : InRealTimeBase(getNextStep() == Step.ISREADSUCCESS)
 then
 	boolean $isReadSuccess = parkInService.isReadSuccess($parkIn);
-	System.out.println("判断识别是否成功:"+$isReadSuccess);
+	//System.out.println("判断识别是否成功:"+$isReadSuccess);
 	$parkIn.setNextStep($isReadSuccess? Step.ISREGULARCAR:Step.READFAIL);
 	update($parkIn);
 end
@@ -113,7 +115,7 @@ when
 	$parkIn : InRealTimeBase(getNextStep() == Step.ISREGULARCAR)
 then
 	boolean $isRegularCar = parkInService.isRegularCar($parkIn);
-	System.out.println("是否是固定车:"+$isRegularCar);
+	//System.out.println("是否是固定车:"+$isRegularCar);
 	$parkIn.setNextStep($isRegularCar? Step.REGULARCAR:Step.TEMPCAR);
 	update($parkIn);
 end	
@@ -126,7 +128,7 @@ when
 	$parkIn : InRealTimeBase(getNextStep() == Step.REGULARCAR)  //固定车
 then
 	boolean $isChannelPower = parkInService.isCarTypeChannelPower($parkIn);
-	System.out.println("通道权限:"+$isChannelPower);
+	//System.out.println("通道权限:"+$isChannelPower);
 	$parkIn.setNextStep($isChannelPower? Step.HASGULARPOWER:Step.NOGULARPOWER);
 	update($parkIn);
 end	
@@ -213,7 +215,7 @@ when
 	$parkIn : InRealTimeBase(getNextStep() == Step.EFFECTIVE)
 then
 	boolean $isFamily = parkInService.isFamilyGroup($parkIn);
-	System.out.println("是否家庭组:"+$isFamily);
+	//System.out.println("是否家庭组:"+$isFamily);
 	$parkIn.getStatusMap().put("familyType",$isFamily);
 	$parkIn.setNextStep($isFamily? Step.FAMILY:Step.NOTFAMILY);
 	update($parkIn);
@@ -228,7 +230,7 @@ when
 	$parkIn : InRealTimeBase(getNextStep() == Step.FAMILY)
 then
 	boolean $familyType = parkInService.getFamilyCarType($parkIn);
-	System.out.println("车位组入场类型:" + $familyType);
+	//System.out.println("车位组入场类型:" + $familyType);
 	$parkIn.setNextStep($familyType? Step.FAMILYTEMP:Step.FAMILYMONTH);
 	update($parkIn);
 end
@@ -252,7 +254,7 @@ when
 then
 	//家庭组满位，播报语音
 	parkInService.broadcastVoice($parkIn);//报语音
-	System.out.println("家庭组满位");
+	//System.out.println("家庭组满位");
 	$parkIn.getStatusMap().put("isSuccess",1);
 	$parkIn.getStatusMap().put("Msg","家庭组满位");
 	$parkIn.setNextStep(Step.END);
@@ -277,7 +279,7 @@ when
 	$parkIn : InRealTimeBase(getNextStep() == Step.TEMPCAR)
 then
 	boolean $isTemplPower = parkInService.isCarTypeChannelPower($parkIn);
-	System.out.println("通道权限:"+$isTemplPower);
+	//System.out.println("通道权限:"+$isTemplPower);
 	$parkIn.setNextStep($isTemplPower? Step.HASTEMPPOWER:Step.NOTEMPPOWER);
 	update($parkIn);
 end

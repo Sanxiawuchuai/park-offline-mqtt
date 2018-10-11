@@ -1,7 +1,13 @@
 package com.drzk.offline.vo;
 
-public class ChargePaySuccess {
+import java.io.Serializable;
 
+public class ChargePaySuccess implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6692831246086918933L;
 	private String uId; //唯一标志
 	private String boxIP; //岗亭 IP
 	public String getuId() {

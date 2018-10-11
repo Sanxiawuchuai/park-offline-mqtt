@@ -1,11 +1,17 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf
  * 黑名单车辆
  */
-public class BlacklistVehicleVO {
-	 private Integer cardIssueBlackId;//编号
+public class BlacklistVehicleVO implements Serializable {
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8613849284303619229L;
+	private Integer cardIssueBlackId;//编号
      private String carNo;//车牌号码
      private Integer carNoType;//车牌类型(0无,1黑名单,2特种车辆)
      private Integer isStop;//类型(0无,1禁止通行,2通行免费,3自由通行)

@@ -3,9 +3,9 @@ package com.drzk.online.vo;
 import java.util.Date;
 import java.util.List;
 
-public class FeescaleVO extends SuperBody {
+public class FeescaleVO extends OnlineBody{
 
-    private String packageName;		//账户名称
+	private String packageName;		//账户名称
 	private String crossTimeType;
 	private String freeTime;			//免费时间
 	private Double mostMoney;			//最高计费

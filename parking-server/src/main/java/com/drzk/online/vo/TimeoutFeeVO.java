@@ -1,13 +1,11 @@
 package com.drzk.online.vo;
 
-import java.io.Serializable;
 
 /**
  * @author tf
  * 超时收费
  */
-public class TimeoutFeeVO extends SuperBody implements Serializable{
-	private static final long serialVersionUID = 1L;
+public class TimeoutFeeVO extends OnlineBody{
 
 	private Integer cardType;	//账户类型
 	private Integer deadTime;//停滞时间  分钟

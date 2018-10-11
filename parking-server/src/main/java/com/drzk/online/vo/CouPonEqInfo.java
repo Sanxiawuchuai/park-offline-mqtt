@@ -1,11 +1,13 @@
 package com.drzk.online.vo;
 
+
 /** 商家信息  */
-public class CouPonEqInfo extends SuperBody {
+public class CouPonEqInfo extends OnlineBody{
 
 	private String businessName;
 	private String clientNo;
 	private String remark;
+	private Integer status;
 
 	public String getBusinessName() {
 		return businessName;
@@ -29,5 +31,13 @@ public class CouPonEqInfo extends SuperBody {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }

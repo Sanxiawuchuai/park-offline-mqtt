@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class YktCardIssuePark {
+public class YktCardIssuePark implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3965498145724659275L;
+
+	/**
      * id，与主卡id的值一样
      */
     private Integer yktId;

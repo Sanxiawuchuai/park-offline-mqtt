@@ -70,14 +70,17 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		insert into park_dis_detail (id, out_type, discount_id,
-		card_id, out_time, discount_time,
-		dis_amount, dis_type, online_id,car_no,in_time
+		card_id, out_time, 
+		dis_amount, dis_type, online_id,car_no,in_time,discount_time,
+		puid,is_load,del_frag
 		)
 		values (#{id,jdbcType=INTEGER}, #{outType,jdbcType=INTEGER},
 		#{discountId,jdbcType=VARCHAR},
-		#{cardId,jdbcType=VARCHAR}, #{outTime,jdbcType=TIMESTAMP}, #{discountTime,jdbcType=TIMESTAMP},
+		#{cardId,jdbcType=VARCHAR}, #{outTime,jdbcType=TIMESTAMP}, 
 		#{disAmount,jdbcType=REAL}, #{disType,jdbcType=INTEGER},
-		#{onlineId,jdbcType=VARCHAR},#{carNo,jdbcType=VARCHAR},#{inTime,jdbcType=TIMESTAMP}
+		#{onlineId,jdbcType=VARCHAR},#{carNo,jdbcType=VARCHAR},#{inTime,jdbcType=TIMESTAMP},
+		#{discountTime,jdbcType=TIMESTAMP},#{puid,jdbcType=VARCHAR},#{isLoad,jdbcType=INTEGER},
+		#{delFrag,jdbcType=INTEGER}
 		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.drzk.vo.ParkDisDetail">

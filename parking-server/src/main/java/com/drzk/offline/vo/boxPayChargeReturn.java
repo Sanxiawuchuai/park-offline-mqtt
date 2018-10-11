@@ -1,9 +1,15 @@
 package com.drzk.offline.vo;
 
+import java.io.Serializable;
+
 import com.drzk.fact.AbsRealTimeBase;
 /** 收费改变实体 */
-public class boxPayChargeReturn
+public class boxPayChargeReturn  implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 882712880816380485L;
 	private String uId;
 	private Integer type;
 	private AbsRealTimeBase chargeData;

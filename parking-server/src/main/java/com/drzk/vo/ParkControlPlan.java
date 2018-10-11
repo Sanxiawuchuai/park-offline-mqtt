@@ -1,7 +1,14 @@
 package com.drzk.vo;
 
-public class ParkControlPlan {
+import java.io.Serializable;
+
+public class ParkControlPlan implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7558799112848226498L;
+
+	/**
      * 级别id
      */
     private Integer planId;

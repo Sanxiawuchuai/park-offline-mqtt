@@ -1,7 +1,14 @@
 package com.drzk.vo;
 
-public class ParkChanelTemp {
+import java.io.Serializable;
+
+public class ParkChanelTemp implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3155975297285821228L;
+
+	/**
      * 自增ID
      */
     private Integer id;

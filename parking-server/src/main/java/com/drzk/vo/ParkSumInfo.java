@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ParkSumInfo {
-    private Integer id;
+public class ParkSumInfo implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4508234846628406186L;
+
+	private Integer id;
 
     private String puid;
 

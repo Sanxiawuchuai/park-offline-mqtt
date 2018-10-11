@@ -212,12 +212,18 @@
         #{modifyUserName})
     </insert>
 
-    <update id="updateByCode" parameterType="com.drzk.vo.SysParameters">
-        update sys_parameters
-        set
-        parameter_value = #{parameterValue},
-        modify_date = #{modifyDate},
-        modify_user_name = #{modifyUserName}
-        where parameter_code = #{parameterCode}
+    <update id="updateByCode">
+        update sys_parameters set parameter_value = #{paramsValue}
+        where parameter_code = #{paramsCode}
     </update>
+
+	<update id="batchUpdate" parameterType="java.util.Map">
+		<foreach collection="map.keys" item="key" separator=";" open="" close="">
+			update sys_parameters
+			<set>
+				parameter_value ="${map[key]}"
+			</set>
+			where parameter_code = #{key}
+		</foreach>
+	</update>
 </mapper>

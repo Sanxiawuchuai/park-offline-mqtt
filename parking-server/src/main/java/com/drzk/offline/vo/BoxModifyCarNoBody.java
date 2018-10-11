@@ -1,9 +1,16 @@
 package com.drzk.offline.vo;
 
+import java.io.Serializable;
+
 import com.drzk.vo.ParkCarIn;
 
-public class BoxModifyCarNoBody extends SuperBody
+public class BoxModifyCarNoBody implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7887459377736059917L;
+	private String uId;
 	private String controlIP;//控制器IP
 	private String equipmentID;//硬件设备编号
 	private ParkCarIn parkCarIn;//入场记录实体
@@ -30,6 +37,14 @@ public class BoxModifyCarNoBody extends SuperBody
 
 	public void setEquipmentID(String equipmentID) {
 		this.equipmentID = equipmentID;
+	}
+
+	public String getuId() {
+		return uId;
+	}
+
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 		
 }

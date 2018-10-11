@@ -1,10 +1,16 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf
  * 异常出场
  */
-public class AbnormalAppearanceVO {
+public class AbnormalAppearanceVO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2090126975397716900L;
 	private Integer id;//编号
     private String areaName;//小区名称
     private String carNo;//车牌号码

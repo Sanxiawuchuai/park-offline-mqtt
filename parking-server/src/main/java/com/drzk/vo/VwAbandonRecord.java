@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class VwAbandonRecord {
+public class VwAbandonRecord implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2284699336240031850L;
+
+	/**
      * 
      */
     private Integer id;

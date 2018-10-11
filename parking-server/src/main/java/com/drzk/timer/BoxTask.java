@@ -23,7 +23,7 @@ import com.drzk.utils.LoggerUntils;
  */
 
 @Component
-@Scope("singleton")
+@Scope("prototype")
 public class BoxTask implements Runnable {
 	private static Logger logger = Logger.getLogger("userLog");
 	
@@ -49,8 +49,8 @@ public class BoxTask implements Runnable {
 		try {
 			Method classMethod = clazz.getMethod(method, String.class);
 			classMethod.invoke(boxOperation, json);
-		} catch (Exception e) {
-			LoggerUntils.error(logger, e);
+		} catch (Exception ex) {
+			logger.error("岗亭通讯线程:", ex);
 		}
 	}
 }

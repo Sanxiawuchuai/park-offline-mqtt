@@ -1,8 +1,14 @@
 package com.drzk.offline.vo;
 
-public class BoxComputerGateBody extends SuperBody
-{
+import java.io.Serializable;
 
+public class BoxComputerGateBody implements Serializable
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7562645822414659528L;
+	private String uId;
 	private String controlIP;//控制器IP
 	private String equipmentID;//硬件设备编号
 	private String type;//0,开闸 1,停闸,2,关闸
@@ -94,6 +100,12 @@ public class BoxComputerGateBody extends SuperBody
 	public String getReason()
 	{
 		return reason;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	
 	

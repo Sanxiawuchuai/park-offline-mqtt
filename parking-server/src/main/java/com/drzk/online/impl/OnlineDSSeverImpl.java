@@ -10,6 +10,7 @@ import com.drzk.utils.GlobalPark;
 import com.drzk.utils.JsonUtil;
 import com.drzk.vo.*;
 import com.drzk.vo.ParkCarOut;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -122,7 +123,9 @@ public class OnlineDSSeverImpl implements OnlineDSSever
 			return;
 		ParkCarIn inModel = parkCarInMapper.selectByGuid(model.getuId());
 		if(inModel ==null) return;
-		ParkCarInVO VO = conversionParameterClass.getParkCarIn(inModel);
+		BackUpParkCarIn backUpParkCarIn=new BackUpParkCarIn();
+		BeanUtils.copyProperties(inModel, backUpParkCarIn);
+		ParkCarInVO VO = conversionParameterClass.getParkCarIn(backUpParkCarIn);
 		if(VO == null) return ;
 		List<String> guids = new ArrayList<String>();
 		guids.add(model.getuId());

@@ -1,8 +1,8 @@
 package com.drzk.online.vo;
 
-public class ParkCamerasVO extends SuperBody
-{
 
+public class ParkCamerasVO extends OnlineBody
+{
 	private String cameIp;
 	private String cameName;
 	private String camePort;

@@ -1,7 +1,14 @@
 package com.drzk.vo;
 
-public class YktCardIssueRel {
+import java.io.Serializable;
+
+public class YktCardIssueRel implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7212945544690351375L;
+
+	/**
      * 主键id
      */
     private Integer id;

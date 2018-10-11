@@ -1,10 +1,16 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf
  * 交班记录
  */
-public class HandoverRecordVO {
+public class HandoverRecordVO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1690263051110443175L;
 	private Integer sumUserId; // 编号
 	private Integer boxId;// 岗亭编号
 	private String loginDate;// 登入时间

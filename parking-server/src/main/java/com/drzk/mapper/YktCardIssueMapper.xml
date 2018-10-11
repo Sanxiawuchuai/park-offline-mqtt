@@ -204,9 +204,8 @@
 
 	<update id="updateDSStatusBypid">
 		update ykt_card_issue set is_load =#{status}
-		where p_id in
-		<foreach collection="list" index="index" item="item" open="("
-			separator="," close=")">
+		where cuid in
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 	</update>

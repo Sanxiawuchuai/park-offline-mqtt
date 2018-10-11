@@ -19,8 +19,8 @@ import com.drzk.service.entity.ParkCarOutRecordBody;
 import com.drzk.service.entity.UpRecordBody;
 import com.drzk.service.impl.MqttServiceImpl;
 import com.drzk.service.impl.ParkingInServiceImpl;
+import com.drzk.utils.BeanCopierUtil;
 import com.drzk.utils.JsonUtil;
-import com.drzk.utils.LoggerUntils;
 import com.drzk.vo.BackUpParkCarIn;
 import com.drzk.vo.ParkCarIn;
 import com.drzk.vo.ParkCarOut;
@@ -41,7 +41,7 @@ import com.drzk.vo.VwParkCarIsuse;
  * @see
  */
 @Component
-@Scope("singleton")
+@Scope("prototype")
 public class AutoParkOut implements Runnable {
 	private static Logger logger = Logger.getLogger("userLog");
 	@Autowired
@@ -83,11 +83,8 @@ public class AutoParkOut implements Runnable {
 				carOut.setYktId(0);
 			}
 			outChannelType=channel.getInOut();
-			ParkCarIn condition = new ParkCarIn();
 			String rCarNo = body.getCarNo().trim().substring(1);
-			condition.setCarNo(rCarNo);
-			condition.setSmall(small);
-			ParkCarIn modelGet = parkCarInMapper.selectTop(condition);
+			ParkCarIn modelGet = parkCarInMapper.selectTop(rCarNo,small);
 			if (modelGet != null) { // 存在入场记录
 				ParkChannelSet parkChannelset = ParkMethod.getChannelSetByControlIndex(
 						modelGet.getMachNo() == null ? 0 : modelGet.getMachNo().byteValue());
@@ -100,7 +97,7 @@ public class AutoParkOut implements Runnable {
 				} else {
 					parkCarInMapper.deleteByPrimaryKey(modelGet.getId());
 					BackUpParkCarIn backUpIn = new BackUpParkCarIn();
-					BeanUtils.copyProperties(modelGet, backUpIn);
+					BeanCopierUtil.copyProperties(modelGet, backUpIn);
 					backUpIn.setId(null);
 					backUpParkCarInMapper.insert(backUpIn);
 				}
@@ -143,12 +140,12 @@ public class AutoParkOut implements Runnable {
 				sendParkCarOutRecordToBox(carOut); //推送入场记录
 				parking.pushOutData(channel, carOut);
 				parking.outStatisticsRefresh(carOut);
-				LoggerUntils.error(logger, "保存出场记录成功");
+				logger.debug("出场记录成功!");
 			}
 			else
-				LoggerUntils.error(logger, "保存出场记录失败");
-		} catch (Exception e) {
-			LoggerUntils.error(logger, e);
+				logger.debug("出场记录保存失败!");
+		} catch (Exception ex) {
+			logger.error("出场记录:", ex);
 		}
 	}
 	/**
@@ -179,12 +176,13 @@ public class AutoParkOut implements Runnable {
 					String equipmentID = local.getEquipmentID();
 					String replyTopic = String.format(TopicsDefine.BOX_ERROR, equipmentID);
 					MqttMessageVO reply = MqttServiceImpl.sendMessage(equipmentID,replyTopic, jsonBody, null, 0);
+					logger.debug("出场记录推送:"+replyTopic+","+jsonBody);
 				}
 			}
 		}
 		catch(Exception ex)
 		{
-			LoggerUntils.error(logger, ex.toString());
+			logger.error("推送出场数据:", ex);
 		}
 	}
 }

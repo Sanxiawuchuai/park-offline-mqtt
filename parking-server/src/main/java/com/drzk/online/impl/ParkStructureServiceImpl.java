@@ -94,21 +94,21 @@ public class ParkStructureServiceImpl implements ParkStructureService {
         Integer companyId = perCompanyMapper.selectByUuid( config.getCompanyId() );
         Integer departmentId = perDeptMapper.selectByUuid( config.getParentId() );
         //车位
-        ParkCarGroup carport =parkCarGroupMapper.getByCuid( config.getCarportGroupId());
-        if(carport!=null&&carport.getId()!=null){
+        ParkCarGroup carport = parkCarGroupMapper.getByCuid( config.getCarportGroupId() );
+        if (carport != null && carport.getId() != null) {
             perPersons.setPlaceId( carport.getId() );
         }
         if (companyId != null) {
-            perPersons.setCompId( companyId);
+            perPersons.setCompId( companyId );
         }
         if (departmentId != null) {
-            perPersons.setDeptId( departmentId);
+            perPersons.setDeptId( departmentId );
         }
         perPersons.setIsload( ConstantUtil.SQL_SUCCESS );
         //加密
-        perPersons.setPerEmail( StringUtils.encode(perPersons.getPerEmail()) );
-        perPersons.setPerTel( StringUtils.encode(perPersons.getPerTel()) );
-        if(config.getEducation()!=null){
+        perPersons.setPerEmail( StringUtils.encode( perPersons.getPerEmail() ) );
+        perPersons.setPerTel( StringUtils.encode( perPersons.getPerTel() ) );
+        if (config.getEducation() != null) {
             perPersons.setEduLevel( EduLevelEnum.get( config.getEducation() ).getDesc() );
         }
         int result = perPersonsMapper.insertOnline( perPersons );
@@ -160,22 +160,22 @@ public class ParkStructureServiceImpl implements ParkStructureService {
         Integer companyId = perCompanyMapper.selectByUuid( config.getCompanyId() );
         Integer departmentId = perDeptMapper.selectByUuid( config.getParentId() );
         //车位
-        ParkCarGroup carport =parkCarGroupMapper.getByCuid( config.getCarportGroupId());
-        if(carport!=null&&carport.getId()!=null){
+        ParkCarGroup carport = parkCarGroupMapper.getByCuid( config.getCarportGroupId() );
+        if (carport != null && carport.getId() != null) {
             perPersons.setPlaceId( carport.getId() );
         }
         if (companyId != null) {
-            perPersons.setCompId( companyId);
+            perPersons.setCompId( companyId );
         }
         if (departmentId != null) {
-            perPersons.setDeptId( departmentId);
+            perPersons.setDeptId( departmentId );
         }
-        if(config.getEducation()!=null){
+        if (config.getEducation() != null) {
             perPersons.setEduLevel( EduLevelEnum.get( config.getEducation() ).getDesc() );
         }
         //加密
-        perPersons.setPerEmail( StringUtils.encode(perPersons.getPerEmail()) );
-        perPersons.setPerTel( StringUtils.encode(perPersons.getPerTel()) );
+        perPersons.setPerEmail( StringUtils.encode( perPersons.getPerEmail() ) );
+        perPersons.setPerTel( StringUtils.encode( perPersons.getPerTel() ) );
         int result = perPersonsMapper.updateByUuid( perPersons );
         if (result > ConstantUtil.SQL_FAILED) {
             sendSyncResult( config.getObjectId(), ConstantUtil.PERSONNEL_METHOD, ConstantUtil.SQL_SUCCESS_STATUS, config.getParkingNo() );
@@ -236,10 +236,13 @@ public class ParkStructureServiceImpl implements ParkStructureService {
             String executeType = head.getExecuteType();
             if (method.equals( ConstantUtil.COMPANY_METHOD )) {
                 ParkCompanyVo vo = JacksonUtils.jsonToMqttObject( message, ParkCompanyVo.class ).getBody();
-                if (executeType.equals( ConstantUtil.INSERT_OPERATION )) {
-                    insertParkCompany( vo );
-                } else if (executeType.equals( ConstantUtil.UPDATE_OPERATION )) {
-                    saveParkCompany( vo );
+                Integer exists = perCompanyMapper.selectByUuid( head.getSubId() );
+                if (executeType.equals( ConstantUtil.INSERT_OPERATION ) || executeType.equals( ConstantUtil.UPDATE_OPERATION )) {
+                    if (exists != null) {
+                        saveParkCompany( vo );
+                    } else {
+                        insertParkCompany( vo );
+                    }
                 } else if (executeType.equals( ConstantUtil.DELETE_OPERATION )) {
                     vo = new ParkCompanyVo();
                     vo.setObjectId( head.getSubId() );
@@ -248,10 +251,13 @@ public class ParkStructureServiceImpl implements ParkStructureService {
                 }
             } else if (method.equals( ConstantUtil.DEPARTMENT_METHOD )) {
                 ParkDepartmentVo vo = JacksonUtils.jsonToMqttObject( message, ParkDepartmentVo.class ).getBody();
-                if (executeType.equals( ConstantUtil.INSERT_OPERATION )) {
-                    insertParkDepartment( vo );
-                } else if (executeType.equals( ConstantUtil.UPDATE_OPERATION )) {
-                    saveParkDepartment( vo );
+                Integer exists = perDeptMapper.selectByUuid( head.getSubId() );
+                if (executeType.equals( ConstantUtil.INSERT_OPERATION ) || executeType.equals( ConstantUtil.UPDATE_OPERATION )) {
+                    if (exists != null) {
+                        saveParkDepartment( vo );
+                    } else {
+                        insertParkDepartment( vo );
+                    }
                 } else if (executeType.equals( ConstantUtil.DELETE_OPERATION )) {
                     vo = new ParkDepartmentVo();
                     vo.setObjectId( head.getSubId() );
@@ -260,10 +266,13 @@ public class ParkStructureServiceImpl implements ParkStructureService {
                 }
             } else if (method.equals( ConstantUtil.PERSONNEL_METHOD )) {
                 ParkPersonnelVo vo = JacksonUtils.jsonToMqttObject( message, ParkPersonnelVo.class ).getBody();
-                if (executeType.equals( ConstantUtil.INSERT_OPERATION )) {
-                    insertParkPersonnel( vo );
-                } else if (executeType.equals( ConstantUtil.UPDATE_OPERATION )) {
-                    saveParkPersonnel( vo );
+                PerPersons exists = perPersonsMapper.selectByUuid( head.getSubId() );
+                if (executeType.equals( ConstantUtil.INSERT_OPERATION ) || executeType.equals( ConstantUtil.UPDATE_OPERATION )) {
+                    if (exists != null) {
+                        saveParkPersonnel( vo );
+                    } else {
+                        insertParkPersonnel( vo );
+                    }
                 } else if (executeType.equals( ConstantUtil.DELETE_OPERATION )) {
                     vo = new ParkPersonnelVo();
                     vo.setObjectId( head.getSubId() );
@@ -272,23 +281,25 @@ public class ParkStructureServiceImpl implements ParkStructureService {
                 }
             }
         }
+
     }
 
     /**
      * 同步结果
+     *
      * @param objectId  objectId
-     * @param method  method
-     * @param result 2 成功 3 失败
+     * @param method    method
+     * @param result    2 成功 3 失败
      * @param parkingNo 车场编号
      */
-    private void sendSyncResult(String objectId,String method,Integer result, String parkingNo) {
+    private void sendSyncResult(String objectId, String method, Integer result, String parkingNo) {
         MqttHeadVo head = new MqttHeadVo();
         head.setSubId( objectId );
         head.setMethod( method );
         head.setStatus( result.toString() );
         head.setParkingNo( parkingNo );
-        MqttPayloadVo replay=new MqttPayloadVo();
+        MqttPayloadVo replay = new MqttPayloadVo();
         replay.setHead( head );
-        ofMqttService.sendMessage(ConstantUtil.PUBLISH_ASYNC_STATUS_TO_ONLINE,JacksonUtils.objectToJson( replay ),0);
+        ofMqttService.sendMessage( ConstantUtil.PUBLISH_ASYNC_STATUS_TO_ONLINE, JacksonUtils.objectToJson( replay ), 0 );
     }
 }

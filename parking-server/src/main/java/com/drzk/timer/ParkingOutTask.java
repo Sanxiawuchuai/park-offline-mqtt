@@ -11,10 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.drzk.common.InOutRealTimeBase.Step;
 import com.drzk.fact.OutRealTimeBase;
 import com.drzk.service.IParkingService;
-import com.drzk.utils.LoggerUntils;
 
 /**
  * ClassName:ParkingOutTask <br>
@@ -26,7 +24,7 @@ import com.drzk.utils.LoggerUntils;
  * @see
  */
 @Component
-@Scope("singleton")
+@Scope("prototype")
 public class ParkingOutTask implements Runnable {
 	private static Logger logger = Logger.getLogger("userLog");
 
@@ -51,22 +49,21 @@ public class ParkingOutTask implements Runnable {
 
 	@Override
 	public void run() {
-		//try {
+		try {
 			long t1 = new Date().getTime();
 			kSession.setGlobal("parkOutService", parkingOutService);
 			//parkOut.setNextStep(Step.START);
 			kSession.insert(parkOut);
 			kSession.fireAllRules();
-
 			long t2 = new Date().getTime();
 
 			System.out.println(t2 - t1);
 			for (Entry<String, Object> entry : parkOut.getStatusMap().entrySet()) {
 				System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
 			}
-		//} catch (Exception e) {
-		//	LoggerUntils.error(logger, e);
-		//}
+		} catch (Exception ex) {
+			logger.error("出场处理线程:",ex);
+		}
 
 	}
 }

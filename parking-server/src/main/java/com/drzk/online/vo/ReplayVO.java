@@ -12,7 +12,8 @@ import java.util.List;
  * @since JDK 1.8
  * @see
  */
-public class ReplayVO<H,B> {
+public class ReplayVO<H,B>{
+
 	private H head;
 	
 	private List<B> body;

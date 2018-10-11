@@ -6,7 +6,7 @@ import java.util.Date;
  * @author tf 
  * 出场纪录
  */
-public class ParkCarOutVO extends SuperBody {
+public class ParkCarOutVO extends OnlineBody{
 	
 	private String entranceId; //控制器编号
 	private String entranceName;//入场控制器名称
@@ -20,7 +20,7 @@ public class ParkCarOutVO extends SuperBody {
 	private String correctCarNo;//矫正车牌
 	private String contactName;//车主名称
 	private String cardTypeName; //卡类名称
-	private String carTypeId;//卡类型
+	private Integer carTypeId;//卡类型
 	private String carNoType;//车牌类型
 	private Date inTime;//入场时间
 	private String inPic;//入场图片路径
@@ -141,14 +141,15 @@ public class ParkCarOutVO extends SuperBody {
 	{
 		this.cardTypeName = cardTypeName;
 	}
-	public String getCarTypeId()
-	{
+
+	public Integer getCarTypeId() {
 		return carTypeId;
 	}
-	public void setCarTypeId(String carTypeId)
-	{
+
+	public void setCarTypeId(Integer carTypeId) {
 		this.carTypeId = carTypeId;
 	}
+
 	public String getCarNoType()
 	{
 		return carNoType;

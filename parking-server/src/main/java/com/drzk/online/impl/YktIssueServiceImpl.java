@@ -4,6 +4,7 @@ import com.drzk.common.ParkMethod;
 import com.drzk.mapper.*;
 import com.drzk.online.service.YktIssueService;
 import com.drzk.online.vo.CarportAndCarVO;
+import com.drzk.online.vo.ParkCaruser;
 import com.drzk.online.vo.RenewalVO;
 import com.drzk.parklib.send.MainBoardSdk;
 import com.drzk.service.entity.LoadUserMsgBody;
@@ -11,6 +12,7 @@ import com.drzk.service.entity.LoadUserMsgBodyReturn;
 import com.drzk.service.entity.MainBoardMessage;
 import com.drzk.service.entity.ReplyHead;
 import com.drzk.utils.GlobalPark;
+import com.drzk.utils.JsonUtil;
 import com.drzk.utils.StringUtils;
 import com.drzk.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +64,9 @@ public class YktIssueServiceImpl implements YktIssueService {
         //判断是修改还是新增
         if(yktCardIssue==null) {
             PerPersons perPersons = perPersonsMapper.getPerInfo(perName, StringUtils.encode(perTel));
+            if(perPersons==null){
+                return result;
+            }
             yktCardIssue = new YktCardIssue();            //发卡的主表
             yktCardIssue.setcFlag(4);             //卡介质默认为纯车牌
             yktCardIssue.setStatus(status);            //卡状态
@@ -71,6 +76,7 @@ public class YktIssueServiceImpl implements YktIssueService {
             yktCardIssue.setBalanceMoney(carportAndCarVO.getBalanceMoney());
             yktCardIssue.setpId(perPersons.getPid());
             yktCardIssue.setCreateDate(new Date());
+            yktCardIssue.setCreateUserName("system");
             result = yktCardIssueMapper.insert(yktCardIssue);
         }else{
             yktCardIssue.setStatus(status);
@@ -93,8 +99,9 @@ public class YktIssueServiceImpl implements YktIssueService {
      */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void saveIssuePark(Integer yktId,CarportAndCarVO carportAndCarVO,Integer operationType){
+        YktCardIssuePark oldYktCarIssue=yktCardIssueParkMapper.findById(yktId);
         //如果是发卡，新增副表记录
-        if(operationType==0) {
+        if(oldYktCarIssue==null) {
             YktCardIssuePark yktCardIssuePark=new YktCardIssuePark();
             yktCardIssuePark.setYktId(yktId);
             yktCardIssuePark.setCarNo(carportAndCarVO.getCarNo());
@@ -106,12 +113,11 @@ public class YktIssueServiceImpl implements YktIssueService {
             yktCardIssueParkMapper.insert(yktCardIssuePark);        //保存副表记录
             saveCardRsMoney(carportAndCarVO,yktCardIssuePark,operationType,null);               //保存交易记录表
         }else{
-            YktCardIssuePark yktCardIssuePark=yktCardIssueParkMapper.findById(yktId);
-            Date oldTime=yktCardIssuePark.getEndDate();         //保存默认的历史记录
-            setSTime(yktCardIssuePark,carportAndCarVO.getStartTime());
-            yktCardIssuePark.setEndDate(carportAndCarVO.getEndTime());
-            yktCardIssueParkMapper.update(yktCardIssuePark);        //保存副表记录
-            saveCardRsMoney(carportAndCarVO,yktCardIssuePark,operationType,oldTime);               //保存交易记录表
+            Date oldTime=oldYktCarIssue.getEndDate();         //保存默认的历史记录
+            setSTime(oldYktCarIssue,carportAndCarVO.getStartTime());
+            oldYktCarIssue.setEndDate(carportAndCarVO.getEndTime());
+            yktCardIssueParkMapper.update(oldYktCarIssue);        //保存副表记录
+            saveCardRsMoney(carportAndCarVO,oldYktCarIssue,operationType,oldTime);               //保存交易记录表
         }
     }
 
@@ -143,8 +149,8 @@ public class YktIssueServiceImpl implements YktIssueService {
     public void saveCardRsMoney(CarportAndCarVO carportAndCarVO,YktCardIssuePark yktCardIssuePark,Integer operationType,Date oldTime){
         YktCardRsmoney yktCardRsmoney=new YktCardRsmoney();
         yktCardRsmoney.setYktid(yktCardIssuePark.getYktId());
-        yktCardRsmoney.setBalanceMoney(carportAndCarVO.getBalanceMoney());
         yktCardRsmoney.setCreateDate(new Date());
+        yktCardRsmoney.setCreateUserName("system");
         yktCardRsmoney.setFrontDate(oldTime);
         yktCardRsmoney.setNewStartDate(yktCardIssuePark.getStartDate());
         yktCardRsmoney.setNewEndDate(yktCardIssuePark.getEndDate());
@@ -153,17 +159,16 @@ public class YktIssueServiceImpl implements YktIssueService {
         Integer cardType=carportAndCarVO.getCardTypeId();       //账户类型
         if (operationType == 0) {           //卡状态为发行正常
             yktCardRsmoney.setsType(0);            //状态为发行
-            if (cardType > 50 && cardType < 60) {                       //如果是储值卡
-                yktCardRsmoney.setBeforeMoney(0.0);                     //默认存0
-            }
+            yktCardRsmoney.setBalanceMoney(carportAndCarVO.getRechargeMoney());                     //默认存0
         } else if (operationType == 6) {     //卡状态为销户
-            yktCardRsmoney.setsType(6);            //状态为发行
+            yktCardRsmoney.setsType(6);            //状态为销户
+            yktCardRsmoney.setBalanceMoney(0.0);                     //默认存0
+        }else if(operationType==1){         //延期
+            yktCardRsmoney.setsType(1);            //状态为延期
+            yktCardRsmoney.setBalanceMoney(carportAndCarVO.getRechargeMoney());
             if (cardType > 50 && cardType < 60) {                       //如果是储值卡
                 yktCardRsmoney.setBeforeMoney(carportAndCarVO.getBalanceMoney());                     //默认存0
             }
-        }else if(operationType==1){         //延期
-            yktCardRsmoney.setsType(1);            //状态为延期
-            //yktCardRsmoney.setBeforeMoney(yktCardIssueVo.getBalanceMoney());
         }
         yktCardRsmoneyMapper.insert(yktCardRsmoney);
     }
@@ -243,6 +248,43 @@ public class YktIssueServiceImpl implements YktIssueService {
     }
 
     /**
+     * 批量导入，只做发行卡处理
+     * @param parkCaruser
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = false,rollbackFor = Exception.class)
+    public int importYkt(ParkCaruser parkCaruser) {
+        int result=0;
+        PerPersons perPersons=perPersonsMapper.getPerInfo(parkCaruser.getContactName(),StringUtils.encode(parkCaruser.getContactPhone()));          //判断当前人员是否存在
+        if(perPersons==null){           //如果不存在，新增当前用户
+            return result;
+        }
+        CarportAndCarVO carportAndCarVO=JsonUtil.jsonStrToObject(JsonUtil.objectToJsonStr(parkCaruser.getCarportAndCarList().get(0)),CarportAndCarVO.class);
+        YktCardIssuePark yktCardIssuePark=yktCardIssueParkMapper.findCardByCarNo(carportAndCarVO.getCarNo());           //根据车牌号码判断是否存在
+        if(yktCardIssuePark!=null){     //如果存在，直接退出
+            return result;
+        }
+
+        YktCardIssue yktCardIssue = new YktCardIssue();            //发卡的主表
+        yktCardIssue.setcFlag(4);             //卡介质默认为纯车牌
+        yktCardIssue.setStatus(0);            //卡状态
+        yktCardIssue.setIsShare(0);                                       //默认不共享车位
+        yktCardIssue.setIsLoad(1);                                        //默认上传标志
+        yktCardIssue.setCuid(parkCaruser.getId());
+        yktCardIssue.setBalanceMoney(carportAndCarVO.getBalanceMoney());
+        yktCardIssue.setpId(perPersons.getPid());
+        yktCardIssue.setCreateDate(new Date());
+        yktCardIssue.setCreateUserName("system");
+        result = yktCardIssueMapper.insert(yktCardIssue);
+        if(result==1){
+            saveIssuePark(yktCardIssue.getId(),carportAndCarVO,parkCaruser.getOperationType());        //保存副表信息
+            saveIssueRel(yktCardIssue.getId(), 1);              //控制器表
+        }
+        return result;
+    }
+
+    /**
      * 线上续期下发保存数据
      * @param yktCardIssuePark
      * @param renewalVO
@@ -253,17 +295,20 @@ public class YktIssueServiceImpl implements YktIssueService {
         YktCardRsmoney yktCardRsmoney=new YktCardRsmoney();
         yktCardRsmoney.setYktid(yktCardIssuePark.getYktId());
         yktCardRsmoney.setCreateDate(new Date());
+        yktCardRsmoney.setCreateUserName("system");
         yktCardRsmoney.setFrontDate(yktCardIssuePark.getEndDate());
         yktCardRsmoney.setNewStartDate(renewalVO.getStartDate());
         yktCardRsmoney.setNewEndDate(renewalVO.getEndDate());
         yktCardRsmoney.setPayType(renewalVO.getPayType());
         yktCardRsmoney.setsType(1);            //状态为续期
+        yktCardRsmoney.setOrderNo(renewalVO.getPaymentNumber());
+        yktCardRsmoney.setCreateUserName("云端");
         if (renewalVO.getCarTypeId() > 50 && renewalVO.getCarTypeId() < 60) {                       //如果是储值卡
             yktCardRsmoney.setBeforeMoney(yktCardIssue.getBalanceMoney());                     //默认存0
-            yktCardRsmoney.setBalanceMoney(renewalVO.getAmount()+yktCardIssue.getBalanceMoney());
+            yktCardRsmoney.setBalanceMoney(renewalVO.getAmount());
         }else{
-            yktCardRsmoney.setBeforeMoney(yktCardIssue.getBalanceMoney());                     //默认存0
-            yktCardRsmoney.setBalanceMoney(yktCardIssue.getBalanceMoney());
+            yktCardRsmoney.setBeforeMoney(renewalVO.getAmount());                     //默认存0
+            yktCardRsmoney.setBalanceMoney(renewalVO.getAmount());
         }
         yktCardRsmoneyMapper.insert(yktCardRsmoney);
     }

@@ -1,6 +1,16 @@
 package com.drzk.service.entity;
+
+import java.io.Serializable;
+
 //3.5. 上传车场状态(服务器订阅)
-public class UpParkStateBody  extends SuperBody{
+public class UpParkStateBody implements Serializable{
+
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4481992634668576717L;
+	private String uId;
 	private String conIp;//控制器Ip
 	
 	private String roadGate;//道闸状态：0-关到位,1-中间位,2-开到位
@@ -285,6 +295,12 @@ public class UpParkStateBody  extends SuperBody{
 	*/
 	public void setFixedCarFull(String fixedCarFull) {
 		this.fixedCarFull = fixedCarFull;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	
 	

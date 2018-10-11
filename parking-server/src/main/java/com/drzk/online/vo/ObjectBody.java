@@ -1,7 +1,13 @@
 package com.drzk.online.vo;
 
-public class ObjectBody
+import java.io.Serializable;
+
+public class ObjectBody implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -139554859355387066L;
 	private String objectId;
 
 	public String getObjectId()

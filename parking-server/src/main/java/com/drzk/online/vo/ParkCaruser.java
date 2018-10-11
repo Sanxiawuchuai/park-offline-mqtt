@@ -2,8 +2,8 @@ package com.drzk.online.vo;
 
 import java.util.List;
 
-public class ParkCaruser extends SuperBody
-{
+public class ParkCaruser extends OnlineBody{
+
 	private String contactName;
 	private String contactPhone;
 	private String carport;
@@ -12,6 +12,7 @@ public class ParkCaruser extends SuperBody
 	private String remark;
 	private Integer operationType;
 	private Integer payType;
+	private String id;
 	private List<CarportAndCarVO> carportAndCarList;
 	
 	/** 车牌发行信息 */
@@ -106,5 +107,12 @@ public class ParkCaruser extends SuperBody
 	{
 		this.payType = payType;
 	}
-	
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 }

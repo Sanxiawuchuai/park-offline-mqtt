@@ -1,11 +1,17 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf
  * 控制器信息
  */
-public class ControllerVO {
-	 private Integer controllerId ; //控制器机号(1-255)
+public class ControllerVO implements Serializable {
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4370060084349540834L;
+	private Integer controllerId ; //控制器机号(1-255)
 	 private String  ContName ; //控制器名称
 	 private String controllerIp ;//控制器IP
      private Integer  type ;//出入类型（0标准入口，1标准出口，2标准嵌套入口，3标准嵌套出口、4半嵌套入口，5半嵌套出口、6单通道）

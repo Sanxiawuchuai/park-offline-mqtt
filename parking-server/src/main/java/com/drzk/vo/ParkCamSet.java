@@ -2,8 +2,7 @@ package com.drzk.vo;
 
 import java.util.Date;
 
-public class ParkCamSet {
-    
+public class ParkCamSet{
 
 
 	/**

@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ParkMonthSet {
+public class ParkMonthSet implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 40298949163665489L;
+
+	/**
      * 自增加id
      */
     private Integer id;

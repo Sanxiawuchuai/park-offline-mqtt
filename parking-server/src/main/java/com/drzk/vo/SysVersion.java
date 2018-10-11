@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class SysVersion {
+public class SysVersion implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2981890565044378087L;
+
+	/**
      * 
      */
     private Integer id;
@@ -16,7 +22,7 @@ public class SysVersion {
     /**
      * 类型0软件版本1硬件版本
      */
-    private Byte vType;
+    private Integer vType;
 
     /**
      * 发布时间
@@ -70,19 +76,11 @@ public class SysVersion {
         this.vSoft = vSoft == null ? null : vSoft.trim();
     }
 
-    /**
-     * 类型0软件版本1硬件版本
-     * @return v_type 类型0软件版本1硬件版本
-     */
-    public Byte getvType() {
+    public Integer getvType() {
         return vType;
     }
 
-    /**
-     * 类型0软件版本1硬件版本
-     * @param vType 类型0软件版本1硬件版本
-     */
-    public void setvType(Byte vType) {
+    public void setvType(Integer vType) {
         this.vType = vType;
     }
 

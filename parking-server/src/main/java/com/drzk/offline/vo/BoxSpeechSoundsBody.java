@@ -1,9 +1,15 @@
 package com.drzk.offline.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class BoxSpeechSoundsBody extends SuperBody
+public class BoxSpeechSoundsBody implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6487680911577577962L;
+	private String uId;
 	private String controlIP;//控制器IP
 	private String equipmentID;//硬件设备编号
 	private String carNo;//车牌
@@ -67,6 +73,12 @@ public class BoxSpeechSoundsBody extends SuperBody
 	}
 	public void setPayMoney(Integer payMoney) {
 		this.payMoney = payMoney;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	
 }

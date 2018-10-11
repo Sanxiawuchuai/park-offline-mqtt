@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ParkCarInException {
+public class ParkCarInException implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2299634042664304914L;
+
+	/**
      * 自增长id
      */
     private Integer id;

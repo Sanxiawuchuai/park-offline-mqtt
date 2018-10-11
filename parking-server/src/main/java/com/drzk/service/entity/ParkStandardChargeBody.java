@@ -4,13 +4,18 @@
  */
 package com.drzk.service.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author chenlong 2018年9月12日
  */
-public class ParkStandardChargeBody {
+public class ParkStandardChargeBody implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7603925615562050272L;
 	private String cardType; // 卡类型
 	private String freeTime; // 免费时间
 	private String isFreeTime; // 是否包含免费时间

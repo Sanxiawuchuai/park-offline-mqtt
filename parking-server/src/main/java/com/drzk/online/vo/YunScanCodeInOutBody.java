@@ -1,10 +1,16 @@
 package com.drzk.online.vo;
 
-public class YunScanCodeInOutBody
+import java.io.Serializable;
+
+public class YunScanCodeInOutBody implements Serializable
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5391153501226523545L;
 	private String carNo;
-	private String channelId;
+	private String dsn;
 	
 	
 	public String getCarNo()
@@ -15,14 +21,15 @@ public class YunScanCodeInOutBody
 	{
 		this.carNo = carNo;
 	}
-	public String getChannelId()
+	public String getDsn()
 	{
-		return channelId;
+		return dsn;
 	}
-	public void setChannelId(String channelId)
+	public void setDsn(String dsn)
 	{
-		this.channelId = channelId;
+		this.dsn = dsn;
 	}
+	 
 	
 	
 }

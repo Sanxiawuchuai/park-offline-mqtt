@@ -1,10 +1,12 @@
 package com.drzk.online.vo;
 
+
+
 /**
  * @author tf
  * 优惠券规则
  */
-public class CouponRules extends SuperBody {
+public class CouponRules extends OnlineBody{
 
 	private String businessId; //商户编号
     private String businessName;//商户名称
@@ -12,6 +14,7 @@ public class CouponRules extends SuperBody {
     private Integer disType; //折扣模式 1全免(0)  2 折扣率(<100) 3免时间(<65535) 4免金额(<65535)
     private Double disAmount;//折扣金额
 	private String description;
+	private String discountId;
 
 	public String getBusinessId() {
 		return businessId;
@@ -59,5 +62,13 @@ public class CouponRules extends SuperBody {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getDiscountId() {
+		return discountId;
+	}
+
+	public void setDiscountId(String discountId) {
+		this.discountId = discountId;
 	}
 }

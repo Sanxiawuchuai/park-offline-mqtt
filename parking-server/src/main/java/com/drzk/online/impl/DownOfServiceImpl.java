@@ -8,10 +8,11 @@ import com.drzk.online.service.*;
 import com.drzk.online.vo.CarportAndCarVO;
 import com.drzk.online.vo.ParkCarGroup;
 import com.drzk.online.vo.ParkCaruser;
-import com.drzk.utils.DateTimeUtils;
-import com.drzk.utils.JacksonUtils;
-import com.drzk.utils.JsonUtils;
-import com.drzk.utils.StringUtils;
+import com.drzk.online.vo.ReplayVO;
+import com.drzk.service.entity.Head;
+import com.drzk.service.entity.LowerBody;
+import com.drzk.service.entity.MainBoardMessage;
+import com.drzk.utils.*;
 import com.drzk.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +20,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 /**
  * @author zhangbin
@@ -35,6 +36,10 @@ import java.util.Map.Entry;
 @Service("downOfService")
 public class DownOfServiceImpl implements DownOfService {
 	private Logger log=LoggerFactory.getLogger(DownOfServiceImpl.class);
+	// 新增
+	public static final String INSERT_OPERATION = "1";
+	// 修改
+	public static final String UPDATE_OPERATION = "2";
 
 	@Resource
 	private ParkCarBlackListMapper blackCarMapper;
@@ -86,7 +91,7 @@ public class DownOfServiceImpl implements DownOfService {
 	private static final String CREATOR = "creator";
 	private static final String CREATETIME = "createTime";
 	private static final String DEL_METHOD = "3"; // 删除操作
-	private static final Logger logger = LoggerFactory.getLogger(DownOfServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger("userLog");
 
 	/**
 	 * 特殊车辆同步
@@ -131,10 +136,8 @@ public class DownOfServiceImpl implements DownOfService {
 			result = blackCarMapper.insert(vo);
 		}
 		if (result >= 1) {
-			logger.debug("syCarBlackInfo success");
 			sendSyncResult(vo.getCuid(), ConstantUtil.BLACK_CAR_METHOD, 2, dataMqtt.getHead().getParkingNo()); // 2成功
 		} else {
-			logger.debug("sycarblack info failed {}", vo);
 			sendSyncResult(vo.getCuid(), ConstantUtil.BLACK_CAR_METHOD, 3, dataMqtt.getHead().getParkingNo()); // 3失败
 		}
 	}
@@ -291,6 +294,7 @@ public class DownOfServiceImpl implements DownOfService {
 		po.setFreeInclude((Integer) data.get("isfree"));
 		po.setOverTimeMinute((Integer) data.get("timeout"));
 		po.setOverTimeAmount((Double)data.get("timeoutFee"));
+		po.setFreeMinute((Integer)data.get("deadTime"));
 		po.setIsLoad(1);
 		po.setPuid((String)data.get("objectId"));
 		int result=3;
@@ -318,13 +322,17 @@ public class DownOfServiceImpl implements DownOfService {
 		logger.debug(json);
 		MqttPayloadVo<Map> dataMqtt = JacksonUtils.jsonToMqttObject(json, Map.class);
 		Map data = dataMqtt.getBody();
-		ParkEquipments pe=parkEquipmentsMapper.selectByGuid((String)data.get("objectId"));
+		MqttHeadVo head=dataMqtt.getHead();
+		String executeType=head.getExecuteType();
 		ParkEquipments parkEquipment=new ParkEquipments();
-		parkEquipment.setEuid((String)data.get("objectId"));
-		parkEquipment.setEqName((String)data.get("businessName"));
-		parkEquipment.setIsLoad(1);
+		String objectId=(String)data.get("objectId");
 		int result=3;
-		parkEquipment.setDelFrag((Integer)data.get("deleteCode"));
+		if(executeType.equals(INSERT_OPERATION)||executeType.equals(UPDATE_OPERATION)){
+			ParkEquipments pe=parkEquipmentsMapper.selectByGuid((String)data.get("objectId"));
+			parkEquipment.setEqName((String)data.get("businessName"));
+			parkEquipment.setIsLoad(1);
+			parkEquipment.setDelFrag((Integer)data.get("deleteCode"));
+			parkEquipment.setEuid(objectId);
 		if(pe!=null){
 			int count=parkEquipmentsMapper.updatePrimaryKey(parkEquipment);
 			if(count>0){
@@ -332,6 +340,13 @@ public class DownOfServiceImpl implements DownOfService {
 			}
 		}else{
 			int count=parkEquipmentsMapper.insertSelective(parkEquipment);
+			if(count>0){
+				result=2;
+			}
+		}
+		}else{
+			List<String> ids = Arrays.asList(objectId.split(","));
+			int count=parkEquipmentsMapper.updateDeleteFlag(ids);
 			if(count>0){
 				result=2;
 			}
@@ -349,36 +364,51 @@ public class DownOfServiceImpl implements DownOfService {
 		logger.debug(json);
 		MqttPayloadVo<Map> dataMqtt = JacksonUtils.jsonToMqttObject(json, Map.class);
 		Map data = dataMqtt.getBody();
+		MqttHeadVo head=dataMqtt.getHead();
+		String executeType=head.getExecuteType();
 		ParkDisInfo pd=parkDisInfoMapper.selectByGuid((String)data.get("objectId"));
 		ParkDisInfo discount=new ParkDisInfo();
-		discount.setPuid((String)data.get("objectId"));
-		discount.setDiscountName((String)data.get("disconutName"));
-		discount.setMemo((String)data.get("disconutRmark"));
-		discount.setDiscountId((String)data.get("disconutNo"));
-		discount.setDiscountType(Integer.valueOf((String)data.get("disconutType")));
-		discount.setDiscountAmount(Double.valueOf((String)data.get("disconutValue")));
-		discount.setIsLoad(1);
+		String objectId=(String)data.get("objectId");
 		int result=3;
-		discount.setDelFrag((Integer)data.get("deleteCode"));
-		ParkEquipments pe=parkEquipmentsMapper.selectByGuid((String)data.get("businessId"));
-		if(pe!=null){
-			discount.setEqid(pe.getEqId());
-		}
-		discount.setCreateDate(DateTimeUtils.parseDate((String) data.get("createTime")));
-		discount.setCreateUserName((String) data.get("creator"));
-		discount.setModifyDate(DateTimeUtils.parseDate((String) data.get("lastUpdateTime")));
-		discount.setModifyUserName((String) data.get("lastUpdateName"));
-		if(pd!=null){
-			int count=parkDisInfoMapper.updatePrimaryKey(discount);
-			if(count>0){
-				result=2;
+		if(executeType.equals(INSERT_OPERATION)||executeType.equals(UPDATE_OPERATION)){
+			ParkEquipments pe=parkEquipmentsMapper.selectByGuid((String)data.get("businessId"));
+			discount.setDiscountName((String)data.get("discountName"));
+			discount.setDelFrag((Integer)data.get("deleteCode"));
+			discount.setPuid(objectId);
+			discount.setMemo((String)data.get("description"));
+			discount.setDiscountId((String)data.get("discountId"));
+			if(!StringUtils.isNullOrEempty((String)data.get("disType"))){
+				discount.setDiscountType(Integer.valueOf((String)data.get("disType")));
+			}if(!StringUtils.isNullOrEempty((String)data.get("disAmount"))){
+				discount.setDiscountAmount(Double.valueOf((String)data.get("disAmount")));
+			}
+			discount.setIsLoad(1);
+			if(pe!=null){
+				discount.setEqid(pe.getEqId());
+			}
+			discount.setCreateDate(DateTimeUtils.parseDate((String) data.get("createTime")));
+			discount.setCreateUserName((String) data.get("creator"));
+			discount.setModifyDate(DateTimeUtils.parseDate((String) data.get("lastUpdateTime")));
+			discount.setModifyUserName((String) data.get("lastUpdateName"));
+			if(pd!=null){
+				int count=parkDisInfoMapper.updatePrimaryKey(discount);
+				if(count>0){
+					result=2;
+				}
+			}else{
+				int count=parkDisInfoMapper.insertSelective(discount);
+				if(count>0){
+					result=2;
+				}
 			}
 		}else{
-			int count=parkDisInfoMapper.insertSelective(discount);
+			List<String> ids = Arrays.asList(objectId.split(","));
+			int count=parkDisInfoMapper.updateDeleteFlag(ids);
 			if(count>0){
 				result=2;
 			}
 		}
+		
 		sendSyncResult((String)data.get("objectId"),ConstantUtil.DEVICE_DISCOUNT_METHOD,result,null);
 	}
 
@@ -428,71 +458,6 @@ public class DownOfServiceImpl implements DownOfService {
 		}
 	}
 
-	/**
-	 * 同步线上基础项目信息
-	 */
-	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	@Override
-	public void syBaseProject(String json) {
-		System.out.println(json);
-		@SuppressWarnings("rawtypes")
-		MqttPayloadVo<Map> dataMqtt = JacksonUtils.jsonToMqttObject(json, Map.class);
-		@SuppressWarnings("unchecked" )
-		Map<String,Object> data = dataMqtt.getBody();
-		int result = 0;
-		for(Entry<String,Object> entry : data.entrySet()) {
-			String key = entry.getKey();
-			Object value = entry.getValue();
-			SysParameters sysPara;
-			switch(key) {
-			case ConstantUtil.PARK_NUM:
-				sysPara = new SysParameters();
-				sysPara.setParameterCode("PARK_NUM");
-				sysPara.setParameterValue((String) value);
-				result += sysParameterMapper.updateByCode(sysPara);
-				break;
-			case ConstantUtil.PROJECT_NAME:
-				sysPara = new SysParameters();
-				sysPara.setParameterCode("PROJECT_NAME");
-				sysPara.setParameterValue((String) value);
-				result += sysParameterMapper.updateByCode(sysPara);
-				break;
-			case ConstantUtil.OPERA_NO:
-				sysPara = new SysParameters();
-				sysPara.setParameterCode("OPERA_NO");
-				sysPara.setParameterValue((String) value);
-				result += sysParameterMapper.updateByCode(sysPara);
-				break;
-			case ConstantUtil.OWNED_CTIY:
-				sysPara = new SysParameters();
-				sysPara.setParameterCode("OWNED_CTIY");
-				sysPara.setParameterValue((String) value);
-				result += sysParameterMapper.updateByCode(sysPara);
-				break;
-			case ConstantUtil.END_VALIDITY:
-				sysPara = new SysParameters();
-				sysPara.setParameterCode("END_VALIDITY");
-				sysPara.setParameterValue(DateTimeUtils.formatDate(new Date((long) value)));
-				result += sysParameterMapper.updateByCode(sysPara);
-				break;
-			default :
-				sysPara = new SysParameters();
-				sysPara.setParameterCode("START_VALIDITY");
-				sysPara.setParameterValue(DateTimeUtils.formatDate(new Date()));
-				result += sysParameterMapper.updateByCode(sysPara);
-				break;
-			}
-		}
-		if(result >=1) {
-			System.out.println("save project success");
-			sendSyncResult(dataMqtt.getHead().getSubId(), ConstantUtil.PROJECT_METHOD, 2, dataMqtt.getHead().getParkingNo());
-		}else{
-			System.out.println("save project failed");
-			sendSyncResult(dataMqtt.getHead().getSubId(), ConstantUtil.PROJECT_METHOD, 3, dataMqtt.getHead().getParkingNo());
-		}
-	}
-
-
     @Override
     @Transactional(readOnly = false, rollbackFor = Exception.class)
     public void syncParkConfig(String json) {
@@ -502,7 +467,6 @@ public class DownOfServiceImpl implements DownOfService {
     @Override
     @Transactional(readOnly = false, rollbackFor = Exception.class)
     public void syncParkPersonnel(String json) {
-		System.out.println(json);
         parkStructureService.syncParkPersonnel( json );
     }
 
@@ -512,6 +476,11 @@ public class DownOfServiceImpl implements DownOfService {
         deviceInfoService.syncParkDevice( json );
     }
 
+    //远程开闸
+    public void syncOpenDoor(String json) {
+        deviceInfoService.syncOpenDoor( json );
+    }
+
 	@Override
 	@Transactional(readOnly = false,rollbackFor = Exception.class)
 	public void syncIssueInfo(String json) {
@@ -519,8 +488,8 @@ public class DownOfServiceImpl implements DownOfService {
 			MqttPayloadVo<Map> dataMqtt = JacksonUtils.jsonToMqttObject(json, Map.class);
 			Map<String, Object> data = dataMqtt.getBody();        //得到回调的body对象属性
             ParkCaruser parkCaruser= (ParkCaruser) StringUtils.map2Object(data,ParkCaruser.class);
-            List<CarportAndCarVO> list=JsonUtils.toList(JsonUtils.toJson(parkCaruser.getCarportAndCarList()),CarportAndCarVO.class);
-			String objectId=(String) data.get("id");			//主键ID
+            List<CarportAndCarVO> list=JsonUtil.jsonStrToList(JsonUtils.toJson(parkCaruser.getCarportAndCarList()),CarportAndCarVO.class);
+			String objectId=parkCaruser.getId();			//主键ID
 			String perName=parkCaruser.getContactName();			//人员名称
 			String perTel=parkCaruser.getContactPhone();			//人员电话
 			Integer operationType=parkCaruser.getOperationType();			//操作类型
@@ -537,9 +506,51 @@ public class DownOfServiceImpl implements DownOfService {
 			yktIssueService.reloadCarGrantData();           //推送到硬件，控制器类
 
 		}catch (Exception e){
-			log.debug("保存发行信息失败："+e.getMessage());
+			log.error("保存发行信息失败：",e);
 		}
 	}
+
+	@Override
+	public void syncBatchRentParking(String json) {
+		try{
+			ReplayVO<Head,ParkCaruser> messaeVo = JsonUtil.jsonToReplayVO(json, Head.class, ParkCaruser.class);
+			List<ParkCaruser> caruserList=messaeVo.getBody();			//获取body的参数
+			List<String> idsList=caruserList.stream().map(parkCaruser -> {				//获取所有下发成功的数据，并返回相关的对象
+				int result=yktIssueService.importYkt(parkCaruser);
+				if(result==1){
+					return parkCaruser.getId();
+				}else{
+					return null;
+				}
+			}).collect(Collectors.toList());
+			idsList=idsList.stream().filter(id->id!=null).collect(Collectors.toList());			//过滤重复的对象
+
+			MqttHeadVo head = new MqttHeadVo();
+			head.setMethod( ConstantUtil.BATCH__RENT_PARKING );
+			head.setStatus("2");
+			head.setParkingNo(GlobalPark.properties.getProperty("PARK_NUM"));
+			MqttPayloadVo replay=new MqttPayloadVo();
+			replay.setHead(head);
+			replay.setBody(JsonUtils.toJson(idsList));
+			ofMqttService.sendMessage(ConstantUtil.PUBLISH_ASYNC_STATUS_TO_ONLINE,JacksonUtils.objectToJson( replay ),0);
+		}catch (Exception e){
+			log.error("保存批量信息异常：",e);
+		}
+	}
+
+    @Override
+    public void lowerNum(String json) {
+		try {
+			log.debug("云端接收车场下发的编号："+json);
+			MainBoardMessage<MqttHeadVo, LowerBody> mqtt = JsonUtil.jsonToBoardMessage(json,MqttHeadVo.class,LowerBody.class);
+			LowerBody lowerBody = mqtt.getBody();
+			if (lowerBody != null) {
+				parkConfigService.syncParkNum(lowerBody);		//同步数据库相关信息
+			}
+		}catch (Exception e){
+			log.error("云端下发车场编号异常：",e);
+		}
+    }
 
     /**
      * 同步结果

@@ -1,13 +1,8 @@
 package com.drzk.online.vo;
 
-import java.io.Serializable;
 
-public class MqttPayloadVo<T> implements Serializable {
+public class MqttPayloadVo<T> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	 //头信息
     private HeadVO head;
 

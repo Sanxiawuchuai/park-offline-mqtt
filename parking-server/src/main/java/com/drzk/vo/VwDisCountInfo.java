@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class VwDisCountInfo {
-    private Integer id;
+public class VwDisCountInfo implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8379202157121238767L;
+
+	private Integer id;
 
     private Byte outType;
 

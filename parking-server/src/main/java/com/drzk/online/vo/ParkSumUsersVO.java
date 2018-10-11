@@ -2,7 +2,7 @@ package com.drzk.online.vo;
 
 import java.util.Date;
 
-public class ParkSumUsersVO extends SuperBody
+public class ParkSumUsersVO extends OnlineBody
 {
 	private String boxId;
 	private Date loginDate;

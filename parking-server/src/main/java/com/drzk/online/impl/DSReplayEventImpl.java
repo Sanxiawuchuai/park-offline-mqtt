@@ -42,6 +42,7 @@ public class DSReplayEventImpl
 			case "park/parksetting/v1":
 			case "park/feescale/v1":
 			case "park/parkcargroup/v1":
+			case "park/computer/v1":
 			    OnlineDSReplaySever onlineDSReplaySever = SpringUtil.getBean(OnlineDSReplaySever.class);
 				threadPool.execute(new Runnable()
 				{

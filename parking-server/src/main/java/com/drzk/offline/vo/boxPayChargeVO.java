@@ -1,11 +1,17 @@
 package com.drzk.offline.vo;
 
 
+import java.io.Serializable;
+
 import com.drzk.fact.CentreRealTimeBase;
 import com.drzk.fact.OutRealTimeBase;
 
 /** 收费改变实体 */
-public class boxPayChargeVO {
+public class boxPayChargeVO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -332108780551052926L;
 	private String uId;
 	private Integer type;
 	private Integer changeType;

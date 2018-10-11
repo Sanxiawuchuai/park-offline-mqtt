@@ -33,6 +33,8 @@ public interface ParkEquipmentsMapper {
 	Vector<ParkEquipments> selectDSTop();
 	
 	int updateDSStatus(@Param("status") Integer status,@Param("list") List<String> list);
+	
+	int updateDeleteFlag(@Param("list") List<String> list);
 
 	ParkEquipments selectByGuid(String euid);
 	

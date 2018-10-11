@@ -1,8 +1,15 @@
 package com.drzk.service.entity;
+
+import java.io.Serializable;
+
 /// <summary>
 /// 通信头
 /// </summary>
-public class Head {
+public class Head implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -327630079526817594L;
 	//答应主题 
 	private String replyTopic;
 	//版本号

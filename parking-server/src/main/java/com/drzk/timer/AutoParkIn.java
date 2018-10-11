@@ -13,6 +13,7 @@ import com.drzk.service.entity.ParkCarInRecordBody;
 import com.drzk.service.entity.UpRecordBody;
 import com.drzk.service.impl.MqttServiceImpl;
 import com.drzk.service.impl.ParkingInServiceImpl;
+import com.drzk.utils.BeanCopierUtil;
 import com.drzk.utils.GlobalPark;
 import com.drzk.utils.JsonUtil;
 import com.drzk.utils.LoggerUntils;
@@ -42,7 +43,7 @@ import org.springframework.stereotype.Component;
  * @see
  */
 @Component
-@Scope("singleton")
+@Scope("prototype")
 public class AutoParkIn implements Runnable {
 	private static Logger logger = Logger.getLogger("userLog");
 	@Autowired
@@ -109,7 +110,7 @@ public class AutoParkIn implements Runnable {
 					return; // 当前记录的入场时间比数据时间早，不需保存
 				parkCarInMapper.deleteByCondition(modelGet.get(0));
 				BackUpParkCarIn backUpIn = new BackUpParkCarIn();
-				BeanUtils.copyProperties(modelGet.get(0), backUpIn);
+				BeanCopierUtil.copyProperties(modelGet, backUpIn);
 				backUpIn.setId(null);
 				backUpParkCarInMapper.insert(backUpIn);
 			}
@@ -118,13 +119,12 @@ public class AutoParkIn implements Runnable {
 				sendParkCarInRecordToBox(carIn); //推送入场记录
 				parking.pushInData(channel, carIn);
 				parking.inStatisticsRefresh(carIn);
-				LoggerUntils.error(logger, "保存入场记录成功");
+				logger.debug("入场记录成功!");
 			}
 			else
-				LoggerUntils.error(logger, "保存入场记录失败");
-
-		} catch (Exception e) {
-			LoggerUntils.error(logger, e);
+				logger.debug("入场记录失败!");
+		} catch (Exception ex) {
+			logger.error("硬件直接传过来的入场记录:", ex);
 		}
 	}
 	
@@ -155,6 +155,7 @@ public class AutoParkIn implements Runnable {
 					{
 						String topic = String.format(TopicsDefine.BOX_ERROR, local.getEquipmentID());
 						MqttMessageVO retVo = MqttServiceImpl.sendMessage(local.getEquipmentID(),topic, jsonBody, null, 0);
+						logger.debug("入场记录推送:"+topic+","+jsonBody);
 						break;
 					}
 				}
@@ -162,7 +163,7 @@ public class AutoParkIn implements Runnable {
 		}
 		catch(Exception ex)
 		{
-			LoggerUntils.error(logger, ex.toString());
+			logger.error("推送入场数据:", ex);
 		}
 	}
 }

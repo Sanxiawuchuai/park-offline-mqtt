@@ -1,10 +1,14 @@
 package com.drzk.offline.vo;
 
-import com.drzk.service.entity.SuperBody;
+import java.io.Serializable;
 
-public class HandCapBody extends SuperBody
-{
+public class HandCapBody implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7400690552487477101L;
+	private String uId;
 	private String camIP;
 	private String equipmentID;
 	
@@ -21,5 +25,11 @@ public class HandCapBody extends SuperBody
 	public  String getCamIP()
 	{
 		return camIP;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 }

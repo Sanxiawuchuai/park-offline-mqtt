@@ -1,7 +1,14 @@
 package com.drzk.vo;
 
-public class PerDept {
-    private Integer id;
+import java.io.Serializable;
+
+public class PerDept implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5325182539566359243L;
+
+	private Integer id;
 
     private String puid;
 

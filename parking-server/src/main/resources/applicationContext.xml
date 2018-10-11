@@ -35,22 +35,15 @@
 		</property>
 	</bean>
 
-	<bean id="databaseConfigurer"
-		class="com.drzk.conf.DatabaseConfigurer">
-		<property name="order" value="2" />
-	</bean>
-
-
-	<bean id="springUtil" class="com.drzk.utils.SpringUtil" />
-
+	<!--<bean id="springUtil" class="com.drzk.utils.SpringUtil" scope="singleton" />-->
 
 	<!-- spring thread pool executor -->
 	<bean id="taskExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<!-- 线程池维护线程的最少数量 -->
-		<property name="corePoolSize" value="5" />
+		<property name="corePoolSize" value="50" />
 		<!-- 允许的空闲时间 -->
-		<property name="keepAliveSeconds" value="200" />
+		<property name="keepAliveSeconds" value="60" />
 		<!-- 线程池维护线程的最大数量 -->
 		<property name="maxPoolSize" value="100" />
 		<!-- 缓存队列 -->
@@ -74,8 +67,5 @@
 		transaction-manager="txManager" />
 
 	<import resource="classpath:applicationContext-jdbc.xml" />
-	<!--<import resource="classpath:applicationContext-mqtt_online.xml" />-->
-	<import resource="classpath:applicationContext-mqtt_offline.xml" />
 	<import resource="classpath:applicationContext-drools.xml" />
-
 </beans>

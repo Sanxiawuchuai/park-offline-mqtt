@@ -1,20 +1,19 @@
 package com.drzk.app;
 
+import com.drzk.parklib.load.LoadChannelPara;
+import com.drzk.service.ILoadDeviceListService;
+import com.drzk.utils.SpringUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
-import com.drzk.parklib.load.LoadChannelPara;
-import com.drzk.service.ILoadDeviceListService;
-import com.drzk.utils.LoggerUntils;
-import com.drzk.utils.SpringUtil;
 
 @Component
 public class Application {
 	@Autowired
 	private ILoadDeviceListService loadDeviceService;
-	@Autowired
+//	@Autowired
 //	private LoadUserInfo loadUserInfo;
 	private static Logger logger = Logger.getLogger("userLog");
 
@@ -29,8 +28,7 @@ public class Application {
 	 * @author wangchengxi
 	 */
 	public void restart() {
-		SpringUtil.applicationContext.close();
-		SpringUtil.applicationContext.destroy();
+		SpringUtil.cleanApplicationContext();
 		start();
 		System.out.println("restart success!!!!");
 	}
@@ -85,13 +83,13 @@ public class Application {
 					LoadChannelPara.loadSysTime();
 					
 					//加载车牌授权数据
-					app.loadDeviceService.loadUserInfo();;
+					//app.loadDeviceService.loadUserInfo();
 					logger.debug("车场服务端初始化结束......");
 				}catch (Exception e) {
 					logger.error("车场服务端初始失败:"+e);
 				}
 			}
-			});
+    	});
     }
     
 }

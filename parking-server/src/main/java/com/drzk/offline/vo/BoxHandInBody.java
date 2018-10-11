@@ -1,8 +1,14 @@
 package com.drzk.offline.vo;
 
-public class BoxHandInBody extends SuperBody
-{
+import java.io.Serializable;
 
+public class BoxHandInBody implements Serializable
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3938093703580248187L;
+	private String uId;
 	private String carNo;//车牌
 	private String carNoType;//车牌颜色 0—蓝色,1-黄，2—白,3-黑
 	private String controlIP;//控制器IP
@@ -58,6 +64,12 @@ public class BoxHandInBody extends SuperBody
 	public String getEquipmentID()
 	{
 		return equipmentID;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	
 }

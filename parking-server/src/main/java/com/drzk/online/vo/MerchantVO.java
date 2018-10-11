@@ -1,10 +1,16 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf
  * 优惠券商户信息
  */
-public class MerchantVO {
+public class MerchantVO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5542498325725968810L;
 	private Integer EqID ; //商户编号
     private String EqName ;//商户名称
     private String ClientNO ;//线上编号

@@ -6,20 +6,22 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.drzk.utils.StringUtils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /* 
  * 张斌提供 跟一卡通软件加密方式保持一致
  */
 public class AESUtil
 {
-
+	private static Logger logger = LoggerFactory.getLogger("userLog");
 	private static final String KEY_ALGORITHM = "AES";
     private static final String DEFAULT_CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding";//默认的加密算法
     
@@ -52,7 +54,7 @@ public class AESUtil
 
             return parseByte2HexStr(result);//通过Base64转码返回
         } catch (Exception ex) {
-            Logger.getLogger(AESUtil.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("AES 加密操作",ex);
         }
 
         return null;
@@ -79,7 +81,7 @@ public class AESUtil
 
             return new String(result, "utf-8");
         } catch (Exception ex) {
-            Logger.getLogger(AESUtil.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("AES 解密操作",ex);
         }
 
         return null;
@@ -104,7 +106,7 @@ public class AESUtil
             key2 = new SecretKeySpec(enCodeFormat, KEY_ALGORITHM);
             return key2;// 转换为AES专用密钥
         } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(AESUtil.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("生成加密秘钥",ex);
         }
 
         return null;

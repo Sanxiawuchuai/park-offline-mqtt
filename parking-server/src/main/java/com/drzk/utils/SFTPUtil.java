@@ -22,7 +22,7 @@ import com.jcraft.jsch.SftpException;
 * 类说明 sftp工具类
 */
 public class SFTPUtil {
-    private transient Logger log = LoggerFactory.getLogger(this.getClass());  
+    private transient Logger log = LoggerFactory.getLogger("userLog");  
     
     private ChannelSftp sftp;  
         

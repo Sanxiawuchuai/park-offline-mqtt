@@ -25,6 +25,4 @@ public interface TopicsDefine {
 	/**发送岗亭错误信息*/
     String BOX_ERROR ="%s/publish/box/data";
 
-    //线上下发数据到服务程序，同步数据库的主题
-	String DOWN_OFFLINEDIR_EVENT="%s/publish/offData";
 }

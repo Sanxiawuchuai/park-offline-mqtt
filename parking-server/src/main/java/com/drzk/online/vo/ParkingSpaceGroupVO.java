@@ -1,10 +1,16 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf
  * 车位组
  */
-public class ParkingSpaceGroupVO {
+public class ParkingSpaceGroupVO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1869889226526477139L;
 	private Integer pid; //人员表ID
     private String conctactID;//人事编号
     private String conctactName; //人事姓名

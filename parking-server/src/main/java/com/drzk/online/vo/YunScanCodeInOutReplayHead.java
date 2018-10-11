@@ -1,8 +1,14 @@
 package com.drzk.online.vo;
 
-public class YunScanCodeInOutReplayHead
+import java.io.Serializable;
+
+public class YunScanCodeInOutReplayHead implements Serializable
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3514305892631824761L;
 	public Integer status;
 	public String message;
 	

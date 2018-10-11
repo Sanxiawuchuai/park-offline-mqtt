@@ -1,20 +1,10 @@
 package com.drzk.utils;
 
-import java.util.Hashtable;
-import java.util.Properties;
-import java.util.Vector;
-
 import com.drzk.fact.InRealTimeBase;
 import com.drzk.fact.OutRealTimeBase;
-import com.drzk.vo.ParkAccountType;
-import com.drzk.vo.ParkCamSet;
-import com.drzk.vo.ParkChannelSet;
-import com.drzk.vo.ParkDeviceStatus;
-import com.drzk.vo.ParkDisInfo;
-import com.drzk.vo.ParkEquipments;
-import com.drzk.vo.ParkFreeType;
-import com.drzk.vo.ParkLocalSet;
-import com.drzk.vo.SysParameters;
+import com.drzk.vo.*;
+
+import java.util.*;
 
 /**
  * 车场全局参数类
@@ -52,5 +42,6 @@ public class GlobalPark {
 	//控制器事件
 	public static Hashtable<String,InRealTimeBase>  inChannelEvent = new Hashtable<String,InRealTimeBase> ();
 	public static Hashtable<String,OutRealTimeBase>  outChannelEvent = new Hashtable<String,OutRealTimeBase> ();
-	
+	//服务器的系统参数数据
+	public static Map<String,String> sysMap=new HashMap<>();
 }

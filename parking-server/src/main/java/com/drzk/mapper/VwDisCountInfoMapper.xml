@@ -36,7 +36,7 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into vw_dis_count_Info (out_type, discount_id, card_id, 
+    insert into vw_dis_count_info (out_type, discount_id, card_id, 
       out_time, discount_time, dis_amount, 
       dis_type, online_id, puid, 
       is_load, del_frag, car_no, 
@@ -57,7 +57,7 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into vw_dis_count_Info
+    insert into vw_dis_count_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="outType != null">
         out_type,
@@ -198,7 +198,7 @@
   <select id="selectTopDS" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from vw_dis_count_Info
+		from vw_dis_count_info
 		where is_load =0 or is_load is null limit 100
 	</select>
 	

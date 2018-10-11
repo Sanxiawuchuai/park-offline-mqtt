@@ -71,7 +71,7 @@ public class MainBoardSdk {
 	 * @return
 	 * @since JDK 1.8
 	 */
-	public static <S extends SuperBody, R extends SuperBody> MainBoardMessage<ReplyHead, R> sendAndGet(String equipmentID, String method, S sendVo,
+	public static <S, R> MainBoardMessage<ReplyHead, R> sendAndGet(String equipmentID, String method, S sendVo,
 			Class<R> rclazz) {
 		
 		ParkChannelSet channnel = ParkMethod.getChannelSetByEquipmentID(equipmentID);
@@ -95,7 +95,7 @@ public class MainBoardSdk {
 		String replyTopic = String.format(TopicsDefine.DOWN_RECIVE, parkNo);
 		head.setReplyTopic(replyTopic);
 		
-		sendVo.setuId(ParkMethod.getUUID());
+		//sendVo.setuId(ParkMethod.getUUID());
 		// 发送的对象
 		MainBoardMessage<Head, S> send = new MainBoardMessage<>(head, sendVo);
 
@@ -112,21 +112,5 @@ public class MainBoardSdk {
 		MainBoardMessage<ReplyHead, R> replyVo = JsonUtil.jsonToBoardMessage(replyjson, ReplyHead.class, rclazz);
 		return replyVo;
 
-	}
-	
-	public static void main(String[] args) {
-//		Head head = new Head();
-//		head.setMethod("loadTime");
-//		String parkNo = GlobalPark.properties.getProperty("PARK_NUM");
-//		String replyTopic = String.format(TopicsDefine.DOWN_RECIVE, parkNo);
-//		head.setReplyTopic(replyTopic);
-
-		LoadSysTimeBody body = new LoadSysTimeBody();
-		body.setSysTime(new Date());
-
-		//LoadSysTimeBody body = new LoadSysTimeBody();
-		MainBoardMessage<ReplyHead, LoadSysTimeBodyReturn> vo = MainBoardSdk.sendAndGet("aa", "", body, LoadSysTimeBodyReturn.class);
-		//MainBoardMessage<ReplyHead, LoadSysTimeBodyReturn> replyVo = MainBoardSdk.sendAndGet("", "", body,
-		//		LoadSysTimeBodyReturn.class);
 	}
 }

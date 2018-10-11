@@ -1,10 +1,16 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf
  * 月租费率
  */
-public class MonthlyRentVO {
+public class MonthlyRentVO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1390759766087082783L;
 	private String typename;// 卡名称
     private Integer stype;//续费类型     0-1月  1-3月   2-半年  3-一年
     private Integer charge;//续费金额

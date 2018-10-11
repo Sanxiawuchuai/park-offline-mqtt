@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class SysParameters {
+public class SysParameters implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4807692922400547822L;
+
+	/**
      * 
      */
     private Integer id;

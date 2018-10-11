@@ -5,14 +5,14 @@ import com.drzk.mapper.*;
 import com.drzk.online.constant.ConstantUtil;
 import com.drzk.online.service.OfMqttService;
 import com.drzk.online.service.OnlineDSScanSever;
+import com.drzk.online.utils.UploadUtil;
 import com.drzk.online.vo.*;
 import com.drzk.utils.GlobalPark;
 import com.drzk.utils.JsonUtil;
 import com.drzk.utils.StringUtils;
 import com.drzk.vo.*;
 import com.drzk.vo.ParkCarOut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Service
 public class OnlineDSScanSeverImpl implements OnlineDSScanSever {
 
-    private Logger log = LoggerFactory.getLogger(OnlineDSScanSeverImpl.class);
+    private Logger log = Logger.getLogger("userLog");
 
     @Autowired
     ParkCarInMapper parkCarInMapper;
@@ -86,6 +86,8 @@ public class OnlineDSScanSeverImpl implements OnlineDSScanSever {
     private ParkCarGroupMapper parkCarGroupMapper;
     @Autowired
     private ParkOverTimeSetMapper parkOverTimeSetMapper;
+    @Autowired
+    private BackUpParkCarInMapper backUpParkCarInMapper;
 
     /**
      * 收费标准推送
@@ -97,7 +99,6 @@ public class OnlineDSScanSeverImpl implements OnlineDSScanSever {
             if (data == null || data.size() == 0) {
                 return;
             }
-
             List<FeescaleVO> sendData = data.stream().map(parkStandardCharge -> {
                 return conversionParameterClass.getFeescaleVO(parkStandardCharge);
             }).collect(Collectors.toList());
@@ -139,6 +140,55 @@ public class OnlineDSScanSeverImpl implements OnlineDSScanSever {
             }
         }catch (Exception e){
             log.error("发布超时收费信息异常：",e);
+        }
+    }
+
+    @Override
+    public void reportAuth() {
+        try{
+            List<ServerInfoVo> list=new ArrayList<>();
+            list.add(conversionParameterClass.convertServerInfo());
+            sendInfo(list, "park/computer/v1", "computer");
+        }catch (Exception e){
+            log.error("上传云端授权信息异常：",e);
+        }
+    }
+
+    @Override
+    public void pushParkCarInImg() {
+        try {
+            List<BackUpParkCarIn> carInList = backUpParkCarInMapper.selectTopImg();
+            if (carInList != null) {
+                List<String> guidList = carInList.stream().map(backUpParkCarIn -> {
+                    return UploadUtil.syFtpImg(backUpParkCarIn.getGuid(), backUpParkCarIn.getInPic());
+                }).collect(Collectors.toList());
+                guidList = guidList.stream().filter(str -> str != null).collect(Collectors.toList());
+                log.debug("入场图片的guid是："+guidList);
+                if(guidList != null && guidList.size()>0){
+                    backUpParkCarInMapper.updateUploadImgStatus(1, guidList);        //更改图片上传的状态
+                }
+            }
+        } catch (Exception ex) {
+            log.error("发布同步入场图片异常：",ex);
+        }
+    }
+
+    @Override
+    public void pushParkCarOutImg() {
+        try {
+            List<ParkCarOut> carOutList = parkCarOutMapper.selectTopImg();
+            if (carOutList != null) {
+                List<String> cuidList = carOutList.stream().map(parkCarOut -> {
+                    return UploadUtil.syFtpImg(parkCarOut.getGuid(), parkCarOut.getInPic());
+                }).collect(Collectors.toList());
+                cuidList = cuidList.stream().filter(str -> str != null).collect(Collectors.toList());
+                log.debug("出场图片的guid是："+cuidList);
+                if(cuidList != null && cuidList.size()>0) {
+                    parkCarOutMapper.updateUploadImgStatus(1, cuidList);        //更改图片上传的状态
+                }
+            }
+        } catch (Exception ex) {
+            log.error("发布同步出场图片异常：",ex);
         }
     }
 
@@ -301,6 +351,7 @@ public class OnlineDSScanSeverImpl implements OnlineDSScanSever {
                 vo.setParkingNo(GlobalPark.properties.getProperty("PARK_NUM"));
                 vo.setDataOrigin("线下");
                 vo.setObjectId(model.getCuid());
+                vo.setRemark(model.getMemo());
                 vo.setOperationType(model.getStatus());
                 List<VwParkCarIsuse> carList = vwParkCarIsuseMapper.selectByPid(model.getpId());   //只取当前1条记录存放
                 List<CarportAndCarVO> carPortandCar = new ArrayList<>();
@@ -320,6 +371,7 @@ public class OnlineDSScanSeverImpl implements OnlineDSScanSever {
                         carPort.setBalanceMoney(body.getBalanceMoney().doubleValue());
                         carPort.setDeposit(body.getForegift().doubleValue());
                         carPort.setCarNo(body.getCarNo());
+                        carPort.setCarportNo(body.getPlaceNum());
                         carPort.setPlateStyle(body.getCarColour());
                         carPort.setCarStatus(3);
                         carPort.setStartTime(body.getStartDate());
@@ -537,9 +589,9 @@ public class OnlineDSScanSeverImpl implements OnlineDSScanSever {
     public void parkcarin() {
         try {
             List<ParkCarInVO> sendList = new ArrayList<ParkCarInVO>();
-            List<ParkCarIn> carInList = parkCarInMapper.selectTopDS();
+            List<BackUpParkCarIn> carInList = backUpParkCarInMapper.selectTopDS();            //查询所有未上传同步的数据
             if (carInList != null) {
-                for (ParkCarIn carIn : carInList) {
+                for (BackUpParkCarIn carIn : carInList) {
                     ParkCarInVO info = conversionParameterClass.getParkCarIn(carIn);
                     if (info != null && info.getObjectId() != null)
                         sendList.add(info);
@@ -654,18 +706,21 @@ public class OnlineDSScanSeverImpl implements OnlineDSScanSever {
      * @param topicName  发布的主题标识
      * @param <T>
      */
+    @Override
     public <T> void sendInfo(List<T> sendData, String sendMethod, String topicName) {
-        String parkNo = GlobalPark.properties.getProperty("PARK_NUM");
-        SendHead head = new SendHead();
-        head.setMethod(sendMethod);
-        String replyTopic = String.format(ConstantUtil.DS_TOPIC, parkNo, topicName);
-        head.setReplyTopic(replyTopic);
-        head.setParkingNo(parkNo);
+        if("1".equals(GlobalPark.properties.getProperty("UPLOAD_DATA_CLOUD"))) {        //如果连云端，则推送消息
+            String parkNo = GlobalPark.properties.getProperty("PARK_NUM");
+            SendHead head = new SendHead();
+            head.setMethod(sendMethod);
+            String replyTopic = String.format(ConstantUtil.DS_TOPIC, parkNo, topicName);
+            head.setReplyTopic(replyTopic);
+            head.setParkingNo(parkNo);
 
-        DataClass<T> test = new DataClass<>();
-        test.setHead(head);
-        test.setBody(sendData);
-        String json = JsonUtil.objectToJsonStr(test);
-        ofMqttService.sendMessage(ConstantUtil.OFFLINE_TOPIC, json, 0);
+            DataClass<T> test = new DataClass<>();
+            test.setHead(head);
+            test.setBody(sendData);
+            String json = JsonUtil.objectToJsonStr(test);
+            ofMqttService.sendMessage(ConstantUtil.OFFLINE_TOPIC, json,0);
+        }
     }
 }

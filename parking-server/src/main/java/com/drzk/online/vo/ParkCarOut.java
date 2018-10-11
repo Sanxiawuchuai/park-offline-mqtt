@@ -1,10 +1,16 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf 
  * 出场纪录
  */
-public class ParkCarOut {
+public class ParkCarOut implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 106473763656202159L;
 	private Integer carOutId ; //出场表ID
 	private String inMachNo; //控制器编号
 	private String entrance ;//入场控制器名称

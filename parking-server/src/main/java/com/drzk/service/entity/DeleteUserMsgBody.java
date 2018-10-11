@@ -1,6 +1,16 @@
 package com.drzk.service.entity;
+
+import java.io.Serializable;
+
 //删除用户信息实体
-public class DeleteUserMsgBody extends SuperBody {
+public class DeleteUserMsgBody implements Serializable {
+
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4083368832339110691L;
+	private String uId;
 	//车辆类型 
 	private String carType;
 	//储值车工作模式 00-自动，01-确认
@@ -17,6 +27,12 @@ public class DeleteUserMsgBody extends SuperBody {
 	private String storedValue;
 	//名单类型 00-白名单，01-黑名单
 	private String listType;
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
+	}
 	public String getCarType() {
 		return carType;
 	}

@@ -176,14 +176,16 @@
 		where guid=#{guid,jdbcType=VARCHAR}
 		order by create_date desc limit 1
 	</select>
+
 	<select id="selectByIsload" resultMap="BaseResultMap">
 		SELECT
-		<include refid="Base_Column_List" />
-		from
-		(SELECT
-		<include refid="Base_Column_List" />
-		FROM vw_park_issue_opera
-		where is_load =0 or is_load is null order by create_date desc ) as t
-		group by t.ykt_id
+		 per_name,t.ykt_id,card_type,car_no,oper_type,before_money,balance_money,start_date,
+		end_date,pay_type,place_name,relase_time,opera_name,memo,front_date,create_date,guid,
+		address,phone,order_no,card_id,foregift,pid,create_user_name,is_load
+		 from vw_park_issue_opera t
+		inner join
+		(SELECT max(create_date) time,ykt_id FROM vw_park_issue_opera
+				where is_load =0 group by ykt_id) t1 on t.ykt_id=t1.ykt_id and t.create_date=t1.time
 	</select>
+
 </mapper>

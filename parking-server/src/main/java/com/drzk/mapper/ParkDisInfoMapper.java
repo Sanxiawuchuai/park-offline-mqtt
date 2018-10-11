@@ -35,6 +35,8 @@ public interface ParkDisInfoMapper {
 	Vector<ParkDisInfo> selectDSTop();
 	
 	int updateDSStatus(@Param("status") Integer status,@Param("list") List<String> list);
+	
+	int updateDeleteFlag(@Param("list") List<String> list);
 	/** 根据折扣ID 获取实体 */
 	ParkDisInfo selectByDiscountId(String discountId);
 }

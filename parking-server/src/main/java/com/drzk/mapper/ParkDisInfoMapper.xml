@@ -260,6 +260,16 @@
 			#{item}
 		</foreach>
 	</update>
+	
+	<update id="updateDeleteFlag">
+		update park_dis_info
+		set del_frag = 1
+		where puid in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
 	<select id="selectByDiscountId" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select

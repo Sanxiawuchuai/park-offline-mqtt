@@ -1,17 +1,11 @@
 
 package com.drzk.offline.vo;
 
-import java.util.Date;
+import com.drzk.vo.*;
+
+import java.io.Serializable;
 import java.util.List;
 import java.util.Properties;
-
-import com.drzk.vo.ParkAccountType;
-import com.drzk.vo.ParkCamSet;
-import com.drzk.vo.ParkChannelSet;
-import com.drzk.vo.ParkDisInfo;
-import com.drzk.vo.ParkEquipments;
-import com.drzk.vo.ParkFreeType;
-import com.drzk.vo.ParkLocalSet;
 
 /**
  * 岗亭参数实体 <br>
@@ -22,8 +16,13 @@ import com.drzk.vo.ParkLocalSet;
  * @since JDK 1.8
  * @see
  */
-public class BoxParamVo extends SuperBody {
+public class BoxParamVo implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1784607140586285229L;
+	private String uId;
 	private Properties parkSysSet; // 参照车场参数设置实体类
 	private ParkLocalSet parkLocalSet; // ParkLocalSet参照车场岗亭设置实体类
 	private List<ParkChannelSet> parkContset; // 参照控制器实体
@@ -191,6 +190,14 @@ public class BoxParamVo extends SuperBody {
 	*/
 	public void setParkDisInfo(List<ParkDisInfo> parkDisInfo) {
 		this.parkDisInfo = parkDisInfo;
+	}
+
+	public String getuId() {
+		return uId;
+	}
+
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 
 	

@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class YktLogin {
+public class YktLogin implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1633225311925804084L;
+
+	/**
      * 主键ID
      */
     private Integer id;

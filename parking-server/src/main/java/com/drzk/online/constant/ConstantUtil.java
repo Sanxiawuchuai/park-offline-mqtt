@@ -9,7 +9,8 @@ public class ConstantUtil {
    public static final String DSReplayEnd ="/v1";
    public static final String ScanCodeInOut ="server/data/publish/phone/%s";
    public static final String getCharge = "park/getcaradmissioninfo/%s";
-   public static final String chargeData = "park/userpaymentcarfee/%s";
+   public static final String ONLINE_LOWER="%s/publish/offData";                     //线上主动下发的接口
+   public static final String OFFLINE_PARKNO="registry/cloudPrivileges/%s";         //获取车场编号主题
 
 
     // 车场设置
@@ -81,5 +82,11 @@ public class ConstantUtil {
    public static final String OWNED_CTIY = "address"; // 项目所属地址
    public static final String END_VALIDITY = "expiresTime"; // 项目有效结束时间
    public static final String HAIRPIN_METHOD="syncRentParking";     //云端发行车牌同步
-   
+   public static final String BATCH__RENT_PARKING="syncBatchRentParking";       //批量导入发卡信息
+
+   public static final String PUBLIC_KEY="123456";          //加密密钥
+
+    // 车场相机
+    public static final String  OPEN_DOOR = "openDoor";
+
 }

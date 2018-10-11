@@ -1,6 +1,15 @@
 package com.drzk.service.entity;
+
+import java.io.Serializable;
+
 //3.7. 上传日志信息(服务器订阅)实体
-public class UpParkLogBody  extends SuperBody{
+public class UpParkLogBody implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3921944662904116803L;
+	private String uId;
 	private String conIp;//控制器Ip
 	private String recordNo;//流水号
 	public String getConIp() {
@@ -14,6 +23,12 @@ public class UpParkLogBody  extends SuperBody{
 	}
 	public void setRecordNo(String recordNo) {
 		this.recordNo = recordNo;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	
 }

@@ -10,8 +10,16 @@ import com.drzk.fact.InRealTimeBase;
 import com.drzk.mapper.BackUpParkCarInMapper;
 import com.drzk.mapper.ParkCarInMapper;
 import com.drzk.mapper.VwParkCarIsuseMapper;
+import com.drzk.online.impl.ConversionParameterClass;
+import com.drzk.online.service.OfMqttService;
+import com.drzk.online.service.OnlineDSScanSever;
+import com.drzk.online.utils.UploadUtil;
+import com.drzk.online.vo.ParkCarInVO;
 import com.drzk.service.entity.*;
-import com.drzk.utils.*;
+import com.drzk.utils.BeanCopierUtil;
+import com.drzk.utils.DateTimeUtils;
+import com.drzk.utils.GlobalPark;
+import com.drzk.utils.JsonUtil;
 import com.drzk.vo.*;
 import org.apache.log4j.Logger;
 import org.kie.api.cdi.KSession;
@@ -20,6 +28,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -50,6 +59,12 @@ public class ParkingInServiceImpl extends AbstractParkingService {
 	private static Logger logger = Logger.getLogger("userLog");
 	@Autowired
 	private BackUpParkCarInMapper backUpParkCarInMapper;
+	@Autowired
+	private ConversionParameterClass conversionParameterClass;
+	@Autowired
+	private OfMqttService ofMqttService;
+	@Autowired
+	private OnlineDSScanSever onlineDSScanSever;
 
 	/**
 	 * 满位是否还让进<br>
@@ -62,6 +77,7 @@ public class ParkingInServiceImpl extends AbstractParkingService {
 	public boolean isParkFullPass(int cardType) {
 		boolean ret = false;
 		try {
+			logger.debug("isParkFullPass:"+cardType);
 			int carType = Integer.parseInt(GlobalPark.properties.getProperty("CAR_TYPE", "1"));
 			if (GlobalPark.properties.getProperty("ISALLOW","0").toLowerCase().equals("0")) {
 				// int cardType = getCardType(carNo);
@@ -113,7 +129,7 @@ public class ParkingInServiceImpl extends AbstractParkingService {
 			if (flag == 1) {
 				model.setInTime(inTime);
 				model.setMachNo(controlIndex);
-				model = parkCarInMapper.selectTop(model);
+				//model = parkCarInMapper.selectTop(model);
 				if (model != null) {
 					long timeSpan = inTime.getTime() - model.getInTime().getTime();
 					return timeSpan <= 1000;
@@ -122,7 +138,7 @@ public class ParkingInServiceImpl extends AbstractParkingService {
 			} else {
 				String rCarNo = carNo.trim().substring(1);
 				model.setCarNo(rCarNo);
-				model = parkCarInMapper.selectTop(model);
+				//model = parkCarInMapper.selectTop(model);
 				return model != null;
 			}
 
@@ -174,6 +190,7 @@ public class ParkingInServiceImpl extends AbstractParkingService {
 	@Override
 	public boolean saveParkInRecord(InRealTimeBase in) {
 		try {
+			logger.debug("saveParkInRecord:"+in.getCarNo());
 			ParkCarIn model = in.getIn();
 			ParkCarIn condition = new ParkCarIn();
 			String rCarNo = in.getCarNo().trim();
@@ -183,13 +200,18 @@ public class ParkingInServiceImpl extends AbstractParkingService {
 			if (modelGet != null && modelGet.size() > 0) {
 				parkCarInMapper.deleteByPrimaryKey(modelGet.get(0).getId());
 				BackUpParkCarIn backUpIn = new BackUpParkCarIn();
-				BeanUtils.copyProperties(modelGet.get(0), backUpIn);
+				BeanCopierUtil.copyProperties(modelGet.get(0), backUpIn);
 				//backUpIn.setId(null);
 				backUpParkCarInMapper.insertSelective(backUpIn);
 			}
 			int row = parkCarInMapper.insert(model);
-			if (row > 0)
-				return true;
+			if (row > 0) {
+				if(GlobalPark.properties.getProperty("UPLOAD_DATA_CLOUD").equals("1")) {
+					pushCarInfo(model);        //推送数据
+					//pushCarInImg(model);
+				}
+                return true;
+            }
 		} catch (Exception e) {
 			logger.error("保存入场记录:", e);
 		}
@@ -204,6 +226,7 @@ public class ParkingInServiceImpl extends AbstractParkingService {
 	public boolean getFamilyCarType(InRealTimeBase in) {
 		boolean isFamilyTemp = false;
 		try {
+			logger.debug("getFamilyCarType:"+in.getCarNo());
 			VwParkCarIsuse model = in.getCardInfo();
 			int groupId = model.getPlaceId();
 			int placeNum = model.getpNum();
@@ -245,6 +268,7 @@ public class ParkingInServiceImpl extends AbstractParkingService {
 	@Override
 	public boolean isFamilyAllowIn(InRealTimeBase in) {
 		try {
+			logger.debug("isFamilyAllowIn:"+in.getCarNo());
 			VwParkCarIsuse model = in.getCardInfo();
 			Byte pType = model.getpType();
 			return pType != null && pType == 0;
@@ -263,7 +287,8 @@ public class ParkingInServiceImpl extends AbstractParkingService {
 			Head replyHead = new Head();
 			replyHead.setMethod("parkErrorMessage");
 			ParkErrorMessageBody body = new ParkErrorMessageBody();
-			if (in.getStatusMap().get("isSuccess") == "1") {
+			Object isSuccess =in.getStatusMap().get("isSuccess");
+			if (isSuccess!=null&&isSuccess.equals(1)) {
 				body.setInOut("0");
 				String msg = in.getStatusMap().get("Msg").toString();
 				body.setDisMessage(msg);
@@ -278,6 +303,7 @@ public class ParkingInServiceImpl extends AbstractParkingService {
 						equipmentID = local.getEquipmentID();
 						String topic = String.format(TopicsDefine.BOX_ERROR, equipmentID);
 						MqttMessageVO reply = MqttServiceImpl.sendMessage(equipmentID,topic, jsonBody, null, 3);
+						logger.debug("parkErrorMessage:"+jsonBody);
 					}
 				}
 			}
@@ -306,6 +332,7 @@ public class ParkingInServiceImpl extends AbstractParkingService {
 					if (local.getOnline() == 1 && local.getEquipmentID() != null) {
 						String topic = String.format(TopicsDefine.BOX_ERROR, local.getEquipmentID());
 						MqttMessageVO retVo = MqttServiceImpl.sendMessage(local.getEquipmentID(),topic, jsonBody, null, 3);
+						logger.debug("推送入场记录:"+topic+","+jsonBody);
 						break;
 					}
 				}
@@ -345,6 +372,7 @@ public class ParkingInServiceImpl extends AbstractParkingService {
 					System.out.println(topic);
 					System.out.println(jsonBody);
 					MqttMessageVO retVo = MqttServiceImpl.sendMessage(equipmentID,topic, jsonBody, null, 1);
+					logger.debug("入场校正推送:"+topic+","+jsonBody);
 				}
 			}
 		} catch (Exception ex) {
@@ -360,7 +388,7 @@ public class ParkingInServiceImpl extends AbstractParkingService {
 	@Override
 	public Step isCardTypeExpireIn(InRealTimeBase fact) {
 		try {
-			
+			logger.debug("isCardTypeExpireIn:"+fact.getCarNo());
 			Date eTime = fact.getCardInfo().getEndDate(); // 结束有效期
 			Date sTime = fact.getCardInfo().getStartDate(); // 开始有效期
 			ParkEffetTimes parkEffetTimes = parkEffetTimesMapper.selectByCardType(fact.getCarRealType());
@@ -409,7 +437,7 @@ public class ParkingInServiceImpl extends AbstractParkingService {
 					}
 					Date start = parkEffetTimes.getbTime(); // 开始时间
 					Date end = parkEffetTimes.geteTime(); // 时段结束时间
-					if (parkEffetTimes.getsType() == 0 && DateTimeUtils.isEffectiveDate(fact.getNowDate(), start, end)) // 时间段禁止进入
+					if (parkEffetTimes.getsType() == 1 && DateTimeUtils.isEffectiveDate(fact.getNowDate(), start, end)) // 时间段禁止进入
 					{
 						return Step.TIMENOTALLOW; // 时段内禁止入场 ，入场还是月卡处理
 					}
@@ -425,4 +453,43 @@ public class ParkingInServiceImpl extends AbstractParkingService {
 		
 		return Step.EFFECTIVE;
 	}
+
+	/**
+	 * 实时推送入场数据
+	 * @param parkCarIn
+	 */
+	public void pushCarInfo(ParkCarIn parkCarIn){
+	    try {
+            BackUpParkCarIn backUpIn = new BackUpParkCarIn();
+            BeanUtils.copyProperties(parkCarIn, backUpIn);
+            ParkCarInVO info = conversionParameterClass.getParkCarIn(backUpIn);
+            List<ParkCarInVO> sendList = new ArrayList<ParkCarInVO>();
+            if (info != null && info.getObjectId() != null) {
+                sendList.add(info);
+                onlineDSScanSever.sendInfo(sendList, "park/parkcarin/v1", "parkcarin");            //传送数据
+                logger.debug("推送入场数据到云端成功");
+            }
+        }catch (Exception e){
+	        logger.error("实时推送入场数据异常：",e);
+        }
+	}
+
+    /**
+     * 实时推送入场数据图片上传
+     * @param parkCarIn
+     */
+    public void pushCarInImg(ParkCarIn parkCarIn){
+        try {
+			if("1".equals(GlobalPark.properties.getProperty("UPLOAD_DATA_CLOUD"))&&"1".equals(GlobalPark.properties.getProperty("CLOUD_STATUS"))) {
+				String result = UploadUtil.syFtpImg(parkCarIn.getGuid(), parkCarIn.getInPic());          //上传入场图片
+				if (result != null) {
+					parkCarIn.setIsImgUpload(1);
+					parkCarInMapper.updateByPrimaryKey(parkCarIn);          //更新数据状态
+					logger.debug("推送入场图片到云端成功");
+				}
+			}
+        }catch (Exception e){
+            logger.error("实时推送入场图片异常：",e);
+        }
+    }
 }

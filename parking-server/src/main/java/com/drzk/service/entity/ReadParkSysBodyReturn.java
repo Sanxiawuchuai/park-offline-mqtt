@@ -1,6 +1,15 @@
 package com.drzk.service.entity;
+
+import java.io.Serializable;
+
 //读取车场系统参数返回实体
-public class ReadParkSysBodyReturn  extends SuperBody{
+public class ReadParkSysBodyReturn implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4670052351888050786L;
+	private String uId;
 	//临时车工作模式 00-自动，01-确认
 	private String temporaryCarWorkingModel;
 	//储值车工作模式 00-自动，01-确认
@@ -130,6 +139,12 @@ public class ReadParkSysBodyReturn  extends SuperBody{
 	}
 	public void setMonthOverDays(String monthOverDays) {
 		this.monthOverDays = monthOverDays;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	//副摄像机类型 0-无，1-大华，2-臻识，3-海康，4-华夏智信，5-信路威
 	private String viceCameraType;

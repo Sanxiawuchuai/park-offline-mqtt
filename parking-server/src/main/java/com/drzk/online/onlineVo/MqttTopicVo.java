@@ -1,11 +1,17 @@
 package com.drzk.online.onlineVo;
 
+import java.io.Serializable;
+
 /**
  * 2018/6/27 cx
  */
-public class MqttTopicVo {
+public class MqttTopicVo implements Serializable {
 
-    //主题
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -9007422164208774641L;
+	//主题
     private String topic;
     //qos
     private Integer qos=1;

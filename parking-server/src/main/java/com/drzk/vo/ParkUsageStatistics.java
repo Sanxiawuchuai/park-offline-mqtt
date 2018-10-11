@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ParkUsageStatistics {
+public class ParkUsageStatistics implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1285592700800477025L;
+
+	/**
      * 自增长id
      */
     private Integer id;

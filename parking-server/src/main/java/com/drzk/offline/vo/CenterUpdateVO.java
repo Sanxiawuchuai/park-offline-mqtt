@@ -1,5 +1,7 @@
 package com.drzk.offline.vo;
 
+import java.io.Serializable;
+
 /**
  * ClassName:CenterUpdateVO <br>
  * Date: 2018年8月6日 下午4:35:35 <br>
@@ -9,7 +11,11 @@ package com.drzk.offline.vo;
  * @since JDK 1.8
  * @see
  */
-public class CenterUpdateVO extends SuperBody{
+public class CenterUpdateVO implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7948413639184864278L;
 	private String type;
 	private String uId;
 	private String id;

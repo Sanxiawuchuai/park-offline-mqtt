@@ -1,8 +1,14 @@
 package com.drzk.offline.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class BoxGetInRecord extends SuperBody {
+public class BoxGetInRecord implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6355224636153385856L;
+	private String uId;
 	private String carNo;
 	private String equipmentID;
 	private String type;
@@ -79,6 +85,12 @@ public class BoxGetInRecord extends SuperBody {
 	 */
 	public String getCardType() {
 		return cardType;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	
 	

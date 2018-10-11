@@ -1,6 +1,7 @@
 package com.drzk.service.entity;
 
 public class DisplayChar {
+
 	private String voiceType;
 	private String disValue;
 	

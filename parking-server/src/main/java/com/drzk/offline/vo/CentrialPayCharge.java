@@ -1,9 +1,15 @@
 package com.drzk.offline.vo;
 
+import java.io.Serializable;
+
 import com.drzk.fact.CentreRealTimeBase;
 /** 中央收费实体*/
-public class CentrialPayCharge
+public class CentrialPayCharge implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4228946353111929773L;
 	private String uId;
 //	private Integer type;
 //	private String controlIP;

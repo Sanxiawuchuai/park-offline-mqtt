@@ -1,52 +1,62 @@
 package com.drzk.utils;
 
-import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.stereotype.Component;
 
 /**
  * Spring IOC上下文工具类
- * 
+ *
  * @author chenlong
- * 
  */
+@Component
 public class SpringUtil implements ApplicationContextAware {
 
-    /**
-     * 当前IOC
-     */
-    public static AbstractApplicationContext applicationContext;
+    private static ApplicationContext applicationContext;
 
     /**
-     * 设置当前上下文环境，此方法由spring自动装配
+     * 实现ApplicationContextAware接口的context注入函数, 将其存入静态变量.
      */
     @Override
-    public void setApplicationContext(ApplicationContext arg0)
-            throws BeansException {
-        applicationContext = (AbstractApplicationContext) arg0;
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        SpringUtil.applicationContext = applicationContext; // NOSONAR
     }
 
-    
-	public static Object getBean(String name) throws BeansException {
-		return applicationContext.getBean(name);
-	}
+    /**
+     * 取得存储在静态变量中的ApplicationContext.
+     */
+    public static ApplicationContext getApplicationContext() {
+        if(applicationContext==null){
+            return null;
+        }
+        return applicationContext;
+    }
 
-	public static <T> T getBean(String name, Class<T> requiredType) throws BeansException {
-		return applicationContext.getBean(name, requiredType);
-	}
+    /**
+     * 从静态变量ApplicationContext中取得Bean, 自动转型为所赋值对象的类型.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T getBean(String name) {
+        if(applicationContext==null){
+            return null;
+        }
+        return (T) applicationContext.getBean(name);
+    }
 
-	public static <T> T getBean(Class<T> requiredType) throws BeansException {
-		return applicationContext.getBean(requiredType);
-	}
+    /**
+     * 从静态变量ApplicationContext中取得Bean, 自动转型为所赋值对象的类型.
+     */
+    public static <T> T getBean(Class<T> clazz) {
+        if(applicationContext==null){
+            return null;
+        }
+        return (T) applicationContext.getBean(clazz);
+    }
 
-	public static Object getBean(String name, Object... args) throws BeansException {
-		return applicationContext.getBean(name, args);
-	}
-
-	public static <T> T getBean(Class<T> requiredType, Object... args) throws BeansException {
-		return applicationContext.getBean(requiredType, args);
-	}
-
-
+    /**
+     * 清除applicationContext静态变量.
+     */
+    public static void cleanApplicationContext() {
+        applicationContext = null;
+    }
 }

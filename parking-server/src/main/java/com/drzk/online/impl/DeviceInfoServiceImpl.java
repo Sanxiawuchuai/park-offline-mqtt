@@ -208,10 +208,14 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
             String executeType = head.getExecuteType();
             if (method.equals( ConstantUtil.BOX_METHOD )) {
                 DeviceBoxVo vo = JacksonUtils.jsonToMqttObject( message, DeviceBoxVo.class ).getBody();
-                if (executeType.equals( ConstantUtil.INSERT_OPERATION )) {
-                    insertBox( vo );
-                } else if (executeType.equals( ConstantUtil.UPDATE_OPERATION )) {
-                    saveBox( vo );
+                ParkLocalSet exists = parkLocalSetMapper.selectByGuid( head.getSubId() );
+                if (executeType.equals( ConstantUtil.INSERT_OPERATION ) || executeType.equals( ConstantUtil.UPDATE_OPERATION )) {
+                    //判断是否存在数据 存在就更新  不存在就新增
+                    if (exists != null) {
+                        saveBox( vo );
+                    } else {
+                        insertBox( vo );
+                    }
                 } else if (executeType.equals( ConstantUtil.DELETE_OPERATION )) {
                     vo = new DeviceBoxVo();
                     vo.setObjectId( head.getSubId() );
@@ -220,10 +224,13 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
                 }
             } else if (method.equals( ConstantUtil.CONTROLLER_METHOD )) {
                 DeviceControllerVo vo = JacksonUtils.jsonToMqttObject( message, DeviceControllerVo.class ).getBody();
-                if (executeType.equals( ConstantUtil.INSERT_OPERATION )) {
-                    insertController( vo );
-                } else if (executeType.equals( ConstantUtil.UPDATE_OPERATION )) {
-                    saveController( vo );
+                ParkChannelSet exists = parkChannelSetMapper.selectByGuid( head.getSubId() );
+                if (executeType.equals( ConstantUtil.INSERT_OPERATION ) || executeType.equals( ConstantUtil.UPDATE_OPERATION )) {
+                    if (exists != null) {
+                        saveController( vo );
+                    } else {
+                        insertController( vo );
+                    }
                 } else if (executeType.equals( ConstantUtil.DELETE_OPERATION )) {
                     vo = new DeviceControllerVo();
                     vo.setObjectId( head.getSubId() );
@@ -232,10 +239,13 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
                 }
             } else if (method.equals( ConstantUtil.CAMERA_METHOD )) {
                 DeviceCameraVo vo = JacksonUtils.jsonToMqttObject( message, DeviceCameraVo.class ).getBody();
-                if (executeType.equals( ConstantUtil.INSERT_OPERATION )) {
-                    insertCamera( vo );
-                } else if (executeType.equals( ConstantUtil.UPDATE_OPERATION )) {
-                    saveCamera( vo );
+                ParkCamSet exists = parkCamSetMapper.selectByUuid( head.getSubId() );
+                if (executeType.equals( ConstantUtil.INSERT_OPERATION ) || executeType.equals( ConstantUtil.UPDATE_OPERATION )) {
+                    if (exists != null) {
+                        insertCamera( vo );
+                    } else {
+                        saveCamera( vo );
+                    }
                 } else if (executeType.equals( ConstantUtil.DELETE_OPERATION )) {
                     vo = new DeviceCameraVo();
                     vo.setObjectId( head.getSubId() );
@@ -245,6 +255,19 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
             }
         }
     }
+
+    @Override
+    public void syncOpenDoor(String message) {
+        MqttPayloadVo<Map> dataMqtt = JacksonUtils.jsonToMqttObject(message, Map.class);
+        Map data = dataMqtt.getBody();
+        if(data!=null){
+            String mac=data.getOrDefault( "macAddr","" ).toString();
+            String ip=data.getOrDefault( "ipAddr","" ).toString();
+            String parkingNo=data.getOrDefault( "parkingNo","" ).toString();
+
+        }
+    }
+
 
     /**
      * 同步结果

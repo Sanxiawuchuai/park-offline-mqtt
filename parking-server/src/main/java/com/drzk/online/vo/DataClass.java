@@ -4,6 +4,7 @@ import java.util.List;
 
 public class DataClass<T>
 {	
+
 	private SendHead head;
 	
 	private List<T> body;

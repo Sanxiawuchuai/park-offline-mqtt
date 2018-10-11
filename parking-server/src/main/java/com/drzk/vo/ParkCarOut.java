@@ -2,12 +2,18 @@ package com.drzk.vo;
 
 
 
-import java.util.Date;
-
 import com.drzk.common.InOutRealTimeBase;
 
-public class ParkCarOut {
+import java.io.Serializable;
+import java.util.Date;
+
+public class ParkCarOut implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3433969904184508218L;
+
+	/**
      * 
      */
     private Integer id;
@@ -190,7 +196,7 @@ public class ParkCarOut {
     /**
      * 0未上传，1正在上传，2上传成功
      */
-    private Integer isLoad;
+    private Integer isLoad=0;
     
     
     private Date centrialTime;
@@ -198,6 +204,7 @@ public class ParkCarOut {
     
     private String smallInPic;
     private String smallOutPic;
+    private Integer isImgUpload=0;
     
 
     /** 是否出场（中央收费时为0，出场后更新为1） */
@@ -853,6 +860,12 @@ public class ParkCarOut {
 	public void setSmallOutPic(String smallOutPic) {
 		this.smallOutPic = smallOutPic;
 	}
-    
-    
+
+    public Integer getIsImgUpload() {
+        return isImgUpload;
+    }
+
+    public void setIsImgUpload(Integer isImgUpload) {
+        this.isImgUpload = isImgUpload;
+    }
 }

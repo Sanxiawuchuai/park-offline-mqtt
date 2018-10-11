@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class VwHandoverRecord {
+public class VwHandoverRecord implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5435521726153850811L;
+
+	/**
      * 岗亭编号
      */
     private Integer boxId;

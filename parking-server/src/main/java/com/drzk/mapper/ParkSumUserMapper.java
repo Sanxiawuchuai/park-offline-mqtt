@@ -1,5 +1,6 @@
 package com.drzk.mapper;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -19,8 +20,11 @@ public interface ParkSumUserMapper {
 
     int updateByPrimaryKey(ParkSumUser record);
     ParkSumUser selectByBoxId(int boxId);
-
+    
+    ParkSumUser selectByUser(ParkSumUser record);
+    
     List<ParkSumUser> selectByCondition(ParkSumUser record);
+    
     
     /** 获取100条未上传的数据 */
     List<ParkSumUser> selectTopDS();

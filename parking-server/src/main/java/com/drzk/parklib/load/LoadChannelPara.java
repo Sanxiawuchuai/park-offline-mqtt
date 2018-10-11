@@ -2,21 +2,15 @@
 package com.drzk.parklib.load;
 
 import com.drzk.common.ParkMethod;
-import com.drzk.mapper.VwParkCarIsuseMapper;
-import com.drzk.mapper.YktCardIssueRelMapper;
 import com.drzk.parklib.send.MainBoardSdk;
 import com.drzk.service.entity.*;
 import com.drzk.utils.GlobalPark;
-import com.drzk.utils.LoggerUntils;
+import com.drzk.utils.JsonUtil;
 import com.drzk.utils.MyBeanUtils;
 import com.drzk.vo.ParkCamSet;
 import com.drzk.vo.ParkChannelSet;
 import com.drzk.vo.ParkStandardCharge;
-import com.drzk.vo.VwParkCarIsuse;
-import com.drzk.vo.YktCardIssueRel;
-
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,6 +36,7 @@ public class LoadChannelPara {
 				String workModel = parkChannelSet.getWorkModel();
 				int id = parkChannelSet.getId();
 				LoadParkSysBody parkSysBody = new LoadParkSysBody();
+				parkSysBody.setuId(ParkMethod.getUUID());
 				parkSysBody.setTemporaryCarWorkingModel(workModel.substring(0, 1));
 				parkSysBody.setMonthlyCarWorkingModel(workModel.substring(1, 2));
 				parkSysBody.setStoredValueCarWorkingModel(workModel.substring(3, 4));
@@ -77,6 +72,7 @@ public class LoadChannelPara {
 				if(equipmentID == null || "".equals(equipmentID)) {
 					continue;
 				}
+				logger.debug(equipmentID+"主板加载参数"+JsonUtil.objectToJsonStr(parkSysBody));
 				MainBoardMessage<ReplyHead, LoadParkSysBodyReturn> reply = MainBoardSdk.sendAndGet(equipmentID, "loadParkSysConfing", parkSysBody, LoadParkSysBodyReturn.class);
 				if(reply == null) {
 					logger.debug("load systems param fail:" + parkChannelSet.getChannelIp());
@@ -95,11 +91,13 @@ public class LoadChannelPara {
 		try {
 			for (ParkChannelSet parkChannelSet : GlobalPark.parkContset) {
 				LoadSysTimeBody body = new LoadSysTimeBody();
+				body.setuId(ParkMethod.getUUID());
 				body.setSysTime(new Date());
 				String equipmentID = parkChannelSet.getDsn();
 				if(equipmentID == null || "".equals(equipmentID)) {
 					continue;
 				}
+				logger.debug(equipmentID+"主板时间参数"+JsonUtil.objectToJsonStr(body));
 				MainBoardMessage<ReplyHead, LoadSysTimeBodyReturn> replyVo = MainBoardSdk.sendAndGet(equipmentID, "loadTime", body,
 						LoadSysTimeBodyReturn.class);
 				if(replyVo == null || !replyVo.getHead().getStatus().equals("0")) {
@@ -117,9 +115,11 @@ public class LoadChannelPara {
 			body.setStandardType("1");
 			List<ParkStandardChargeBody> chargeData = new ArrayList<ParkStandardChargeBody>();
 			for (ParkStandardCharge temp : parkStandardCharge) {
-				ParkStandardChargeBody standardChargeBody = new ParkStandardChargeBody();
-				MyBeanUtils.copyProperties(temp, standardChargeBody);
-				chargeData.add(standardChargeBody);
+				if (temp != null) {
+					ParkStandardChargeBody standardChargeBody = new ParkStandardChargeBody();
+					MyBeanUtils.copyProperties(temp, standardChargeBody);
+					chargeData.add(standardChargeBody);
+				}
 			}
 			//BeanUtils.copyProperties(parkStandardCharge, chargeData);
 			body.setChargeData(chargeData);

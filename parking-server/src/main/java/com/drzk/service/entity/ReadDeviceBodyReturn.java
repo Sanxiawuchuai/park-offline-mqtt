@@ -1,8 +1,15 @@
 package com.drzk.service.entity;
 //	//读取设备信息返回信息实体
 
+import java.io.Serializable;
 
-public class ReadDeviceBodyReturn  extends SuperBody{
+public class ReadDeviceBodyReturn implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2753395546724116538L;
+	private String uId;
 	//设备型号
 	private String equipmentModel;
 	//-设备名称
@@ -50,6 +57,12 @@ public class ReadDeviceBodyReturn  extends SuperBody{
 	}
 	public void setEquipmentDescription(String equipmentDescription) {
 		this.equipmentDescription = equipmentDescription;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	
 }

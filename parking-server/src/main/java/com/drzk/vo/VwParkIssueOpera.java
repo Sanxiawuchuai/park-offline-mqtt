@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class VwParkIssueOpera {
-    private String perName;
+public class VwParkIssueOpera implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8449984988042182038L;
+
+	private String perName;
 
     private Integer yktId;
 

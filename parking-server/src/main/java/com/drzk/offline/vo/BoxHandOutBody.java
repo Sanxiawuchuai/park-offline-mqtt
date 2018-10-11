@@ -1,8 +1,15 @@
 package com.drzk.offline.vo;
-/** 手工出场实体 */
-public class BoxHandOutBody extends SuperBody
-{
 
+import java.io.Serializable;
+
+/** 手工出场实体 */
+public class BoxHandOutBody implements Serializable
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7470474850690965291L;
+	private String uId;
 	private String carNo;//车牌
 	private String ID;//入场记录号
 	private String pInCarNo;//原入场车牌
@@ -93,6 +100,12 @@ public class BoxHandOutBody extends SuperBody
 	public String getEquipmentID()
 	{
 		return equipmentID;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	
 }

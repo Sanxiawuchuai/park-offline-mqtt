@@ -33,7 +33,6 @@ import java.util.List;
  * @since JDK 1.8
  * @see
  */
-
 public abstract class AbstractParkingService implements IParkingService {
 
 	@Autowired
@@ -178,6 +177,7 @@ public abstract class AbstractParkingService implements IParkingService {
 	/** 获取大小车场 */
 	@Override
 	public boolean isSmallPark(AbsRealTimeBase fact) {
+		logger.debug("isSmallPark :" + fact.getCarNo());
 		boolean small = false;
 		try {
 			ParkChannelSet channelModel = fact.getChannelSet();
@@ -203,7 +203,6 @@ public abstract class AbstractParkingService implements IParkingService {
 		if (fact.isInOrOutFlag()) {
 			((InRealTimeBase) fact).getIn().setSmall(small ? 1 : 0);
 		}
-		logger.debug("isSmallPark :" + fact.getCarNo() + " return :" + small);
 		return small;
 	}
 
@@ -292,6 +291,11 @@ public abstract class AbstractParkingService implements IParkingService {
 					((OutRealTimeBase) fact).getOut().setCardNo(model.getCarNo());
 					((OutRealTimeBase) fact).getPayMentVo().setCarRealType(cardType);
 				}
+			}else{
+				if (!fact.isInOrOutFlag()){
+					((OutRealTimeBase) fact).getPayMentVo().setCarRealType(cardType);
+					((OutRealTimeBase) fact).getOut().setCardType(cardType);
+				}
 			}
 		} catch (Exception e) {
 			logger.error("获取车牌的卡类型:", e);
@@ -350,7 +354,7 @@ public abstract class AbstractParkingService implements IParkingService {
 			switch (step) {
 			case NOCARNO: // 无牌车，报播请扫码
 				voice = new DisplayChar();
-				voice.setVoiceType("2E"); // 无牌车请扫码
+				voice.setVoiceType("12"); // 无牌车请扫码
 				charList.add(voice);
 				voice = new DisplayChar();
 				voice.setVoiceType("89"); // 无牌车请扫码
@@ -436,6 +440,7 @@ public abstract class AbstractParkingService implements IParkingService {
 			default:
 				break;
 			}
+			body.setuId(ParkMethod.getUUID());
 			body.setDisplayChar(charList);
 			String equipmentID = fact.getChannelSet().getDsn();
 			String method = "displayOutPut";
@@ -443,6 +448,7 @@ public abstract class AbstractParkingService implements IParkingService {
 					DisplayBodyReturn.class);
 			long end = System.currentTimeMillis();
 			System.out.println("voice time:" + (end - start));
+			logger.debug("播报语音:" + body);
 			return !(replyVo == null || !"0".equals(replyVo.getHead().getStatus()));
 		} catch (Exception e) {
 			logger.error("播报语音:", e);
@@ -484,11 +490,13 @@ public abstract class AbstractParkingService implements IParkingService {
 		voice.setDisValue(parkTime + "");
 		charList.add(voice);
 
-		// 二维码
-		voice = new DisplayChar();
-		voice.setVoiceType("89");
-		voice.setDisValue(ParkMethod.getTwoCode(fact.getChannelSet().getDsn()));
-		charList.add(voice);
+		// 二维码 
+		if (((OutRealTimeBase) fact).getPayMentVo().getPayCharge()!=null&&((OutRealTimeBase) fact).getPayMentVo().getPayCharge() > 0) {
+			voice = new DisplayChar();
+			voice.setVoiceType("89");
+			voice.setDisValue(ParkMethod.getTwoCode(fact.getChannelSet().getDsn()));
+			charList.add(voice);
+		}
 
 		return charList;
 	}
@@ -669,6 +677,7 @@ public abstract class AbstractParkingService implements IParkingService {
 					"roadGateControl", body, GateBodyReturn.class);
 			long end = System.currentTimeMillis();
 			System.out.println("open time:" + (end - start));
+			logger.debug("开闸:" + body);
 			return !(replyVo == null || !"0".equals(replyVo.getHead().getStatus()));
 		} catch (Exception e) {
 			logger.error("开闸:", e);
@@ -697,7 +706,7 @@ public abstract class AbstractParkingService implements IParkingService {
 				carNoType = in.getCarRealType();
 			} else {
 				channel = out.getChannelSet();
-				isDeal = out.isDeal();
+				//isDeal = out.isDeal();
 				carNoType = out.getCarRealType();
 				isOut = true;
 			}
@@ -707,7 +716,7 @@ public abstract class AbstractParkingService implements IParkingService {
 				Integer type = carNoType / 10;// 1,临时卡 2，储值卡.3,月卡,4免费卡
 				String card = "0";
 				switch (type) {
-				case 1: //月卡
+				case 1: // 月卡
 					if (!channel.getWorkModel().substring(1, 2).equals("0"))
 						card = channel.getStrobeSet().substring(1, 2);
 					break;
@@ -718,7 +727,7 @@ public abstract class AbstractParkingService implements IParkingService {
 						card = channel.getStrobeSet().substring(0, 1);
 						// 出场快速出场 收费为0，选择了快速出场
 						if (isOut && quickPass == 1
-								&& (out.getOut().getPayCharge() == null || out.getOut().getPayCharge() == 0)) {
+								&& (out.getPayMentVo() == null || out.getPayMentVo().getPayCharge() == 0)) {
 							card = "0";
 						}
 					}
@@ -1057,13 +1066,8 @@ public abstract class AbstractParkingService implements IParkingService {
 			model.setBoxId(box.getBoxId());
 			model.setLoginDate(box.getLoginDate());
 			model.setUserName(box.getLoginName());
-			ParkSumUser sumUser;
-			List<ParkSumUser> parkSumUserList = parkSumUserMapper.selectByCondition(model);
-			if (parkSumUserList != null && parkSumUserList.size() > 0) {
-				sumUser = parkSumUserList.get(0);
-			} else {
-				return;
-			}
+			ParkSumUser sumUser = parkSumUserMapper.selectByUser(model);
+			if(sumUser==null)return;
 			int carType = in.getCardType();
 			if (carType == 1) { // 异常开闸
 				Integer handGate = sumUser.getHandGate();
@@ -1121,13 +1125,8 @@ public abstract class AbstractParkingService implements IParkingService {
 			model.setBoxId(box.getBoxId());
 			model.setLoginDate(box.getLoginDate());
 			model.setUserName(box.getLoginName());
-			ParkSumUser sumUser;
-			List<ParkSumUser> parkSumUserList = parkSumUserMapper.selectByCondition(model);
-			if (parkSumUserList != null && parkSumUserList.size() > 0) {
-				sumUser = parkSumUserList.get(0);
-			} else {
-				return;
-			}
+			ParkSumUser sumUser = parkSumUserMapper.selectByUser(model);
+			if(sumUser==null)return;
 			int carType = out.getCardType();
 			Float accMoney = out.getAccountCharge();
 			if (accMoney == null)
@@ -1292,24 +1291,27 @@ public abstract class AbstractParkingService implements IParkingService {
 		int yCardType = 0;
 		switch (monthType) {
 		case 2:
-			yCardType = InOutRealTimeBase.TEMP_CAR_B;
+			yCardType = InOutRealTimeBase.TEMP_CAR_A;
 			break;
 		case 3:
-			yCardType = InOutRealTimeBase.TEMP_CAR_C;
+			yCardType = InOutRealTimeBase.TEMP_CAR_B;
 			break;
 		case 4:
-			yCardType = InOutRealTimeBase.TEMP_CAR_D;
+			yCardType = InOutRealTimeBase.TEMP_CAR_C;
 			break;
 		case 5:
-			yCardType = InOutRealTimeBase.TEMP_CAR_E;
+			yCardType = InOutRealTimeBase.TEMP_CAR_D;
 			break;
 		case 6:
-			yCardType = InOutRealTimeBase.TEMP_CAR_F;
+			yCardType = InOutRealTimeBase.TEMP_CAR_E;
 			break;
 		case 7:
-			yCardType = InOutRealTimeBase.TEMP_CAR_G;
+			yCardType = InOutRealTimeBase.TEMP_CAR_F;
 			break;
 		case 8:
+			yCardType = InOutRealTimeBase.TEMP_CAR_G;
+			break;
+		case 9:
 			yCardType = InOutRealTimeBase.TEMP_CAR_H;
 			break;
 		}
@@ -1569,13 +1571,8 @@ public abstract class AbstractParkingService implements IParkingService {
 			sumUser.setBoxId(box.getBoxId());
 			sumUser.setLoginDate(box.getLoginDate());
 			sumUser.setUserName(box.getLoginName());
-			ParkSumUser model;
-			List<ParkSumUser> parkSumUserList = parkSumUserMapper.selectByCondition(sumUser);
-			if (parkSumUserList != null && parkSumUserList.size() > 0) {
-				model = parkSumUserList.get(0);
-			} else {
-				return;
-			}
+			ParkSumUser model = parkSumUserMapper.selectByUser(sumUser);
+			if(model==null) return;
 			int carType = centre.getCardType();
 			Float accMoney = centre.getAccountCharge();
 			if (accMoney == null)

@@ -1,10 +1,16 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class YktCardRsmoney {
+public class YktCardRsmoney implements Serializable {
 
-    private Integer id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6272140547050938929L;
+
+	private Integer id;
 
     /**
      * 开户ID号

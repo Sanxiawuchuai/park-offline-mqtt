@@ -1,6 +1,8 @@
 
 package com.drzk.service.entity;
 
+import java.io.Serializable;
+
 /**
  * ClassName:ReplyHead <br>
  * Date: 2018年7月2日 上午10:38:35 <br>
@@ -10,7 +12,13 @@ package com.drzk.service.entity;
  * @since JDK 1.8
  * @see
  */
-public class ReplyHead {
+public class ReplyHead implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5003621204026959857L;
+
 	/** 状态*/
 	private String status;
 	

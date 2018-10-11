@@ -1,10 +1,15 @@
 package com.drzk.service.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class HandInParkingCarInfoBody extends SuperBody
+public class HandInParkingCarInfoBody implements Serializable
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7429564441480830067L;
 	private String msgTypeID;//0 新增\更新场内表 1删除场内表
 	private String parkingFlag;//车场标记 0--大车场场外 1-大车场内 2小车场内
 	private String chargeFlag;//收费标记 0未收费 1已打折 2已收费
@@ -15,7 +20,13 @@ public class HandInParkingCarInfoBody extends SuperBody
 	private Date smallParkingInTime;//小车场入场时间
 	private Date centerChargeTime;//中央收费时间
 	private Date discountTime;//打折时间
-	
+	private String uId;
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
+	}
 	
 	/** 0 新增\更新场内表 1删除场内表 */
 	public String getMsgTypeID()

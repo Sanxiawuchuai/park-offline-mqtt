@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ParkFreeType {
-    private Integer freeType;
+public class ParkFreeType implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7080475093896866565L;
+
+	private Integer freeType;
 
     private String freeName;
 

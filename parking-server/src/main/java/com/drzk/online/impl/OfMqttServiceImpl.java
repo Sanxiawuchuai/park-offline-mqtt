@@ -1,17 +1,10 @@
 package com.drzk.online.impl;
 
-import com.drzk.offline.constant.ConstantUtil;
 import com.drzk.online.service.OfMqttService;
-import com.drzk.online.vo.HeadVO;
 import com.drzk.online.vo.MqttPayloadVo;
 import com.drzk.service.impl.ClientMQTT;
-import com.drzk.utils.GlobalPark;
-import com.drzk.utils.JsonUtil;
 import com.drzk.utils.StringUtils;
-import org.eclipse.paho.client.mqttv3.IMqttClient;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,36 +13,27 @@ import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-
 @Service
 public class OfMqttServiceImpl<T> implements OfMqttService<T>{
-	private Logger logger=LoggerFactory.getLogger(OfMqttServiceImpl.class);
+	private static Logger logger=LoggerFactory.getLogger(OfMqttServiceImpl.class);
 
 	public static IMqttClient client = null;
 
-	public IMqttClient getConnection() {
+	/**
+	 * 云端MQTT连接
+	 * @return
+	 */
+	public synchronized static IMqttClient getConnection(){
 		if (client == null) {
-			//String clientId = GlobalPark.properties.getProperty("UUID");		//发布统一用车场配置的UUID
-			String clientId=UUID.randomUUID().toString();
-			client = ClientMQTT.getConnect(clientId);
-		}
-
-		if(!client.isConnected()) {
 			try {
-				client.connect();
-			} catch (Exception e) {
-				logger.debug("发布消息后，服务器client连接失败");
+				//String clientId = GlobalPark.properties.getProperty("UUID");		//发布统一用车场配置的UUID
+				String clientId = UUID.randomUUID().toString();
+				client = ClientMQTT.getConnect(clientId);
+			}catch (MqttException e) {
+				logger.error("云端MQTT连接异常:",e);
 			}
 		}
 		return client;
-	}
-
-	@Override
-	public MqttPayloadVo<T> sendMqtt(T body) {
-		// TODO Auto-generated method stub
-		// 将发送的对象转换成json
-		MqttPayloadVo<T> reply =sendAndGet(body);
-		return reply;
 	}
 
 	/**
@@ -80,7 +64,6 @@ public class OfMqttServiceImpl<T> implements OfMqttService<T>{
 		CountDownLatch countDownLatch = new CountDownLatch(1);
 		IMqttClient client = null;
 		MqttPayloadVo<T> returnMessage = new MqttPayloadVo<T>();
-		//DefaultMqttPahoClientFactory clientFactory = (DefaultMqttPahoClientFactory)SpringUtil.getBean("onlineClientFactory");
 		//如果replyTopic为空,表示不需要等待
 		boolean isWait = !StringUtils.isNullOrEempty(replyTopic);
 		try {
@@ -113,7 +96,7 @@ public class OfMqttServiceImpl<T> implements OfMqttService<T>{
 			MqttMessage sendMessage = new MqttMessage(body.getBytes());
 			sendMessage.setQos(0);
 			client.publish(topic, sendMessage);
-			System.out.println("publish sucess:"+sendMessage);
+			logger.debug("publish sucess:"+sendMessage);
 			if(isWait) {
 				countDownLatch.await(timeout, TimeUnit.SECONDS);
 				client.unsubscribe(replyTopic);
@@ -128,32 +111,4 @@ public class OfMqttServiceImpl<T> implements OfMqttService<T>{
 		return returnMessage;
 	}
 
-	public MqttPayloadVo<T> sendAndGet(T body) {
-		//参数检查
-		if(body == null ) {
-			return null;
-		}
-		// 发送的主题
-		String topic = ConstantUtil.OFFLINE_TOPIC;
-		// 组装发送的头部
-		HeadVO head = new HeadVO();
-		head.setMethod(ConstantUtil.OFFLINE_METHO);
-		String parkNo = GlobalPark.properties.getProperty("PARK_NUM");
-		String replyTopic = String.format(ConstantUtil.OFFLINE_METHO, parkNo);
-		head.setReplyTopic(replyTopic);
-		head.setParkingNo(parkNo);
-		// 发送的对象
-		MqttPayloadVo<T> json=new MqttPayloadVo<T>();
-		json.setHead(head);
-		json.setBody(body);
-		// 将发送的对象转换成json
-		String jsonBody = JsonUtil.objectToJsonStr(json);
-		MqttPayloadVo<T> reply =sendMessage(topic,jsonBody,replyTopic,3);
-		if (reply.getHead().getStatus() == 0) {
-			return null;
-		} else {
-			return reply;
-		}
-
-	}
 }

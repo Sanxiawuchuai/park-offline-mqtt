@@ -1,8 +1,14 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ParkDeviceStatus {
+public class ParkDeviceStatus implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -949410051110138925L;
+
 	/**
 	 * 
 	 */

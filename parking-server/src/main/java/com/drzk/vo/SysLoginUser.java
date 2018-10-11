@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class SysLoginUser {
+public class SysLoginUser implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7010826586657937256L;
+
+	/**
      * 
      */
     private Integer id;

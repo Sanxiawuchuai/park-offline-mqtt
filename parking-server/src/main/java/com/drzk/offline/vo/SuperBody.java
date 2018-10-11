@@ -9,8 +9,7 @@ package com.drzk.offline.vo;
  * @since JDK 1.8
  * @see
  */
-public class SuperBody {
-	
+public class SuperBody{
 	private String uId;
 
 	

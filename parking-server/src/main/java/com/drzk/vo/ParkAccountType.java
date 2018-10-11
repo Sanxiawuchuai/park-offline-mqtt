@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ParkAccountType {
+public class ParkAccountType implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1140934862576715020L;
+
+	/**
      * 
      */
     private Integer id;

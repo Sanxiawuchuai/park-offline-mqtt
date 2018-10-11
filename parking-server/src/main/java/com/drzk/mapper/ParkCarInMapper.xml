@@ -32,6 +32,7 @@
 		<result column="in_way" jdbcType="INTEGER" property="inWay" />
 		<result column="is_load" jdbcType="INTEGER" property="isLoad" />
 		<result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+		<result column="is_img_upload" property="isImgUpload" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, guid, mach_no, ykt_id, card_id, c_flag, card_no, card_type, emp_name,
@@ -39,7 +40,7 @@
 		in_user_name, car_no, assistant_car_no, modify_car_no, in_pic, back_in_pic,
 		small_pic,
 		assistant_small_pic, car_no_type, small, discount_no, type_id, discount_time, makeup,
-		makeup_user_name, is_locked, in_way, is_load,is_delete
+		makeup_user_name, is_locked, in_way, is_load,is_delete,is_img_upload
 	</sql>
 	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
 		resultMap="BaseResultMap">
@@ -49,7 +50,7 @@
 		where id = #{id,jdbcType=INTEGER} and is_delete=0
 	</select>
 
-	<select id="selectTop" parameterType="com.drzk.vo.ParkCarIn"
+	<select id="selectTopAll" parameterType="com.drzk.vo.ParkCarIn"
 		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
@@ -66,7 +67,7 @@
 				and card_no = #{cardNo,jdbcType=VARCHAR}
 			</if>
 			<if test="carNo != null"> 
-				and SUBSTRING(car_no,2) = #{carNo,jdbcType=VARCHAR}
+				and car_no= #{carNo,jdbcType=VARCHAR}
 			</if>
 			<if test="cardId != null">
 				and card_id = #{cardId,jdbcType =VARCHAR}
@@ -74,6 +75,20 @@
 			<if test="small != null">
 				and small = #{small,jdbcType=INTEGER}
 			</if>
+			and is_delete =0
+		</where>
+
+		order by in_time DESC limit 1
+	</select>
+	
+	<select id="selectTop"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from park_car_in
+		<where>
+				and SUBSTRING(car_no,2) = #{carNo,jdbcType=VARCHAR}
+				and small = #{small,jdbcType=INTEGER}
 			and is_delete =0
 		</where>
 
@@ -281,7 +296,7 @@
 		car_no_type, small, discount_no,
 		type_id, discount_time, makeup,
 		makeup_user_name, is_locked, in_way,
-		is_load)
+		is_load,is_delete,is_img_upload)
 		values (#{id,jdbcType=INTEGER}, #{guid,jdbcType=VARCHAR},
 		#{machNo,jdbcType=INTEGER},
 		#{yktId,jdbcType=INTEGER}, #{cardId,jdbcType=VARCHAR}, #{cFlag,jdbcType=INTEGER},
@@ -296,7 +311,7 @@
 		#{typeId,jdbcType=INTEGER}, #{discountTime,jdbcType=TIMESTAMP}, #{makeup,jdbcType=INTEGER},
 		#{makeupUserName,jdbcType=VARCHAR}, #{isLocked,jdbcType=INTEGER},
 		#{inWay,jdbcType=INTEGER},
-		#{isLoad,jdbcType=INTEGER})
+		#{isLoad,jdbcType=INTEGER}, #{isDelete,jdbcType=INTEGER}, #{isImgUpload,jdbcType=INTEGER})
 	</insert>
 	<insert id="insertSelective" parameterType="com.drzk.vo.ParkCarIn">
 		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -386,6 +401,12 @@
 			<if test="isLoad != null">
 				is_load,
 			</if>
+			<if test="isDelete != null" >
+				is_delete,
+			</if>
+			<if test="isImgUpload != null" >
+				is_img_upload,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			#{id,jdbcType=INTEGER},
@@ -469,6 +490,12 @@
 			</if>
 			<if test="isLoad != null">
 				#{isLoad,jdbcType=INTEGER},
+			</if>
+			<if test="isDelete != null" >
+				#{isDelete,jdbcType=INTEGER},
+			</if>
+			<if test="isImgUpload != null" >
+				#{isImgUpload,jdbcType=INTEGER},
 			</if>
 		</trim>
 	</insert>
@@ -557,7 +584,10 @@
 				is_load = #{isLoad,jdbcType=INTEGER},
 			</if>
 			<if test="isDelete != null">
-				is_delete = #{isDelete,jdbcType=INTEGER}
+				is_delete = #{isDelete,jdbcType=INTEGER},
+			</if>
+			<if test="isImgUpload != null" >
+				is_img_upload=#{isImgUpload,jdbcType=INTEGER},
 			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}
@@ -591,9 +621,11 @@
 		is_locked = #{isLocked,jdbcType=INTEGER},
 		in_way = #{inWay,jdbcType=INTEGER},
 		is_load = #{isLoad,jdbcType=INTEGER},
-		is_delete = #{isDelete,jdbcType=INTEGER}
+		is_delete = #{isDelete,jdbcType=INTEGER},
+		is_img_upload=#{isImgUpload,jdbcType=INTEGER}
 		where id = #{id,jdbcType=INTEGER}
 	</update>
+
 	<select id="selectAllParkIn" resultType="java.lang.Integer">
 		select count(id) from park_car_in where is_delete=0
 	</select>
@@ -640,8 +672,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from park_car_in
-		where (is_load =0 or is_load is null) 
-		and is_delete=0
+		where (is_load =0 or is_load is null)  and is_delete=0
 		order by in_time limit 100
 	</select>
 
@@ -692,5 +723,15 @@
 		and is_delete=0
 		order by in_time limit 1
 	</select>
+
+    <update id="updateUploadImgStatus">
+        update park_car_in
+        set is_img_upload=#{status}
+        where guid in
+        <foreach collection="list" index="index" item="item" open="("
+                 separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
 	
 </mapper>

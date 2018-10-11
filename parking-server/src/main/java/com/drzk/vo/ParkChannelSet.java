@@ -2,8 +2,10 @@ package com.drzk.vo;
 
 import java.util.Date;
 
-public class ParkChannelSet {
-    /**
+public class ParkChannelSet{
+
+
+	/**
      * 自增id
      */
     private Integer id;
@@ -101,11 +103,11 @@ public class ParkChannelSet {
     /**
      * 上传标记0未上传1正在上传2已上传
      */
-    private Integer isLoad;
+    private Integer isLoad=0;
     
     private String cuid;
     
-    private Integer delFrag;
+    private Integer delFrag=0;
     
     private boolean isOnline = true;
 

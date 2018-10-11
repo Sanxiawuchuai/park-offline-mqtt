@@ -2,16 +2,15 @@ package com.drzk.online.vo;
 
 import java.util.Date;
 
-public class ParkCenterPayment extends SuperBody
+public class ParkCenterPayment extends OnlineBody
 {
-
 	private String carNo;
 	private Integer inMachNo;
 	private String entrance;
 	private String cardId;
 	private String cardNo;
 	private Integer cFlag;
-	private String cardType;
+	private Integer cardType;
 	private String cardTypeName;
 	private Integer freeType; 
 	private Date inTime;
@@ -86,14 +85,15 @@ public class ParkCenterPayment extends SuperBody
 	{
 		this.cFlag = cFlag;
 	}
-	public String getCardType()
-	{
+
+	public Integer getCardType() {
 		return cardType;
 	}
-	public void setCardType(String cardType)
-	{
+
+	public void setCardType(Integer cardType) {
 		this.cardType = cardType;
 	}
+
 	public String getCardTypeName()
 	{
 		return cardTypeName;

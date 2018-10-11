@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class VwParkFree {
-    private Byte cardType;
+public class VwParkFree implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7883283389486667254L;
+
+	private Byte cardType;
 
     private String cardId;
 

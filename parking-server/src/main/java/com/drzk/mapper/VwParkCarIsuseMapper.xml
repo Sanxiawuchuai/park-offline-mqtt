@@ -464,7 +464,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from vw_park_car_isuse
-		where is_load =0 or is_load is null group by p_id
+		where is_load =0
 	</select>
 	<select id="selectByPid" parameterType="java.lang.String"
 		resultMap="BaseResultMap">

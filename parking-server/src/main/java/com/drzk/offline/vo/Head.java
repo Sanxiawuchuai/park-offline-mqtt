@@ -1,8 +1,15 @@
 package com.drzk.offline.vo;
+
+import java.io.Serializable;
+
 /// <summary>
 /// 通信头
 /// </summary>
-public class Head {
+public class Head  implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6081410093882532812L;
 	//答应主题 
 	private String replyTopic;
 	//版本号

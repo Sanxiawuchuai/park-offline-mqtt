@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ParkFamilyGroupCharge {
-    private Integer id;
+public class ParkFamilyGroupCharge implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6522508501555154710L;
+
+	private Integer id;
 
     private Integer inId;
 

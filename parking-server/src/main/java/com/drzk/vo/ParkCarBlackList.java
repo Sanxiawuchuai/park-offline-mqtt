@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ParkCarBlackList {
+public class ParkCarBlackList  implements Serializable{
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6311153284666157808L;
+
+	/**
      * 
      */
     private Integer id;

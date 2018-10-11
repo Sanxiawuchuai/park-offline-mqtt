@@ -1,19 +1,31 @@
 package com.drzk.service.entity;
 
+import java.io.Serializable;
+
 import com.drzk.fact.InRealTimeBase;
 
-public class BoxInIsOpenBody extends SuperBody
+public class BoxInIsOpenBody implements Serializable
 {
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1437218318143649537L;
 	private String controlIP;
 	private String equipmentID;
 	private String type;
 	private InRealTimeBase inRecord;
+	private String uId;
 	
 	/** 车场入场实体 8 */
 	public void setInRecord(InRealTimeBase inRecord)
 	{
 		this.inRecord = inRecord;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	/** 车场入场实体 8 */
 	public InRealTimeBase getInRecord()

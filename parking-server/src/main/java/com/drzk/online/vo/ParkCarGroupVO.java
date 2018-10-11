@@ -1,11 +1,12 @@
 package com.drzk.online.vo;
 
+
 /**
  * 车位组转化的vo类，实现线下与线上的json的联调
  */
-public class ParkCarGroupVO extends SuperBody {
+public class ParkCarGroupVO extends OnlineBody{
 
-    private String carportGroupName;        //车位组名称
+	private String carportGroupName;        //车位组名称
     private Integer carportNumber;          //车位数
     private Integer fullHold;               //车位类型
     private String remark;                  //备注

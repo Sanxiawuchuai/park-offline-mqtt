@@ -13,7 +13,11 @@ import java.util.Map;
  */
 public class ParkPersonnelVo implements Serializable {
 
-    public static Map<String,String> map=new HashMap<>(  );
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3298918521767028774L;
+	public static Map<String,String> map=new HashMap<>(  );
     static {
         map.put( "objectId","puid" );
         map.put( "contactNo","perId" );

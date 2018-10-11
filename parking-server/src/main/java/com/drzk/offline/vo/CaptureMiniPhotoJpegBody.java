@@ -1,10 +1,14 @@
 package com.drzk.offline.vo;
 
-import com.drzk.service.entity.SuperBody;
+import java.io.Serializable;
 
-public class CaptureMiniPhotoJpegBody extends SuperBody
+public class CaptureMiniPhotoJpegBody implements Serializable
 {
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 576217992646195307L;
+	private String uId;
 	private String picPath;//图片路径
 	
 	public  void setPicPath(String picPath)
@@ -14,5 +18,11 @@ public class CaptureMiniPhotoJpegBody extends SuperBody
 	public String getPicPath()
 	{
 		return picPath;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 }

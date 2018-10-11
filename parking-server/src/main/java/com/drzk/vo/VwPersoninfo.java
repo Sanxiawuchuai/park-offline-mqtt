@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class VwPersoninfo {
-    private Integer pid;
+public class VwPersoninfo implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3255938988966118562L;
+
+	private Integer pid;
 
     private String puid;
 

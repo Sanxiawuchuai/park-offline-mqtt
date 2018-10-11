@@ -1,9 +1,17 @@
 package com.drzk.service.entity;
 
+import java.io.Serializable;
+
 import com.drzk.vo.ParkCarOut;
 
-public class ParkCarOutRecordBody extends SuperBody
+public class ParkCarOutRecordBody implements Serializable
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2878332399505852282L;
+	private String uId;
 	private ParkCarOut outRecord;
 	
 	/**
@@ -17,5 +25,11 @@ public class ParkCarOutRecordBody extends SuperBody
 	public ParkCarOut getOutRecord()
 	{
 		return outRecord;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 }

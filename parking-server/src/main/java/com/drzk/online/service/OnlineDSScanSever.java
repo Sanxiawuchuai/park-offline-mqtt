@@ -1,6 +1,8 @@
 package com.drzk.online.service;
 
 
+import java.util.List;
+
 /** 定时扫描数据 */
 public interface OnlineDSScanSever {
 
@@ -54,4 +56,20 @@ public interface OnlineDSScanSever {
     void carGroupInfo();
     /**超时收费测试*/
     void pushOverTimes();
+    /**提交车场授权信息*/
+    void reportAuth();
+    /**入场图片上传*/
+    void pushParkCarInImg();
+    /**出场图片上传*/
+    void pushParkCarOutImg();
+
+    /**
+     * 全局统一的发布主题的方法
+     *
+     * @param sendData   发布的body
+     * @param sendMethod 发布头部的方法
+     * @param topicName  发布的主题标识
+     * @param <T>
+     */
+    public <T> void sendInfo(List<T> sendData, String sendMethod, String topicName);
 }

@@ -1,23 +1,15 @@
 package com.drzk.service.impl;
 
-import com.drzk.app.Application;
 import com.drzk.bean.MqttMessageVO;
-import com.drzk.common.TopicsDefine;
-import com.drzk.parklib.event.UploadParkingEvent;
-import com.drzk.parklib.test.MainBoardSdkTest;
+import com.drzk.common.ParkMethod;
+import com.drzk.offline.constant.OfClientMQTT;
 import com.drzk.service.IMqttService;
-import com.drzk.utils.GlobalPark;
 import com.drzk.utils.JsonUtil;
-import com.drzk.utils.SpringUtil;
 import com.drzk.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.*;
-import org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory;
-import org.springframework.messaging.Message;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -28,50 +20,38 @@ public class MqttServiceImpl implements IMqttService {
 
 	public static ConcurrentHashMap<String,IMqttClient> clientMap = new ConcurrentHashMap<>();          //测试调用多个MQTT方法
 
+	/**
+	 * 线下MQTT连接问题
+	 * @param mac
+	 * @return
+	 */
 	public static IMqttClient getConnection(String mac) {
 		IMqttClient client=clientMap.get(mac);              //获取当前mac地址所对应的client
 		if (client == null) {
-			DefaultMqttPahoClientFactory clientFactory = (DefaultMqttPahoClientFactory) SpringUtil.getBean("offlineClientFactory");
-			try {
-				String clientId=UUID.randomUUID().toString()+mac;
-				client = clientFactory.getClientInstance(clientFactory.getConnectionOptions().getServerURIs()[0], clientId);
-				clientMap.put(mac,client);          //存放到公共的client集合中
-			} catch (MqttException e) {
-				logger.error("连接MQTT出现异常：",e);
-			}
-		}
-
-		if(!client.isConnected()) {
-			try {
-				client.connect();
-			} catch (Exception e) {
-				logger.error("连接MQTT断线重连异常：",e);
+			client=getCon(client,mac);
+		}else{
+			if(!client.isConnected()){
+				client=getCon(client,mac);
 			}
 		}
 		return client;
 	}
-//	public static IMqttClient client = null;
-//
-//	public static IMqttClient getConnection() {
-//		if (client == null) {
-//			DefaultMqttPahoClientFactory clientFactory = (DefaultMqttPahoClientFactory) SpringUtil.getBean("offlineClientFactory");
-//			try {
-//				String clientId=UUID.randomUUID().toString();
-//				client = clientFactory.getClientInstance(clientFactory.getConnectionOptions().getServerURIs()[0], clientId);
-//			} catch (MqttException e) {
-//				logger.debug("连接MQTT出现异常："+e.getMessage());
-//			}
-//		}
-//
-//		if(!client.isConnected()) {
-//			try {
-//				client.connect();
-//			} catch (Exception e) {
-//				logger.debug("连接MQTT出现异常："+e.getMessage());
-//			}
-//		}
-//		return client;
-//	}
+
+	/**
+	 * 连接client连接
+	 * @param client
+	 * @param mac
+	 */
+	public static IMqttClient getCon(IMqttClient client,String mac){
+		try {
+			String clientId=ParkMethod.getUUID()+mac;
+			client = OfClientMQTT.getConnect(clientId);
+			clientMap.put(mac,client);          //存放到公共的client集合中
+		} catch (MqttException e) {
+			logger.error("线下MQTT连接异常：",e);
+		}
+		return client;
+	}
 
 	/**
 	 * mqtt 发送消息
@@ -128,49 +108,19 @@ public class MqttServiceImpl implements IMqttService {
 				});
 			}
 			//System.out.println(content);
-			MqttMessage sendMessage = new MqttMessage(content.getBytes("utf-8"));
-			sendMessage.setQos(0);
-			client.publish(topic, sendMessage);
-			if (isWait) {
-				countDownLatch.await(3, TimeUnit.SECONDS);
-				client.unsubscribe(replyTopic);
+			synchronized (client) {
+				MqttMessage sendMessage = new MqttMessage(content.getBytes("utf-8"));
+				sendMessage.setQos(0);
+				client.publish(topic, sendMessage);
+				if (isWait) {
+					countDownLatch.await(3, TimeUnit.SECONDS);
+					client.unsubscribe(replyTopic);
+				}
 			}
-			//client.disconnect();
-			//client.close();
-
 		} catch (Exception e) {
 			logger.error("线下发布订阅异常：",e);
 		}
 
 		return returnMessage;
-	}
-
-	/**
-	 * mqtt 接收事件
-	 */
-	@Override
-	public void reciveMessage(Message<String> message) {
-		try {
-			String topic = (String) message.getHeaders().get("mqtt_topic");
-			String body = message.getPayload();
-			logger.debug("线下订阅语句："+body);
-			String parkNo = GlobalPark.properties.getProperty("PARK_NUM");
-
-			String uploadParkEventTopic = String.format(TopicsDefine.DOWN_UPLOAD_PARK_EVENT, parkNo);
-
-			if ("test".equals(topic)) {
-				long start = new Date().getTime();
-				MainBoardSdkTest.test(body);
-				long end = new Date().getTime();
-				System.out.println("run time ：" + (end - start));
-			} else if ("refresh".equals(topic)) {
-				Application app = SpringUtil.getBean(Application.class);
-				app.restart();
-			} else if (uploadParkEventTopic.equals(topic)) { // 车场上传事件
-				UploadParkingEvent.receiveJson(body);
-			}
-		} catch (Exception e) {
-			logger.error("线下订阅异常",e);
-		}
 	}
 }

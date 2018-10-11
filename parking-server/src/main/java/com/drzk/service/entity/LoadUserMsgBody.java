@@ -1,9 +1,16 @@
 package com.drzk.service.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 //加载用户信息实体
-public class LoadUserMsgBody  extends SuperBody{
+public class LoadUserMsgBody implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8283275045270653097L;
+	private String uId;
 	private String carType;//车辆类型 
 	private String carNo; //车牌号
 	private String mediumType;//介质类型 0-无，1-IC卡，2-IC转ID卡，3-ID卡，4-ETC，5-CPU，6-纸票，7-身份证UID
@@ -101,6 +108,12 @@ public class LoadUserMsgBody  extends SuperBody{
 	*/
 	public void setUserTimeEnd(Date userTimeEnd) {
 		this.userTimeEnd = userTimeEnd;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	
 	

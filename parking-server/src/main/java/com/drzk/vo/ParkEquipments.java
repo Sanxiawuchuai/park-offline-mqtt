@@ -1,7 +1,14 @@
 package com.drzk.vo;
 
-public class ParkEquipments {
+import java.io.Serializable;
+
+public class ParkEquipments implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7262920897163542242L;
+
+	/**
      * 自增长设备id
      */
     private Integer eqId;

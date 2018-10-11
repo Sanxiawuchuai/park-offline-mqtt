@@ -1,15 +1,21 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class CarportAndCarVO {
+public class CarportAndCarVO implements Serializable {
 
-    private String carportNo;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5148646257457769936L;
+	private String carportNo;
     private Integer cardTypeId;
     private String cardTypeName;
 
     private Double deposit;
     private Double balanceMoney;
+    private Double rechargeMoney;       //操作金额
     private String carNo;
     private String plateStyle;
     private String stopNo;
@@ -210,5 +216,13 @@ public class CarportAndCarVO {
 
     public void setPayType(Integer payType) {
         this.payType = payType;
+    }
+
+    public Double getRechargeMoney() {
+        return rechargeMoney;
+    }
+
+    public void setRechargeMoney(Double rechargeMoney) {
+        this.rechargeMoney = rechargeMoney;
     }
 }

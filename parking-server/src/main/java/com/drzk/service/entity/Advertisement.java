@@ -1,6 +1,12 @@
 package com.drzk.service.entity;
 
-public class Advertisement {
+import java.io.Serializable;
+
+public class Advertisement implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8585359279830362559L;
 	//行号
 	private String lineNumber;
 	//广告内容

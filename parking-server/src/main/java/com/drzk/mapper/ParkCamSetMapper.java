@@ -30,7 +30,7 @@ public interface ParkCamSetMapper {
     
     ParkCamSet selectByGuid(String guid);
 
-    Integer selectByUuid(@Param("guid")String guid);
+    ParkCamSet selectByUuid(@Param("cuid")String cuid);
 
     int deleteByUuid(ParkCamSet param);
 

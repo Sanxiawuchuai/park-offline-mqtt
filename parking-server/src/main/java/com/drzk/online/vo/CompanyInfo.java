@@ -1,6 +1,8 @@
 package com.drzk.online.vo;
 
-public class CompanyInfo extends SuperBody
+import java.io.Serializable;
+
+public class CompanyInfo extends OnlineBody
 {
 	private String companyName;
 

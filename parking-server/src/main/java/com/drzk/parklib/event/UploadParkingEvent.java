@@ -9,7 +9,10 @@ import com.drzk.fact.OutRealTimeBase;
 import com.drzk.service.IParkingService;
 import com.drzk.service.entity.*;
 import com.drzk.timer.*;
-import com.drzk.utils.*;
+import com.drzk.utils.GlobalPark;
+import com.drzk.utils.JsonUtil;
+import com.drzk.utils.LoggerUntils;
+import com.drzk.utils.SpringUtil;
 import com.drzk.vo.ParkCarIn;
 import com.drzk.vo.ParkCarOut;
 import com.drzk.vo.ParkChannelSet;
@@ -42,6 +45,9 @@ public class UploadParkingEvent {
 		try {  
 			String method = JsonUtil.getMethodByJsonStr(jsonStr);
 			ThreadPoolTaskExecutor threadPool = SpringUtil.getBean(ThreadPoolTaskExecutor.class);
+			if(threadPool==null){
+				return;
+			}
 			switch (method) {
 			case "uploadRecord": // 上传记录(服务器订阅)
 				uploadRecord(jsonStr);
@@ -74,11 +80,14 @@ public class UploadParkingEvent {
 			case "boxSpeechSounds"://播报收费语音
 			case "boxModifyCarNo"://修改入场车牌
 			case "getPayCharge"://计费
+				logger.debug("收到岗亭数据:"+jsonStr);
 				BoxTask boxTask = SpringUtil.getBean(BoxTask.class);
 				boxTask.setJson(jsonStr);
 				threadPool.execute(boxTask);
 				break;
 			case "administrationCenterUpdate":  //后台更新数据通知
+				logger.debug("收到后台数据更新:"+jsonStr);
+				//如果数据库设置需要往云端传数据,再往云端传输数据
 				CenterUpdateTask centerUpdateTask = SpringUtil.getBean(CenterUpdateTask.class);
 				centerUpdateTask.setJson(jsonStr);
 				threadPool.execute(centerUpdateTask);
@@ -107,6 +116,7 @@ public class UploadParkingEvent {
 			if (channel == null) {
 				return;
 			}
+			channel.setOnline(true);
 			switch (recordType) {
 			case "0": // 入场记录
 				AutoParkIn parkInTask = SpringUtil.getBean(AutoParkIn.class);
@@ -152,6 +162,7 @@ public class UploadParkingEvent {
 			if (channel == null) {
 				return;
 			}
+			channel.setOnline(true);
 			switch (recordType) {
 			case "1":
 				InRealTimeBase in = new InRealTimeBase();
@@ -309,9 +320,6 @@ public class UploadParkingEvent {
 		//carIn.setAssistantSmallPic(assistantSmallPic);
 		//carIn.setBackInPic(backInPic);
 		String carNo = eventBody.getCarNo();
-		
-		//carIn.setCardNo(cardNo);
-		//carIn.setCardType(cardType);
 //		if(!StringUtils.isNullOrEempty(carNo)) {
 			carIn.setCarNo(carNo);
 			if(carNo != null)

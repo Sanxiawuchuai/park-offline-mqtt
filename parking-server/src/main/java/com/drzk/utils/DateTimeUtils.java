@@ -1,17 +1,16 @@
 
 package com.drzk.utils;
 
+import org.joda.time.DateTime;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-
-import org.joda.time.DateTime;
 
 /**
  * ClassName:DateTimeUtils <br>
@@ -238,28 +237,20 @@ public class DateTimeUtils {
 	}
 	/**
 	 * 在一个时间加上分钟数
-	 * 
+	 * minute 分钟数
 	 * @author chenlong 2018年9月4日
 	 */
 	public static Date dateAddMinute(Date start, int minute) {
 
-		LocalDateTime localDateTime = LocalDateTime.ofInstant(start.toInstant(), ZoneId.systemDefault());
-		localDateTime.plusMinutes(minute);
-
-		ZoneId zoneId = ZoneId.systemDefault();
-		ZonedDateTime zdt = localDateTime.atZone(zoneId);
-
-		Date date = Date.from(zdt.toInstant());
-
-		return date;
-
+		long currentTime = start.getTime() ;
+		currentTime=currentTime+(minute*60*1000);
+		return new Date(currentTime);
 	}
 
 	/**
 	 * 字符串格式化为日期
 	 * 默认yyyy-MM-dd HH:mm:ss 格式日期
 	 * @param date
-	 * @param format
 	 * @return
 	 * Date
 	 * 2018年9月12日
@@ -282,8 +273,8 @@ public class DateTimeUtils {
 	 * String
 	 * 2018年9月14日
 	 */
-	public static String formatDate(Date date) {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	public static String formatDate(Date date,String formatt) {
+		SimpleDateFormat df = new SimpleDateFormat(formatt);
 		return df.format(date);
 	}
 	

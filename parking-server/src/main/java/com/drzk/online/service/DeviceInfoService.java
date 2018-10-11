@@ -67,4 +67,10 @@ public interface DeviceInfoService {
      */
     void syncParkDevice(String message);
 
+    /**
+     * 同步出入口设备信息
+     */
+    void syncOpenDoor(String message);
+
+
 }

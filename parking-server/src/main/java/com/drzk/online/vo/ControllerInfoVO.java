@@ -1,6 +1,7 @@
 package com.drzk.online.vo;
 
-public class ControllerInfoVO extends SuperBody
+
+public class ControllerInfoVO extends OnlineBody
 {
 	private String contName;
 	private String controllerIp;

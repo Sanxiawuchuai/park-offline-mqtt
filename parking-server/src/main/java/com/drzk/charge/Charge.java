@@ -88,6 +88,8 @@ public class Charge {
 			money=money-(int)(centralRecord.getAccountCharge()*100);
 			paymentVo.setRemark("未设置超时收费标准,按标准收费计算");
 		}
+		paymentVo.setLastPayTime(paymentVo.getOutTime());
+		if(money<0)money=0;
 		paymentVo.setPaidFee(money);
 		paymentVo.setDisAmount(0);
 		paymentVo.setPaidFee(money);
@@ -107,7 +109,7 @@ public class Charge {
 		int money = 0; 
 		if(rule != null && payInTime!=null && payOutTime!=null)
 		 {
-			if(rule.getOverTimeUnit()==null || rule.getOverTimeAmount()==null)return money=0;
+			if(rule.getOverTimeMinute()==null || rule.getOverTimeAmount()==null)return money=0;
 			long timesec = payOutTime.getTime() - payInTime.getTime(); //获得停车时长
 			if (timesec > 0) {
 				double minu = (double) (timesec / (1000 * 60)); 
@@ -134,19 +136,22 @@ public class Charge {
 	 * @param outTime
 	 * @return
 	 */
-	public PaymentVo getDisCountFee(OutRealTimeBase outFact,AbstractChargeStandard chargeMode,String discountID,Date outTime)
+	public PaymentVo getDisCountFee(PaymentVo paymentVo,AbstractChargeStandard chargeMode)
 	{
 		// Date inTime = in.getInTime();
 		Double disAmount = null;
 		Integer disType = 0;
-		PaymentVo retVo = getFeeByCarNo(outFact.getPayMentVo(), chargeMode, outFact.getCarNo());
+		PaymentVo retVo = paymentVo;
 		Integer pay = retVo.getPaidFee();
 		Integer money = pay;
-		if (discountID != null) {
-			ParkDisInfo disInfo = parkDisInfoMapper.selectByDiscountId(discountID);
+		if (paymentVo.getDiscountID() != null && paymentVo.getTypeId()!=null) {
+			ParkDisInfo disInfo = parkDisInfoMapper.selectByDiscountId(paymentVo.getDiscountID());
 			if (disInfo != null) {
 				disType = disInfo.getDiscountType();
-				disAmount = disInfo.getDiscountAmount().doubleValue();
+				if (disInfo.getDiscountAmount() != null)
+					disAmount = disInfo.getDiscountAmount().doubleValue();
+				else
+					disAmount = 0.0;
 			}
 			if (disType > 0) {
 				switch (disType) {
@@ -154,18 +159,19 @@ public class Charge {
 					money = 0;
 					break;
 				case 2: //折扣率
-					Double mon = (pay * disAmount) / 100;
+					Double mon = pay * (disAmount/100);
 					money = mon.intValue();
 					break;
 				case 3:  //免時間
 					Integer hours = disAmount.intValue();
-					outTime = ParkMethod.GetDateByHours(outTime, -hours);
-					retVo = getFeeByCarNo(outFact.getPayMentVo(), chargeMode, outFact.getCarNo());
+					retVo.setPayOutTime(ParkMethod.GetDateByHours(retVo.getPayOutTime(), -hours)); 
+					retVo = getFeeByCarNo(retVo, chargeMode, "");
 					money = retVo.getPaidFee();
 					break;
 				case 4: //免金額
-					Double dis = disAmount / 100;
+					Double dis = disAmount * 100;
 					money = pay - dis.intValue();
+					if(money<0)money=0;
 					break;
 				default:
 					money = pay;
@@ -173,7 +179,6 @@ public class Charge {
 				}
 			}
 		}
-		retVo.setDiscountID(discountID);
 		retVo.setDisAmount(pay - money);
 		retVo.setPayCharge(money);
 		retVo.setPaidFee(pay);

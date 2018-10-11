@@ -1,60 +1,29 @@
 package com.drzk.common;
 
+import com.drzk.offline.vo.BoxParamVo;
+import com.drzk.offline.vo.Head;
+import com.drzk.service.IParkingService;
+import com.drzk.service.entity.MainBoardMessage;
+import com.drzk.service.impl.MqttServiceImpl;
+import com.drzk.utils.GlobalPark;
+import com.drzk.utils.JsonUtil;
+import com.drzk.utils.SpringUtil;
+import com.drzk.utils.StringUtils;
+import com.drzk.vo.*;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.*;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.EnableLoadTimeWeaving;
-import org.springframework.stereotype.Component;
-
-import com.drzk.utils.GlobalPark;
-import com.drzk.utils.JsonUtil;
-import com.drzk.utils.LoggerUntils;
-import com.drzk.utils.SpringUtil;
-import com.drzk.utils.StringUtils;
-import com.drzk.vo.ParkAccountType;
-import com.drzk.vo.ParkCamSet;
-import com.drzk.vo.ParkChannelSet;
-import com.drzk.vo.ParkDeviceStatus;
-import com.drzk.vo.ParkFreeType;
-import com.drzk.vo.ParkLocalSet;
-import com.drzk.mapper.ParkCarInMapper;
-import com.drzk.offline.vo.BoxLoginReturn;
-import com.drzk.offline.vo.BoxParamVo;
-import com.drzk.offline.vo.GetNoCarNoBody;
-import com.drzk.offline.vo.Head;
-import com.drzk.offline.vo.SuperBody;
-import com.drzk.service.IParkingService;
-import com.drzk.service.entity.MainBoardMessage;
-import com.drzk.service.entity.ReplyHead;
-import com.drzk.service.impl.AbstractParkingService;
-import com.drzk.service.impl.MqttServiceImpl;
-import com.drzk.service.impl.ParkingInServiceImpl;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.codec.binary.Base64;
+import java.util.*;
 
 /**
  * 车场公共方法 Date: 2018年5月16日 下午2:09:11 <br>
@@ -64,7 +33,7 @@ import org.apache.commons.codec.binary.Base64;
 @Component
 public class ParkMethod {
 	private static Logger logger = Logger.getLogger("userLog");
-	
+
 	/**
 	 * 根据cardType获取卡类型 <br>
 	 * 逻辑 Date: 2018年9月17日 下午2:09:11 <br>
@@ -146,12 +115,13 @@ public class ParkMethod {
 					head.setReplyTopic("");
 					head.setVersion("V11");
 					head.setMethod("parkSystem");
-					MainBoardMessage<Head, SuperBody> returnInfo = new MainBoardMessage<>(head, body);
+					MainBoardMessage<Head, BoxParamVo> returnInfo = new MainBoardMessage<>(head, body);
 					String jsonBody = JsonUtil.objectToJsonStr(returnInfo);
 					MqttServiceImpl.sendMessage(GlobalPark.parkLocalSet.get(k).getEquipmentID(), GlobalPark.parkLocalSet.get(k).getEquipmentID() + "/publish/box/data", jsonBody, null, 3);
+					logger.debug("车场参数推送到岗亭:"+jsonBody);
 				}
 			} catch (Exception ex) {
-				LoggerUntils.error(logger, ex.toString());
+				logger.error("车场参数推送到岗亭:",ex);
 			}
 		}
 	}
@@ -169,13 +139,13 @@ public class ParkMethod {
 			String e_key = GlobalPark.properties.getProperty("ENCYP_KEY");//加密密钥(必须是16位)
 			String op_no = GlobalPark.properties.getProperty("OPERA_NO");//运营商编号
 			long timestmp = System.currentTimeMillis()/1000;
-			String datas = op_no + "##" + Dsn + "##" + timestmp;
-			String EncryptStr = encrypt(datas,e_key);
-			if(EncryptStr == null)
-				return null;
-			result = url + "?parkid=" + parknum + "&data=" + EncryptStr + "&t=" + timestmp;
-		} catch (Exception e) {
-			LoggerUntils.error(logger, e);
+			String datas = op_no + "," + Dsn + "," + timestmp;
+//			String EncryptStr = encrypt(datas,e_key);
+//			if(EncryptStr == null)
+//				return null;
+			result = url + "?parkId=" + parknum + "&dsn=" + datas + "&t=" + timestmp;
+		} catch (Exception ex) {
+			logger.error("动态二维码生成:",ex);
 		}
 		return result;
 	}
@@ -257,8 +227,8 @@ public class ParkMethod {
 		try {		
 			IParkingService parkingService= (IParkingService) SpringUtil.getBean("parkingInService");
 			result = parkingService.getNewNOPNo();
-		} catch (Exception e) {
-			LoggerUntils.error(logger, e);
+		} catch (Exception ex) {
+			logger.error("获取无牌车号码:",ex);
 		}
 		return result;
 	}
@@ -288,8 +258,8 @@ public class ParkMethod {
 					result = "0" + result;
 				}
 			}
-		} catch (Exception e) {
-			LoggerUntils.error(logger, e);
+		} catch (Exception ex) {
+			logger.error("车牌号码生成cardid:",ex);
 		}
 		return result;
 	}
@@ -309,8 +279,8 @@ public class ParkMethod {
 		try {
 			addr = InetAddress.getLocalHost();
 			ip = addr.getHostAddress().toString(); // 获取本机ip
-		} catch (UnknownHostException e) {
-			LoggerUntils.error(logger, "获取本机ip失败");
+		} catch (UnknownHostException ex) {
+			logger.error("获取本机IP:",ex);
 		}
 		return ip;
 	}
@@ -321,21 +291,18 @@ public class ParkMethod {
 	public static int GetMinuteValue(DateTime InTime, DateTime OutTime) {
 		int ParkTime = 0;
 		try {
-			// SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			// String str1 = format.format(InTime);
-			// String str2 = format.format(OutTime);
 			long intime = InTime.getMillis();
 			long outtime = OutTime.getMillis();
 			long dif = (outtime - intime) / 1000;
 			ParkTime = (int) dif / 60;
-		} catch (Exception e) {
-			LoggerUntils.error(logger, "GetMinuteValue" + e);
+		} catch (Exception ex) {
+			logger.error("获取分钟数:",ex);
 		}
 		return ParkTime;
 	}
 
 	/**
-	 * 
+	 * 获取显示分钟数
 	 */
 	public static String getMinuteString(DateTime inTime, DateTime outTime) {
 		String ret = null;
@@ -347,8 +314,8 @@ public class ParkMethod {
 			long hour = dif / (60 * 60) - day * 24;
 			long min = dif / 60 - day * 24 * 60 - hour * 60;
 			ret = day + "天" + hour + "小时" + min + "分";
-		} catch (Exception e) {
-			LoggerUntils.error(logger, "getMinuteString" + e);
+		} catch (Exception ex) {
+			logger.error("获取分钟数:",ex);
 		}
 		return ret;
 	}
@@ -579,7 +546,7 @@ public class ParkMethod {
 	 * 获取当班操作人员 <br>
 	 *
 	 * @author wangchengxi
-	 * @param ip
+	 * @param boxId
 	 * @return
 	 * @since JDK 1.8
 	 */
@@ -662,7 +629,7 @@ public class ParkMethod {
 			return null;
 		List<ParkDeviceStatus> list = new ArrayList<ParkDeviceStatus>();
 		for (ParkDeviceStatus model : GlobalPark.parkDeviceStatus) {
-			if (boxId == model.getBoxId())
+			if (model!=null&&boxId == model.getBoxId())
 				list.add(model);
 		}
 		return list;
@@ -817,7 +784,7 @@ public class ParkMethod {
 	/**
 	 * 获取大小车场<br>
 	 * @author wangchengxi
-	 * @param jsonStr
+	 * @param channelModel
 	 * @since JDK 1.8
 	 */
 	public static int getSmallOrBig(ParkChannelSet channelModel) {
@@ -838,8 +805,8 @@ public class ParkMethod {
 					break;
 				}
 			}
-		} catch (Exception e) {
-			LoggerUntils.error(logger, e);
+		} catch (Exception ex) {
+			logger.error("获取大小车场:",ex);
 		}
 		return small;
 	}

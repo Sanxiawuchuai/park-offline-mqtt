@@ -1,7 +1,14 @@
 package com.drzk.vo;
 
-public class ParkControlPlanRel {
+import java.io.Serializable;
+
+public class ParkControlPlanRel implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 328939963343670234L;
+
+	/**
      * 主键id
      */
     private Integer id;

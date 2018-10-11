@@ -1,13 +1,19 @@
 package com.drzk.offline.vo;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.drzk.fact.OutRealTimeBase;
 import com.drzk.service.entity.UpParkEventBody;
 import com.drzk.vo.ParkCarIn;
 
-public class ParkOutChanelCorrectingBody extends SuperBody
+public class ParkOutChanelCorrectingBody implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -385446985364788908L;
+	private String uId;
 	private String controlIP;
 	private String equipmentID;
 	private String type;
@@ -46,5 +52,11 @@ public class ParkOutChanelCorrectingBody extends SuperBody
 	public void setOutRecord(OutRealTimeBase outRecord)
 	{
 		this.outRecord = outRecord;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 }

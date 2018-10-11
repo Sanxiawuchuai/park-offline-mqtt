@@ -1,7 +1,13 @@
 package com.drzk.online.vo;
 
-public class YunGetCharge
+import java.io.Serializable;
+
+public class YunGetCharge implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5438964442263695488L;
 	private String carNo;
 	private String entryTime;
 	private String chargeTime;

@@ -5,7 +5,7 @@ package com.drzk.online.vo;
  * @author tf
  * 入场记录
  */
-public class ParkCarInVO extends SuperBody
+public class ParkCarInVO extends OnlineBody
 {
 	private String entranceId; //控制器编号
 	private String entranceName;//入场控制器名称
@@ -16,7 +16,7 @@ public class ParkCarInVO extends SuperBody
 	private String correctCarNo;//矫正车牌
 	private String contactName;//车主名称
 	private String cardTypeName; //卡类名称
-	private String carTypeId;//卡类型
+	private Integer carTypeId;//卡类型
 	private String carNoType;//车牌类型
 	private String inTime;//入场时间
 	private String inPic;//入场图片路径
@@ -113,14 +113,15 @@ public class ParkCarInVO extends SuperBody
 	{
 		this.cardTypeName = cardTypeName;
 	}
-	public String getCarTypeId()
-	{
+
+	public Integer getCarTypeId() {
 		return carTypeId;
 	}
-	public void setCarTypeId(String carTypeId)
-	{
+
+	public void setCarTypeId(Integer carTypeId) {
 		this.carTypeId = carTypeId;
 	}
+
 	public String getCarNoType()
 	{
 		return carNoType;

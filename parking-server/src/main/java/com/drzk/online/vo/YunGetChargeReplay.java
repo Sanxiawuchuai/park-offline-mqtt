@@ -1,8 +1,8 @@
 package com.drzk.online.vo;
 
+
 public class YunGetChargeReplay extends YunScanCodeOutModel
 {
-
 	private Integer overTime;
 
 	/** 交费后允许免费出场时间 */

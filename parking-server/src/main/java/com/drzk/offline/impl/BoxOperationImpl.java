@@ -17,6 +17,9 @@ import com.drzk.offline.service.IBoxOperation;
 import com.drzk.offline.vo.*;
 import com.drzk.offline.vo.Head;
 import com.drzk.offline.vo.SuperBody;
+import com.drzk.online.impl.ConversionParameterClass;
+import com.drzk.online.service.OnlineDSScanSever;
+import com.drzk.online.vo.ParkCenterPayment;
 import com.drzk.parklib.send.MainBoardSdk;
 import com.drzk.service.IParkingService;
 import com.drzk.service.entity.*;
@@ -42,7 +45,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Service
+@Service("boxOperation")
 public class BoxOperationImpl implements IBoxOperation {
 	@Autowired
 	private VwParkCarInMapper vwParkCarInMapper;
@@ -66,6 +69,8 @@ public class BoxOperationImpl implements IBoxOperation {
 	VwParkCarIsuseMapper vwParkCarIsuseMapper;
 	@Autowired
 	ParkCentralChargeMapper parkCentralChargeMapper;
+	@Autowired
+	private ParkDisDetailMapper parkDisDetailMapper;
 	
 	@KSession("ksession_centre")
 	private KieSession kSession;
@@ -73,7 +78,12 @@ public class BoxOperationImpl implements IBoxOperation {
 	@Autowired
 	private IParkingService parkingCentreService;
 	@Autowired
-	ParkingInServiceImpl parking;
+	private ParkingInServiceImpl parking;
+	@Autowired
+	private ConversionParameterClass conversionParameterClass;
+	@Autowired
+	private OnlineDSScanSever onlineDSScanSever;
+
 	private static Logger logger = Logger.getLogger("userLog");
 
 
@@ -125,12 +135,14 @@ public class BoxOperationImpl implements IBoxOperation {
 						}
 						centerModel.setPayChargeTime(model.getChargeData().getNowDate());
 						centerModel.setPayUserName(local.getLoginName());
+						centerModel.setInUserName(model.getChargeData().getInRecord().getInUserName());
 						centerModel.setPuid(ParkMethod.getUUID());
 						centerModel.setBoxId(local.getBoxId());
-						centerModel.setCardType(centerModel.getCardType());
-						centerModel.setCardNo(centerModel.getCarNo());
-						centerModel.setOrderNum(centerModel.getOrderNum());
+						centerModel.setCardType(model.getChargeData().getInRecord().getCardType());
+						centerModel.setCardNo(model.getChargeData().getInRecord().getCarNo());
+						centerModel.setOrderNum(model.getChargeData().getPayMentVo().getOrderNum());
 						parkCentralChargeMapper.insertSelective(centerModel);
+						saveDiscountInfo(model.getChargeData());
 						//修改入场记录卡类型
 						ParkCarIn record = new ParkCarIn();
 						record.setCardType(centerModel.getCardType());
@@ -142,17 +154,43 @@ public class BoxOperationImpl implements IBoxOperation {
 						head.setStatus("0");
 						head.setMessage("缴费成功");
 						body.setuId(model.getuId());
+
+						if(GlobalPark.properties.getProperty("UPLOAD_DATA_CLOUD").equals("1")){
+							pushCenterInfo(centerModel);		//推送数据到云端
+						}
 					}
 				}
 				MainBoardMessage<ReplyHead, ChargePaySuccess> returnInfo = new MainBoardMessage<>(head, body);
 				String jsonBody = JsonUtil.objectToJsonStr(returnInfo);
 				MqttServiceImpl.sendMessage(local.getEquipmentID(),receivehead.getReplyTopic(), jsonBody, null, 3);
+				logger.debug("中央收费确认:" +receivehead.getReplyTopic()+","+jsonBody);
 			}
 		} catch (Exception ex) {
 			logger.error("中央收费确认:", ex);
 		}
 	}
 
+	private void saveDiscountInfo(CentreRealTimeBase center)
+	{
+		if(center.getPayMentVo() != null && center.getPayMentVo().getDiscountID()!= null)
+		{
+		ParkDisDetail disModel = new ParkDisDetail();
+		disModel.setOutType((byte)1);
+		disModel.setDiscountId(center.getPayMentVo().getDiscountID());
+		disModel.setCardId(center.getInRecord().getCardId());
+		disModel.setOutTime(center.getCentreRecord().getDiscountTime());
+		disModel.setDiscountTime(center.getCentreRecord().getDiscountTime());
+		disModel.setDisAmount(center.getPayMentVo().getDisAmount().floatValue()/100);
+		disModel.setDisType((byte)0);
+		disModel.setPuid(ParkMethod.getUUID());
+		disModel.setIsLoad(0);
+		disModel.setDelFrag((byte)0);
+		disModel.setCarNo(center.getCarNo());
+		disModel.setInTime(center.getPayMentVo().getInTime());
+		parkDisDetailMapper.insert(disModel);
+		}
+	}
+	
 	/**
 	 * 中央缴费<br>
 	 * @author wangchengxi
@@ -202,6 +240,7 @@ public class BoxOperationImpl implements IBoxOperation {
 					MainBoardMessage<ReplyHead, CentrialPayCharge> returnInfo = new MainBoardMessage<>(head, body);
 					String jsonBody = JsonUtil.objectToJsonStr(returnInfo);
 					MqttServiceImpl.sendMessage(local.getEquipmentID(),receivehead.getReplyTopic(), jsonBody, null, 3);
+					logger.debug("中央缴费:" +receivehead.getReplyTopic()+","+jsonBody);
 				}
 			}
 		} catch (Exception ex) {
@@ -229,104 +268,9 @@ public class BoxOperationImpl implements IBoxOperation {
 			if (model != null) {
 				if (model.getType() == 0)// 出口收费
 				{
-					System.out.println("出口收费");
-					OutRealTimeBase chargeData = model.getOutRealTimeBase();
-					AbstractChargeStandard mode = SpringUtil.getBean(StandChargeRule.class);
-					PaymentVo money = chargeData.getPayMentVo();
-					switch (model.getChangeType()) {
-					case 1: // 车型改变
-						money = charge.getFeeByCarNo(chargeData.getPayMentVo(), mode,
-								chargeData.getPayMentVo().getCarNo());
-						String cardTypeName = String.valueOf(chargeData.getPayMentVo().getCarRealType());
-						ParkAccountType parkAccountType = ParkMethod
-								.getParkCardType(chargeData.getPayMentVo().getCarRealType());
-						if (parkAccountType != null)
-							cardTypeName = parkAccountType.getaCustname();
-						chargeData.getPayMentVo().setRemark("车辆类型改变为:" + cardTypeName);
-						chargeData.getOut().setCardType(chargeData.getPayMentVo().getCarRealType());
-						System.out.println("车类型改变");
-						break;
-					case 2: // 优惠
-						money = charge.getDisCountFee(chargeData, mode, chargeData.getPayMentVo().getDiscountID(),
-								chargeData.getPayMentVo().getPayOutTime());
-						chargeData.getPayMentVo().setRemark("优惠金额:" + (money.getDisAmount() / 100));
-						chargeData.getOut().setDiscountNo(chargeData.getPayMentVo().getDiscountID());
-						chargeData.getOut().setTypeId(chargeData.getPayMentVo().getTypeId());
-						chargeData.getOut().setDiscountTime(new Date());
-						System.out.println("优惠");
-						break;
-					case 3: // 免费
-						money.setPaidFee(0);
-						money.setDisAmount(chargeData.getPayMentVo().getPayCharge());
-						money.setPayCharge(0);
-						chargeData.getPayMentVo().setRemark("特殊车辆免费");
-						chargeData.getOut().setCardType(chargeData.getPayMentVo().getCarRealType());
-						chargeData.getOut().setFreeType(chargeData.getPayMentVo().getFreeType());
-						money.setCarRealType(chargeData.getPayMentVo().getCarRealType());
-						String freeTypeName = String.valueOf(chargeData.getPayMentVo().getFreeType());
-						ParkFreeType parkFreeType = ParkMethod.getFreeType(chargeData.getOut().getFreeType());
-						if (parkFreeType != null)
-							freeTypeName = parkFreeType.getFreeName();
-						chargeData.getOut().setMemo(freeTypeName);
-						System.out.println("免费");
-						break;
-					default:
-						money = chargeData.getPayMentVo();
-						break;
-					}
-					chargeData.setPayMentVo(money);
-					if (GlobalPark.outChannelEvent.containsKey(model.getControlIP())) {
-						GlobalPark.outChannelEvent.remove(model.getControlIP());
-					}
-					GlobalPark.outChannelEvent.put(model.getControlIP(), chargeData);
-					retBody.setChargeData(chargeData);
+					boxChangeFeeOut(model, retBody);
 				} else {
-					System.out.println("中央收费");
-					CentreRealTimeBase chargeData = model.getCentreRealTimeBase();
-					AbstractChargeStandard mode = SpringUtil.getBean(StandChargeRule.class);
-					PaymentVo money = chargeData.getPayMentVo();
-					switch (model.getChangeType()) {
-					case 1: // 车型改变
-						money = charge.getFeeByCarNo(chargeData.getPayMentVo(), mode, chargeData.getCarNo());
-						String cardTypeName = String.valueOf(chargeData.getPayMentVo().getCarRealType());
-						ParkAccountType parkAccountType = ParkMethod
-								.getParkCardType(chargeData.getPayMentVo().getCarRealType());
-						if (parkAccountType != null)
-							cardTypeName = parkAccountType.getaCustname();
-						chargeData.getPayMentVo().setRemark("车辆类型改变为:" + cardTypeName);
-						chargeData.getCentreRecord().setCardType(chargeData.getPayMentVo().getCarRealType());
-						System.out.println("车类型改变");
-						break;
-					case 2: // 优惠
-						/*
-						money = charge.getDisCountFee(chargeData, mode, chargeData.getPayMentVo().getDiscountID(), chargeData.getPayMentVo().getPayOutTime());
-						chargeData.getPayMentVo().setRemark("优惠金额:" + (money.getDisAmount()/100));
-						chargeData.getCentreRecord().setDiscountNo(chargeData.getPayMentVo().getDiscountID());
-						chargeData.getCentreRecord().setTypeId(chargeData.getPayMentVo().getTypeId());
-						chargeData.getCentreRecord().setDiscountTime(new Date());
-						System.out.println("优惠");
-						*/
-						break;
-					case 3: // 免费
-						money.setPaidFee(0);
-						money.setDisAmount(chargeData.getPayMentVo().getPayCharge());
-						money.setPayCharge(0);
-						chargeData.getPayMentVo().setRemark("特殊车辆免费");
-						chargeData.getCentreRecord().setCardType(chargeData.getPayMentVo().getCarRealType());
-						chargeData.getCentreRecord().setFreeType(chargeData.getPayMentVo().getFreeType());
-						money.setCarRealType(chargeData.getPayMentVo().getCarRealType());
-						String freeTypeName = String.valueOf(chargeData.getPayMentVo().getFreeType());
-						ParkFreeType parkFreeType = ParkMethod.getFreeType(chargeData.getCentreRecord().getFreeType());
-						if (parkFreeType != null)
-							freeTypeName = parkFreeType.getFreeName();
-						chargeData.getCentreRecord().setMemo(freeTypeName);
-						break;
-					default:
-						money = chargeData.getPayMentVo();
-						break;
-					}
-					chargeData.setPayMentVo(money);
-					retBody.setChargeData(chargeData);
+					boxChangeFeeCenter(model, retBody);
 				}
 				ReplyHead head = new ReplyHead();
 				head.setMethod("boxPayCharge");
@@ -335,10 +279,139 @@ public class BoxOperationImpl implements IBoxOperation {
 				String jsonBody = JsonUtil.objectToJsonStr(returnInfo);
 				System.out.println(jsonBody);
 				MqttServiceImpl.sendMessage(model.getEquipmentID(), receivehead.getReplyTopic(), jsonBody, null, 3);
+				logger.debug("收费改变:" +receivehead.getReplyTopic()+","+jsonBody);
 			} 
 		} catch (Exception ex) {
 			logger.error("收费改变:",ex);
 		}
+	}
+
+	/**
+	 * 收费改变-中央收费
+	 * @param model
+	 * @param retBody
+	 * @throws BeansException
+	 */
+	private void boxChangeFeeCenter(boxPayChargeVO model, boxPayChargeReturn retBody) throws BeansException {
+		System.out.println("中央收费");
+		CentreRealTimeBase chargeData = model.getCentreRealTimeBase();
+		AbstractChargeStandard mode = SpringUtil.getBean(StandChargeRule.class);
+		PaymentVo money = chargeData.getPayMentVo();
+		switch (model.getChangeType()) {
+		case 1: // 车型改变
+			money = charge.getFeeByCarNo(chargeData.getPayMentVo(), mode, chargeData.getCarNo());
+			String cardTypeName = String.valueOf(chargeData.getPayMentVo().getCarRealType());
+			ParkAccountType parkAccountType = ParkMethod
+					.getParkCardType(chargeData.getPayMentVo().getCarRealType());
+			if (parkAccountType != null)
+				cardTypeName = parkAccountType.getaCustname();
+			chargeData.getPayMentVo().setRemark("车辆类型改变为:" + cardTypeName);
+			chargeData.getCentreRecord().setCardType(chargeData.getPayMentVo().getCarRealType());
+			System.out.println("车类型改变");
+			break;
+		case 2: // 优惠
+			money = charge.getDisCountFee(chargeData.getPayMentVo(),mode);
+			chargeData.getPayMentVo().setRemark("优惠金额:" + (money.getDisAmount()/100));
+			chargeData.getCentreRecord().setDiscountNo(chargeData.getPayMentVo().getDiscountID());
+			chargeData.getCentreRecord().setTypeId(chargeData.getPayMentVo().getTypeId());
+			chargeData.getCentreRecord().setDiscountTime(new Date());
+			System.out.println("优惠");
+			break;
+		case 3: // 免费
+			money.setPaidFee(chargeData.getPayMentVo().getPayCharge());
+			money.setDisAmount(chargeData.getPayMentVo().getPayCharge());
+			money.setPayCharge(0);
+			chargeData.getPayMentVo().setRemark("特殊车辆免费");
+			chargeData.getCentreRecord().setCardType(chargeData.getPayMentVo().getCarRealType());
+			chargeData.getCentreRecord().setFreeType(chargeData.getPayMentVo().getFreeType());
+			String freeTypeName = String.valueOf(chargeData.getPayMentVo().getFreeType());
+			ParkFreeType parkFreeType = ParkMethod.getFreeType(chargeData.getCentreRecord().getFreeType());
+			if (parkFreeType != null)
+				freeTypeName = parkFreeType.getFreeName();
+			chargeData.getCentreRecord().setMemo(freeTypeName);
+			break;
+		default:
+			chargeData.getPayMentVo().setCarRealType(chargeData.getInRecord().getCardType());
+			money = charge.getFeeByCarNo(chargeData.getPayMentVo(), mode,
+					chargeData.getPayMentVo().getCarNo());
+			chargeData.getPayMentVo().setRemark("");
+			chargeData.getCentreRecord().setDiscountNo(null);
+			chargeData.getCentreRecord().setTypeId(null);
+			chargeData.getCentreRecord().setDiscountTime(null);
+			chargeData.getCentreRecord().setCardType(chargeData.getPayMentVo().getCarRealType());
+			chargeData.getCentreRecord().setFreeType(null);
+			chargeData.getCentreRecord().setMemo("");
+			break;
+		}
+		chargeData.setPayMentVo(money);
+		retBody.setChargeData(chargeData);
+	}
+
+	/**
+	 * 收费改变-出口收费
+	 * @param model
+	 * @param retBody
+	 * @throws BeansException
+	 */
+	private void boxChangeFeeOut(boxPayChargeVO model, boxPayChargeReturn retBody) throws BeansException {
+		System.out.println("出口收费");
+		OutRealTimeBase chargeData = model.getOutRealTimeBase();
+		AbstractChargeStandard mode = SpringUtil.getBean(StandChargeRule.class);
+		PaymentVo money = chargeData.getPayMentVo();
+		switch (model.getChangeType()) {
+		case 1: // 车型改变
+			money = charge.getFeeByCarNo(chargeData.getPayMentVo(), mode,
+					chargeData.getPayMentVo().getCarNo());
+			String cardTypeName = String.valueOf(chargeData.getPayMentVo().getCarRealType());
+			ParkAccountType parkAccountType = ParkMethod
+					.getParkCardType(chargeData.getPayMentVo().getCarRealType());
+			if (parkAccountType != null)
+				cardTypeName = parkAccountType.getaCustname();
+			chargeData.getPayMentVo().setRemark("车辆类型改变为:" + cardTypeName);
+			chargeData.getOut().setCardType(chargeData.getPayMentVo().getCarRealType());
+			System.out.println("车类型改变");
+			break;
+		case 2: // 优惠
+			money = charge.getDisCountFee(chargeData.getPayMentVo(),mode);
+			chargeData.getPayMentVo().setRemark("优惠金额:" + (money.getDisAmount() / 100));
+			chargeData.getOut().setDiscountNo(chargeData.getPayMentVo().getDiscountID());
+			chargeData.getOut().setTypeId(chargeData.getPayMentVo().getTypeId());
+			chargeData.getOut().setDiscountTime(new Date());
+			System.out.println("优惠");
+			break;
+		case 3: // 免费
+			money.setPaidFee(chargeData.getPayMentVo().getPayCharge());
+			money.setDisAmount(chargeData.getPayMentVo().getPayCharge());
+			money.setPayCharge(0);
+			chargeData.getPayMentVo().setRemark("特殊车辆免费");
+			chargeData.getOut().setCardType(chargeData.getPayMentVo().getCarRealType());
+			chargeData.getOut().setFreeType(chargeData.getPayMentVo().getFreeType());
+			String freeTypeName = String.valueOf(chargeData.getPayMentVo().getFreeType());
+			ParkFreeType parkFreeType = ParkMethod.getFreeType(chargeData.getOut().getFreeType());
+			if (parkFreeType != null)
+				freeTypeName = parkFreeType.getFreeName();
+			chargeData.getOut().setMemo(freeTypeName);
+			System.out.println("免费");
+			break;
+		default:
+			chargeData.getPayMentVo().setCarRealType(chargeData.getInRecord().getCardType());
+			money = charge.getFeeByCarNo(chargeData.getPayMentVo(), mode,
+					chargeData.getPayMentVo().getCarNo());
+			chargeData.getPayMentVo().setRemark("");
+			chargeData.getOut().setDiscountNo(null);
+			chargeData.getOut().setTypeId(null);
+			chargeData.getOut().setDiscountTime(null);
+			chargeData.getOut().setCardType(chargeData.getPayMentVo().getCarRealType());
+			chargeData.getOut().setFreeType(null);
+			chargeData.getOut().setMemo("");
+			break;
+		}
+		chargeData.setPayMentVo(money);
+		if (GlobalPark.outChannelEvent.containsKey(model.getControlIP())) {
+			GlobalPark.outChannelEvent.remove(model.getControlIP());
+		}
+		GlobalPark.outChannelEvent.put(model.getControlIP(), chargeData);
+		retBody.setChargeData(chargeData);
 	}
 	
 	
@@ -402,6 +475,7 @@ public class BoxOperationImpl implements IBoxOperation {
 			MainBoardMessage<ReplyHead, BoxLoginReturn> returnInfo = new MainBoardMessage<>(head, body);
 			String jsonBody = JsonUtil.objectToJsonStr(returnInfo);
 			MqttServiceImpl.sendMessage(model.getEquipmentMac(),receivehead.getReplyTopic(), jsonBody, null, 3);
+			logger.debug("岗亭登录返回:" +receivehead.getReplyTopic()+","+jsonBody);
 		} catch (Exception ex) {
 			logger.error("岗亭登录:",ex);
 		}
@@ -424,6 +498,7 @@ public class BoxOperationImpl implements IBoxOperation {
 			if (parkLocalSet != null && parkLocalSet.getOnline() == 1 && parkLocalSet.getEquipmentID() != null) {
 				String topic = String.format(TopicsDefine.BOX_ERROR, parkLocalSet.getEquipmentID());
 				MqttServiceImpl.sendMessage(parkLocalSet.getEquipmentID(),topic, jsonBody, null, 0);
+				logger.debug("推送当前收费:" +topic+","+jsonBody);
 			}
 		}catch (Exception ex) {
 			logger.error("推送当前收费",ex);
@@ -482,46 +557,35 @@ public class BoxOperationImpl implements IBoxOperation {
 	private ParkSumUser boxLoginCheck(Integer boxId, String loginName) {
 		ParkSumUser model = new ParkSumUser();
 		model.setBoxId(boxId);
+		//model.setUserName(loginName);
 		Date tDate=new Date();
-		ParkSumUser sumUser=new ParkSumUser();
-		List<ParkSumUser> parkSumUserList = parkSumUserMapper.selectByCondition(model);
-		if (parkSumUserList != null && parkSumUserList.size() > 0) {
+		ParkSumUser sumUser = parkSumUserMapper.selectByUser(model);
+		if (sumUser != null) {
 			// 之前有登陆，且接班操作员为空
-			if (parkSumUserList.get(0).getReliefUserName() == null) {
-				if (parkSumUserList.get(0).getUserName().equals(loginName)) {
-					sumUser=parkSumUserList.get(0);
-				} else {
-					parkSumUserList.get(0).setReliefUserName(loginName);
-					parkSumUserList.get(0).setReliefDate(tDate);
-					parkSumUserList.get(0).setIsLoad((byte) 0);
-					
-					parkSumUserMapper.updateByPrimaryKeySelective(parkSumUserList.get(0));
-					ParkSumUser modelmody = new ParkSumUser();
-					modelmody.setBoxId(boxId);
-					modelmody.setUserName(loginName);
-					modelmody.setLoginDate(tDate);
-					modelmody.setPuid(ParkMethod.getUUID());
-					parkSumUserMapper.insert(modelmody);///////////////
-					sumUser=modelmody;
-				}
+			if (sumUser.getUserName().equals(loginName)) {
+				// sumUser=parkSumUserList.get(0);
 			} else {
+				sumUser.setReliefUserName(loginName);
+				sumUser.setReliefDate(tDate);
+				sumUser.setIsLoad(0);
+
+				parkSumUserMapper.updateByPrimaryKeySelective(sumUser);
 				ParkSumUser modelmody = new ParkSumUser();
 				modelmody.setBoxId(boxId);
 				modelmody.setUserName(loginName);
 				modelmody.setLoginDate(tDate);
 				modelmody.setPuid(ParkMethod.getUUID());
-				parkSumUserMapper.insert(modelmody);//////////////
-				sumUser=modelmody;
+				parkSumUserMapper.insert(modelmody);///////////////
+				sumUser = modelmody;
 			}
 		} else {
-			// 第一次登陆
 			ParkSumUser modelmody = new ParkSumUser();
 			modelmody.setBoxId(boxId);
 			modelmody.setUserName(loginName);
 			modelmody.setLoginDate(tDate);
 			modelmody.setPuid(ParkMethod.getUUID());
-			parkSumUserMapper.insert(modelmody);
-			sumUser=modelmody;
+			parkSumUserMapper.insert(modelmody);//////////////
+			sumUser = modelmody;
 		}
 		return sumUser;
 	}
@@ -588,6 +652,7 @@ public class BoxOperationImpl implements IBoxOperation {
 			MainBoardMessage<ReplyHead, SuperBody> returnInfo = new MainBoardMessage<>(head, body);
 			String jsonBody = JsonUtil.objectToJsonStr(returnInfo);
 			MqttServiceImpl.sendMessage(model.getEquipmentMac(),receivehead.getReplyTopic(), jsonBody, null, 3);
+			logger.debug("岗亭交班:" +receivehead.getReplyTopic()+","+jsonBody);
 		} catch (Exception ex) {
 			logger.error("岗亭交班:",ex);
 		}
@@ -668,7 +733,8 @@ public class BoxOperationImpl implements IBoxOperation {
 					HandCapBody body = new HandCapBody();
 					body.setuId(ParkMethod.getUUID());
 					body.setEquipmentID(channel.getDsn());
-					MainBoardSdk.sendAndGet(channel.getDsn(), "handCap", body, com.drzk.service.entity.SuperBody.class);
+					MainBoardSdk.sendAndGet(channel.getDsn(), "handCap", body, HandCapBody.class);
+					logger.debug("软件触发相机"+body);
 				}
 			}
 		} catch (Exception ex) {
@@ -735,7 +801,6 @@ public class BoxOperationImpl implements IBoxOperation {
 	 */
 	@Override
 	public void boxHandOut(String jsonStr) {
-
 		try {
 			MainBoardMessage<Head, BoxHandOutBody> messages = JsonUtil.jsonToBoardMessage(jsonStr, Head.class,
 					BoxHandOutBody.class);
@@ -768,17 +833,12 @@ public class BoxOperationImpl implements IBoxOperation {
 					ParkCarIn inModel = parkCarInMapper.selectByPrimaryKey(Integer.parseInt(model.getID()));
 					outRealTimeBase.setInRecord(inModel);
 				}
-				// UpParkEventBody outModel = new UpParkEventBody();
-				// outModel.setEquipmentID(model.getEquipmentID());
-				// outModel.setConIp(model.getControlIP());
-				// outModel.setRecordNo(model.getuId());
-				// outModel.setEventTime(new Date().toString());
-				// out.setRecord(outModel);
 				if (GlobalPark.outChannelEvent.containsKey(model.getControlIP())) {
 					GlobalPark.outChannelEvent.remove(model.getControlIP());
 				}
 				GlobalPark.outChannelEvent.put(model.getControlIP(), outRealTimeBase);
 				ThreadPoolTaskExecutor threadPool = SpringUtil.getBean(ThreadPoolTaskExecutor.class);
+				
 				ParkingOutTask parkingOutTask = SpringUtil.getBean(ParkingOutTask.class);
 				parkingOutTask.setParkOut(outRealTimeBase);
 				threadPool.execute(parkingOutTask);
@@ -793,7 +853,6 @@ public class BoxOperationImpl implements IBoxOperation {
 	 */
 	@Override
 	public void boxComputerGate(String jsonStr) {
-
 		try {
 			MainBoardMessage<Head, BoxComputerGateBody> messages = JsonUtil.jsonToBoardMessage(jsonStr, Head.class,
 					BoxComputerGateBody.class);
@@ -857,6 +916,7 @@ public class BoxOperationImpl implements IBoxOperation {
 			MainBoardMessage<ReplyHead, SuperBody> returnInfo = new MainBoardMessage<>(head, body);
 			String jsonBody = JsonUtil.objectToJsonStr(returnInfo);
 			MqttServiceImpl.sendMessage(model.getEquipmentID(),receivehead.getReplyTopic(), jsonBody, null, 3);
+			logger.debug("电脑开闸:" +receivehead.getReplyTopic()+","+jsonBody);
 		} catch (Exception ex) {
 			logger.error("电脑开闸:",ex);
 		}
@@ -895,6 +955,7 @@ public class BoxOperationImpl implements IBoxOperation {
 			MainBoardMessage<ReplyHead, SuperBody> returnInfo = new MainBoardMessage<>(retHead, body);
 			String jsonBody = JsonUtil.objectToJsonStr(returnInfo);
 			MqttServiceImpl.sendMessage(model.getEquipmentID(),head.getReplyTopic(), jsonBody, null, 3);
+
 		} catch (Exception ex) {
 			logger.error("高峰模式设置:",ex);
 		}
@@ -1035,6 +1096,7 @@ public class BoxOperationImpl implements IBoxOperation {
 			MainBoardMessage<ReplyHead, SuperBody> returnInfo = new MainBoardMessage<>(replyHead, returnBody);
 			String jsonBody = JsonUtil.objectToJsonStr(returnInfo);
 			MqttServiceImpl.sendMessage(model.getEquipmentID(),retTopic, jsonBody, null, 0);
+			logger.debug("出场确认开闸:" +retTopic+","+jsonBody);
 		}
 
 	}
@@ -1061,7 +1123,6 @@ public class BoxOperationImpl implements IBoxOperation {
 					carNo = model.getCarNo();
 				if (carNo != null && carNo.equals("无牌车"))
 					carNo = "NOP";
-
 				if (carNo != null)
 					data = vwParkCarInMapper.GetByCarNo(carNo);
 				else
@@ -1073,7 +1134,6 @@ public class BoxOperationImpl implements IBoxOperation {
 			}
 			if (head != null)
 				retTopic = head.getReplyTopic();
-
 			returnBody.setParkInRecord(data);
 			retHead.setMethod("boxGetInRecord");
 		} catch (Exception ex) {
@@ -1084,6 +1144,7 @@ public class BoxOperationImpl implements IBoxOperation {
 			MainBoardMessage<ReplyHead, BoxGetInRecordReturn> returnInfo = new MainBoardMessage<>(retHead, returnBody);
 			String jsonBody = JsonUtil.objectToJsonStr(returnInfo);
 			MqttServiceImpl.sendMessage(model.getEquipmentID(),retTopic, jsonBody, null, 0);
+			logger.debug("查找场内车辆:" +retTopic+","+jsonBody);
 		}
 	}
 
@@ -1260,9 +1321,10 @@ public class BoxOperationImpl implements IBoxOperation {
 			retHead.setMessage("成功");
 			retHead.setMethod("getNoCarNo");
 			body.setNopCarNo(carno);
-			MainBoardMessage<ReplyHead, SuperBody> returnInfo = new MainBoardMessage<>(retHead, body);
+			MainBoardMessage<ReplyHead, GetNoCarNoBody> returnInfo = new MainBoardMessage<>(retHead, body);
 			String jsonBody = JsonUtil.objectToJsonStr(returnInfo);
 			MqttServiceImpl.sendMessage(model.getEquipmentID(),head.getReplyTopic(), jsonBody, null, 3);
+			logger.debug("获取新的无牌车号码:" +head.getReplyTopic()+","+jsonBody);
 		} catch (Exception ex) {
 			logger.error("获取新的无牌车号码:",ex);
 		}
@@ -1345,9 +1407,10 @@ public class BoxOperationImpl implements IBoxOperation {
 				retHead.setMessage("成功");
 				retHead.setMethod("boxModifyCarNo");
 			}
-			MainBoardMessage<ReplyHead, SuperBody> returnInfo = new MainBoardMessage<>(retHead, body);
+			MainBoardMessage<ReplyHead, BoxModifyCarNoBody> returnInfo = new MainBoardMessage<>(retHead, body);
 			String jsonBody = JsonUtil.objectToJsonStr(returnInfo);
 			MqttServiceImpl.sendMessage(model.getEquipmentID(),head.getReplyTopic(), jsonBody, null, 3);
+			logger.debug("修改入场车牌:" +head.getReplyTopic()+","+jsonBody);
 		} catch (Exception ex) {
 			logger.error("修改入场车牌:",ex);
 		}
@@ -1381,11 +1444,30 @@ public class BoxOperationImpl implements IBoxOperation {
 			retHead.setStatus("0");
 			retHead.setMessage("成功");
 			retHead.setMethod("getPayCharge");
-			MainBoardMessage<ReplyHead, SuperBody> returnInfo = new MainBoardMessage<>(retHead, body);
+			MainBoardMessage<ReplyHead, GetPayChargeReturn> returnInfo = new MainBoardMessage<>(retHead, body);
 			String jsonBody = JsonUtil.objectToJsonStr(returnInfo);
 			MqttServiceImpl.sendMessage(model.getEquipmentID(),head.getReplyTopic(), jsonBody, null, 3);
+			logger.debug("计费:" +head.getReplyTopic()+","+jsonBody);
 		} catch (Exception ex) {
 			logger.error("计费:",ex);
+		}
+	}
+
+	/**
+	 * 实时推送中央缴费记录
+	 * @param parkCentralCharge
+	 */
+	public void pushCenterInfo(ParkCentralCharge parkCentralCharge){
+		try {
+			ParkCenterPayment parkCenterPayment = conversionParameterClass.getParkCenterPayment(parkCentralCharge);
+			List<ParkCenterPayment> sendList = new ArrayList<ParkCenterPayment>();
+			if (parkCenterPayment != null) {
+				sendList.add(parkCenterPayment);
+				onlineDSScanSever.sendInfo(sendList,"park/parkcenterpayment/v1","parkcenterpayment");            //传送数据
+				logger.debug("推送中央缴费数据到云端成功");
+			}
+		}catch (Exception e){
+			logger.error("实时推送中央缴费数据异常：",e);
 		}
 	}
 }

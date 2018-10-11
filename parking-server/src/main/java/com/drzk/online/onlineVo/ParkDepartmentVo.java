@@ -13,7 +13,11 @@ import java.util.Map;
  */
 public class ParkDepartmentVo implements Serializable {
 
-    public static Map<String,String> map=new HashMap<>(  );
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2730671400602507259L;
+	public static Map<String,String> map=new HashMap<>(  );
     static {
         map.put( "objectId","puid" );
         map.put( "departmentName","deptName" );

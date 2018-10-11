@@ -1,9 +1,15 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /** 扫码出入场头部 */
-public class YunScanCodeHead
+public class YunScanCodeHead implements Serializable
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 205001136617859487L;
 	private String parkId;
 	private String replyTopic;
 	/** 具体方法 */

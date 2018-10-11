@@ -1,6 +1,7 @@
 package com.drzk.online.service;
 
 import com.drzk.online.vo.CarportAndCarVO;
+import com.drzk.online.vo.ParkCaruser;
 import com.drzk.online.vo.RenewalVO;
 
 /**
@@ -29,4 +30,11 @@ public interface YktIssueService {
      * @return
      */
     public int delay(RenewalVO renewalVO);
+
+    /**
+     * 云端批量导入的方法
+     * @param parkCaruser
+     * @return
+     */
+    public int importYkt(ParkCaruser parkCaruser);
 }

@@ -1,7 +1,14 @@
 package com.drzk.vo;
 
-public class ParkOverTimeSet {
-    private Integer id;
+import java.io.Serializable;
+
+public class ParkOverTimeSet implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3572678712453679688L;
+
+	private Integer id;
 
     private String puid;
 

@@ -1,10 +1,16 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf
  * 线下发布到线上head
  */
-public class HeadVO {
+public class HeadVO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7847659866531195093L;
 	private String method;// 方法名
 	private String replyTopic;// 回复主题
 	private String parkingNo;// 车场编号

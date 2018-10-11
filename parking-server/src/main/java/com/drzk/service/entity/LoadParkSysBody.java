@@ -1,7 +1,15 @@
 package com.drzk.service.entity;
 
+import java.io.Serializable;
+
 //加载车场系统参数实体
-public class LoadParkSysBody extends SuperBody {
+public class LoadParkSysBody implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7634792774281914096L;
+	private String uId;
 	// 临时车工作模式 00-自动，01-确认
 	private String temporaryCarWorkingModel;
 	// 月租车工作模式 0-自动，1-确认 2-受控
@@ -430,6 +438,14 @@ public class LoadParkSysBody extends SuperBody {
 	*/
 	public void setLastCameraTrigger(String lastCameraTrigger) {
 		this.lastCameraTrigger = lastCameraTrigger;
+	}
+
+	public String getuId() {
+		return uId;
+	}
+
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	
 	

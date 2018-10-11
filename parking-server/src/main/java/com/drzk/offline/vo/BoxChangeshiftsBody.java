@@ -1,7 +1,14 @@
 package com.drzk.offline.vo;
 
-public class BoxChangeshiftsBody extends SuperBody
-{
+import java.io.Serializable;
+
+public class BoxChangeshiftsBody implements Serializable
+{	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5097019325519861095L;
+	private String uId;
 	private String boxIP; // 岗亭Ip
 	private String equipmentMac; // 设备编号
 	private String loginType; // 登入类型 0-用户，1，扫码
@@ -151,6 +158,14 @@ public class BoxChangeshiftsBody extends SuperBody
 	*/
 	public void setnewQRCode(String newQRCode) {
 		this.newQRCode = newQRCode;
+	}
+
+	public String getuId() {
+		return uId;
+	}
+
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	
 }

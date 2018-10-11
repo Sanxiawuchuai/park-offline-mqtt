@@ -43,7 +43,7 @@ import com.drzk.vo.VwParkCarIsuse;
  * @see
  */
 @Component
-@Scope("singleton")
+@Scope("prototype")
 public class UnusualInOut implements Runnable {
 	private static Logger logger = Logger.getLogger("userLog");
 	@Autowired
@@ -187,8 +187,8 @@ public class UnusualInOut implements Runnable {
 				else
 					logger.debug("保存出口异常开闸记录失败");
 			}
-		}catch (Exception e) {
-			LoggerUntils.error(logger, e);
+		}catch (Exception ex) {
+			logger.error("异常开闸数据:", ex);
 		}
 	}
 	
@@ -225,7 +225,7 @@ public class UnusualInOut implements Runnable {
 		}
 		catch(Exception ex)
 		{
-			LoggerUntils.error(logger, ex.toString());
+			logger.error("推送入场数据:", ex);
 		}
 	}
 	
@@ -257,12 +257,13 @@ public class UnusualInOut implements Runnable {
 					String equipmentID = local.getEquipmentID();
 					String replyTopic = String.format(TopicsDefine.BOX_ERROR, equipmentID);
 					MqttMessageVO reply = MqttServiceImpl.sendMessage(equipmentID,replyTopic, jsonBody, null, 0);
+					logger.debug("异常开闸记录推送:"+replyTopic+","+jsonBody);
 				}
 			}
 		}
 		catch(Exception ex)
 		{
-			LoggerUntils.error(logger, ex.toString());
+			logger.error("推送出场数据:", ex);
 		}
 	}
 }

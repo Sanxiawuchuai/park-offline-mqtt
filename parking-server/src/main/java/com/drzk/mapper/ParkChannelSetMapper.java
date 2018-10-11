@@ -1,11 +1,10 @@
 package com.drzk.mapper;
 
-import java.util.List;
-import java.util.Vector;
-
+import com.drzk.vo.ParkChannelSet;
 import org.apache.ibatis.annotations.Param;
 
-import com.drzk.vo.ParkChannelSet;
+import java.util.List;
+import java.util.Vector;
 
 public interface ParkChannelSetMapper {
 	int deleteByPrimaryKey(Integer id);
@@ -17,6 +16,13 @@ public interface ParkChannelSetMapper {
 	ParkChannelSet selectByPrimaryKey(Integer id);
 	
 	List<ParkChannelSet> selectByCondition(ParkChannelSet obj);
+
+	/**
+	 * 根据通道号查询
+	 * @param machNo
+	 * @return
+	 */
+	ParkChannelSet selectByMachNo(@Param("machNo") Integer machNo);
 
 	int updateByPrimaryKeySelective(ParkChannelSet record);
 

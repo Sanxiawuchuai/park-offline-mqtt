@@ -7,7 +7,11 @@ import java.io.Serializable;
  */
 public class MqttHeadVo implements Serializable {
 
-    //版本号
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7790721704562243046L;
+	//版本号
     private String version;
     //业务方法
     private String method;

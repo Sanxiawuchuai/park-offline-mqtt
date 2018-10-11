@@ -1,10 +1,16 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf
  * 岗亭信息
  */
-public class BoxVO {
+public class BoxVO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2430854083906731954L;
 	private Integer boxId; // 岗亭编号(1-64)
 	private String boxName;// 岗亭名称
 	private String parkingLotName; // 客户名称

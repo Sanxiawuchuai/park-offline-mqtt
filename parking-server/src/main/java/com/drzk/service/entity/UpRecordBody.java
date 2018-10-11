@@ -1,9 +1,16 @@
 package com.drzk.service.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 //3.1. 上传记录(服务器订阅)实体
-public class UpRecordBody  extends SuperBody{
+public class UpRecordBody implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6224689976584106329L;
+	private String uId;
 	private String conIp;           //控制器Ip
 	private String recordNo;        //流水号
 	private String recordType;      //记录类型
@@ -217,6 +224,12 @@ public class UpRecordBody  extends SuperBody{
 	*/
 	public void setIsBackCarNo(String isBackCarNo) {
 		this.isBackCarNo = isBackCarNo;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	
 	

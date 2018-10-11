@@ -1,9 +1,14 @@
 package com.drzk.offline.vo;
 
-public class BoxPeakModeBody extends SuperBody
+import java.io.Serializable;
+
+public class BoxPeakModeBody implements Serializable
 {
-
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8520851626670656368L;
+	private String uId;
 	private String controlIP;//控制器IP
 	private String equipmentID;//硬件设备编号
 	private String type;//0,道闸常开。1，道闸常开关闭
@@ -57,6 +62,12 @@ public class BoxPeakModeBody extends SuperBody
 	public String getType()
 	{
 		return type;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	
 	

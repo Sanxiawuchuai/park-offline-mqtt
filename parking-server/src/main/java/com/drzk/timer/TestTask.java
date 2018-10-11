@@ -2,7 +2,6 @@
 package com.drzk.timer;
 
 import com.drzk.bean.MqttMessageVO;
-import com.drzk.utils.LoggerUntils;
 import org.apache.log4j.Logger;
 import org.kie.api.runtime.KieSession;
 
@@ -37,7 +36,7 @@ public class TestTask implements Runnable {
 //			System.out.println("topic:" + vo.getTopic());
 //			System.out.println("body:" + vo.getBody());
 		} catch (Exception e) {
-			LoggerUntils.error(logger, e);
+			logger.error("测试异常",e);
 		}
 
 	}

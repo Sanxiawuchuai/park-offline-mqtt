@@ -1,13 +1,16 @@
 package com.drzk.vo;
 
 
-
+import java.io.Serializable;
 import java.util.Date;
 
-import com.drzk.common.InOutRealTimeBase;
-
-public class ParkCarIn {
+public class ParkCarIn implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6982887142239154088L;
+
+	/**
      * 自增长id
      */
     private Integer id;
@@ -145,11 +148,11 @@ public class ParkCarIn {
     /**
      * 0未上传1正在上传,2已上传成功
      */
-    private Integer isLoad;
+    private Integer isLoad=0;
 
     
-    private Integer isDelete;
-    
+    private Integer isDelete=0;
+    private Integer isImgUpload=0;
     
     
     
@@ -612,4 +615,13 @@ public class ParkCarIn {
     public void setIsLoad(Integer isLoad) {
         this.isLoad = isLoad;
     }
+
+    public Integer getIsImgUpload() {
+        return isImgUpload;
+    }
+
+    public void setIsImgUpload(Integer isImgUpload) {
+        this.isImgUpload = isImgUpload;
+    }
+
 }

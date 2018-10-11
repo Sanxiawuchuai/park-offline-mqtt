@@ -1,6 +1,7 @@
 
 package com.drzk.offline.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -22,8 +23,12 @@ import com.drzk.vo.ParkLocalSet;
  * @since JDK 1.8
  * @see
  */
-public class BoxLoginReturn extends SuperBody {
+public class BoxLoginReturn implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2663103502999716737L;
 	private String uId; // 记录唯一编号,32位字符串
 	private Date loginTime; // 登入时间
 	private Properties parkSysSet; // 参照车场参数设置实体类

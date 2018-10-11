@@ -43,7 +43,7 @@
 	<!-- 消息适配器 -->
 	<int-mqtt:message-driven-channel-adapter
 		id="mqttInbound" client-id="parking_server_mqtt_test_subcrib_178778"
-		topics="X21412300001/publish/data,refresh,test,offData" qos="0" client-factory="offlineClientFactory"
+		topics="X22110600001/publish/data,refresh,test,offData" qos="0" client-factory="offlineClientFactory"
 		auto-startup="true" send-timeout="12" channel="offlineSubscribeChannel" />
 	<int:channel id="offlineSubscribeChannel" />
 

@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ParkLocalSet {
+public class ParkLocalSet implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1678281537671124808L;
+
+	/**
      * 岗亭编号
      */
     private Integer boxId;

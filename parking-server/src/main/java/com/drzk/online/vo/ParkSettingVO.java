@@ -1,7 +1,8 @@
 package com.drzk.online.vo;
 
-public class ParkSettingVO extends SuperBody {
-    private String city;
+
+public class ParkSettingVO extends OnlineBody{
+	private String city;
     private String gisInfo;
     private Integer totalSpaces;
     private Integer fixedSpaces;

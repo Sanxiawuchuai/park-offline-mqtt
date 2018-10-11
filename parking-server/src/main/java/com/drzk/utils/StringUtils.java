@@ -1,9 +1,13 @@
 package com.drzk.utils;
 
+import com.drzk.common.AESUtil;
+import com.drzk.online.constant.ConstantUtil;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -117,4 +121,11 @@ public class StringUtils {
 		return obj;
 	}
 
+	public static void main(String[] args) {
+		String expirtDate=DateTimeUtils.formatDate(new Date(1570696101205L),"yyyyMMddHHmmss");
+		String license= "51060400FFFBEBBF"+"00:E0:4C:65:43:53" +expirtDate;
+		String ss=AESUtil.encrypt(license,ConstantUtil.PUBLIC_KEY);
+		System.out.println(ss);
+
+	}
 }

@@ -1,6 +1,8 @@
 package com.drzk.online.vo;
 
-public class BoxInfoVO extends SuperBody
+import java.io.Serializable;
+
+public class BoxInfoVO extends OnlineBody
 {
 	private String parkingLotName;
 	private String boxIp;

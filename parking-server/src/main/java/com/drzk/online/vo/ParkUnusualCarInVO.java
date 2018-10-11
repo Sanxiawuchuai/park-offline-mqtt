@@ -2,7 +2,7 @@ package com.drzk.online.vo;
 
 import java.util.Date;
 
-public class ParkUnusualCarInVO extends SuperBody
+public class ParkUnusualCarInVO extends OnlineBody
 {
 	private String cardId;
 	private String empName;

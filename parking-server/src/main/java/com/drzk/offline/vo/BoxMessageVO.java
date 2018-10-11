@@ -12,7 +12,7 @@ package com.drzk.offline.vo;
  * @since JDK 1.8
  * @see
  */
-public class BoxMessageVO<H,B> {
+public class BoxMessageVO<H,B>{
 	private H head;
 	private B body;
 	

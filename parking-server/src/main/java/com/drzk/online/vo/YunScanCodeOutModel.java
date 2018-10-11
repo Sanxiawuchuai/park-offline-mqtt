@@ -1,7 +1,13 @@
 package com.drzk.online.vo;
 
-public class YunScanCodeOutModel
+import java.io.Serializable;
+
+public class YunScanCodeOutModel implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1481073584826273989L;
 	private Integer channelType;
 	private String entryTime;
 	private String carNo;
@@ -12,17 +18,18 @@ public class YunScanCodeOutModel
 	private float disAmount;
 	private float couponAmount;
 	private Integer duration;
-	private Integer channelId;
+	private String dsn;
 	
 	
 	
-	public Integer getChannelId()
+	
+	public String getDsn()
 	{
-		return channelId;
+		return dsn;
 	}
-	public void setChannelId(Integer channelId)
+	public void setDsn(String dsn)
 	{
-		this.channelId = channelId;
+		this.dsn = dsn;
 	}
 	/** 通道类型 0 入口 1 出口 */
 	public Integer getChannelType()

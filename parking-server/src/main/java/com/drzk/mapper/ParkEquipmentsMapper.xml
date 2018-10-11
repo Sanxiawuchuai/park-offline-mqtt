@@ -121,6 +121,9 @@
 			<if test="eqName != null">
 				eq_name = #{eqName,jdbcType=VARCHAR},
 			</if>
+			<if test="eqId != null">
+				eq_id = #{eqId,jdbcType=INTEGER},
+			</if>
 			<if test="memo != null">
 				memo = #{memo,jdbcType=VARCHAR},
 			</if>
@@ -131,7 +134,7 @@
 				down_load = #{downLoad,jdbcType=VARCHAR},
 			</if>
 			<if test="delFrag != null">
-				del_frag = #{delFrag,jdbcType=VARCHAR},
+				del_frag = #{delFrag,jdbcType=INTEGER},
 			</if>
 		</set>
 		where euid = #{euid,jdbcType=VARCHAR}
@@ -147,7 +150,7 @@
 	</update>
 	<select id="selectAllEquipmentsInfo" resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List" />
+		eq_id, eq_name,client_no,memo,euid
 		from park_equipments
 	</select>
 
@@ -161,6 +164,16 @@
 	<update id="updateDSStatus">
 		update park_equipments
 		set is_load = #{status}
+		where euid in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<update id="updateDeleteFlag">
+		update park_equipments
+		set del_frag = 1
 		where euid in
 		<foreach collection="list" index="index" item="item" open="("
 			separator="," close=")">

@@ -1,10 +1,16 @@
 package com.drzk.offline.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
 
-public class GetPayChargeBody extends SuperBody
+public class GetPayChargeBody implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7143688684475335413L;
+	private String uId;
 	private String chargePay;//收费标准类型 1.标准收费
 	private String equipmentID;//硬件设备编号
 	private String cardType;//卡类型
@@ -53,5 +59,11 @@ public class GetPayChargeBody extends SuperBody
 	}
 	public void setEquipmentID(String equipmentID) {
 		this.equipmentID = equipmentID;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 }

@@ -1,9 +1,13 @@
 package com.drzk.mapper;
 
-import java.util.List;
-
 import com.drzk.vo.SysParameters;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
+
+@Repository
 public interface SysParametersMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -21,8 +25,14 @@ public interface SysParametersMapper {
     
     List<SysParameters> selectAll();
 
-    int updateByCode(SysParameters record);
+    int updateByCode(@Param("paramsCode") String paramsCode, @Param("paramsValue") String paramsValue);
 
     int saveConfig(SysParameters record);
 
+    /**
+     * 批量更新相关的数据
+     * @param map
+     * @return
+     */
+    public int batchUpdate(@Param("map") Map<String,String> map);
 }

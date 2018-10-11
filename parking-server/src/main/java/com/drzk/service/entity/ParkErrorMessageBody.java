@@ -1,8 +1,15 @@
 package com.drzk.service.entity;
 
-public class ParkErrorMessageBody extends SuperBody
+import java.io.Serializable;
+
+public class ParkErrorMessageBody implements Serializable
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -13139545809523756L;
+	private String uId;
 	private String InOut;
 	private String DisMessage;
 	
@@ -37,5 +44,11 @@ public class ParkErrorMessageBody extends SuperBody
 	public void setInOut(String InOut)
 	{
 		this.InOut =InOut;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 }

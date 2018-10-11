@@ -16,7 +16,7 @@ when
 	$parkCentre : CentreRealTimeBase(getNextStep() == Step.START)
 then
 	boolean $isInData =  parkCentreService.getSimilarCar($parkCentre);
-	System.out.println("入场记录:");
+	//System.out.println("入场记录:");
 	$parkCentre.setNextStep($isInData ? Step.CARDTYPE : Step.NOINREORD);
 	update($parkCentre);
 end
@@ -38,7 +38,7 @@ when
 	$parkCentre : CentreRealTimeBase(getNextStep() == Step.CARDTYPE)
 then
 	int $cardType = parkCentreService.getCardTypeInfo($parkCentre);
-	System.out.println("车辆卡类型:"+$cardType);
+	//System.out.println("车辆卡类型:"+$cardType);
 	$parkCentre.setNextStep(Step.ISREGULARCAR);
 	update($parkCentre);
 end
@@ -49,7 +49,7 @@ when
 	$parkCentre : CentreRealTimeBase(getNextStep() == Step.ISREGULARCAR)
 then
 	boolean $isRegularCar = parkCentreService.isRegularCar($parkCentre);
-	System.out.println("是否是固定车:"+$isRegularCar);
+	//System.out.println("是否是固定车:"+$isRegularCar);
 	$parkCentre.setNextStep($isRegularCar? Step.REGULARCAR:Step.ISARREARS);
 	update($parkCentre);
 end
@@ -207,7 +207,7 @@ when
 	$parkCentre : CentreRealTimeBase(statusMap["type"]==1,getNextStep() == Step.EFFECTIVE)
 then
 	boolean $familyType = parkCentreService.isFamilyGroup($parkCentre);
-	System.out.println("是否家庭组:"+$familyType);
+	//System.out.println("是否家庭组:"+$familyType);
 	$parkCentre.setNextStep($familyType? Step.FAMILY:Step.MONTHCAR);
 	update($parkCentre);
 end
@@ -230,7 +230,7 @@ when
 	$parkCentre : CentreRealTimeBase(getNextStep() == Step.FAMILY)
 then
     boolean $familyTemp = parkCentreService.centreFamilyTemp($parkCentre);
-    System.out.println("判断当前车辆是临时车出场还是以月租车出场:"+$familyTemp);
+    //System.out.println("判断当前车辆是临时车出场还是以月租车出场:"+$familyTemp);
 	$parkCentre.setNextStep($familyTemp? Step.ISARREARS:Step.FAMILYMONTH);
 	update($parkCentre);
 end
@@ -242,7 +242,7 @@ when
 	$parkCentre : CentreRealTimeBase(getNextStep() == Step.FAMILYMONTH)
 then
     boolean $familyTemp = parkCentreService.centreFamilyTemp($parkCentre);
-    System.out.println("判断家庭的月租车辆是否有临时计费:"+$familyTemp);
+    //System.out.println("判断家庭的月租车辆是否有临时计费:"+$familyTemp);
 	$parkCentre.setNextStep($familyTemp? Step.ISARREARS:Step.MONTHCAR);
 	update($parkCentre);
 end
@@ -253,7 +253,7 @@ when
 	$parkCentre : CentreRealTimeBase(getNextStep() == Step.ISARREARS)
 then
 	boolean $isArrears = parkCentreService.isArrears($parkCentre);
-	System.out.println("费用是否结清:"+$isArrears);
+	//System.out.println("费用是否结清:"+$isArrears);
 	$parkCentre.setNextStep($isArrears ?Step.NOPAY:Step.ARREARS);
 	update($parkCentre);
 end
@@ -275,7 +275,7 @@ when
 	$parkCentre : CentreRealTimeBase(statusMap["type"]==5, getNextStep() == Step.ARREARS)
 then
 	boolean $result = parkCentreService.storecarCharge($parkCentre);
-	System.out.println("储值车是否够扣费:"+$result);
+	//System.out.println("储值车是否够扣费:"+$result);
 	$parkCentre.setNextStep($result? Step.ISNEEDCONFIRM:Step.ISARREARS);
 	update($parkCentre);
 end

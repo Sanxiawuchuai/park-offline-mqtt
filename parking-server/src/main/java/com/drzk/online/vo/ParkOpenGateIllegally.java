@@ -3,9 +3,8 @@ package com.drzk.online.vo;
 import java.util.Date;
 import java.util.List;
 
-public class ParkOpenGateIllegally extends SuperBody
+public class ParkOpenGateIllegally extends OnlineBody
 {
-
 	private String boxId;
 	private String boxName;
 	private String controllerId;

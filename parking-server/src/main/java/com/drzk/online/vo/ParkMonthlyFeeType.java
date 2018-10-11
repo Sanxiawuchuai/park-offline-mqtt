@@ -1,8 +1,8 @@
 package com.drzk.online.vo;
 
-public class ParkMonthlyFeeType extends SuperBody
-{
 
+public class ParkMonthlyFeeType extends OnlineBody
+{
 	private String packageType;
 	private String packageName;
 	private String packageCharge;

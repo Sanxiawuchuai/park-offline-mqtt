@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ParkTrafficStatistics {
+public class ParkTrafficStatistics implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2697030035763682921L;
+
+	/**
      * 自增长id
      */
     private Integer id;

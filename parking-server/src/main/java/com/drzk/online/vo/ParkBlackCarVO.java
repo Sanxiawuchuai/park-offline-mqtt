@@ -1,8 +1,8 @@
 package com.drzk.online.vo;
 
-public class ParkBlackCarVO extends SuperBody
-{
 
+public class ParkBlackCarVO extends OnlineBody
+{
 	private String carNo;
 	private Integer carNoType;
 	private Integer isStop;

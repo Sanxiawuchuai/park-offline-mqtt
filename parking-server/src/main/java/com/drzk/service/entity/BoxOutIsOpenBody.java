@@ -1,10 +1,17 @@
 package com.drzk.service.entity;
 
+import java.io.Serializable;
+
 import com.drzk.fact.OutRealTimeBase;
 
-public class BoxOutIsOpenBody extends SuperBody
+public class BoxOutIsOpenBody implements Serializable
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5634540993105836565L;
+	private String uId;
 	private String controlIP;
 	private String equipmentID;
 	private String type;
@@ -52,5 +59,11 @@ public class BoxOutIsOpenBody extends SuperBody
 	public String getControlIP()
 	{
 		return controlIP;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 }

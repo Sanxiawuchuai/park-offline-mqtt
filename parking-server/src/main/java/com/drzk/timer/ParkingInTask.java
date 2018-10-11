@@ -28,7 +28,7 @@ import com.drzk.utils.LoggerUntils;
  * @see
  */
 @Component
-@Scope("singleton")
+@Scope("prototype")
 public class ParkingInTask implements Runnable{
 	private static Logger logger = Logger.getLogger("userLog");
 	@KSession("ksession_parkin")
@@ -56,8 +56,8 @@ public class ParkingInTask implements Runnable{
 			kSession.setGlobal("parkInService", parkingInService);
 			kSession.insert(parkIn);
 			kSession.fireAllRules();
-		}catch (Exception e) {
-			LoggerUntils.error(logger, e);
+		}catch (Exception ex) {
+			logger.error("入场处理线程:",ex);
 		}
 	}
 

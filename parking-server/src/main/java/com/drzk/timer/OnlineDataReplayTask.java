@@ -13,7 +13,7 @@ import com.drzk.utils.JsonUtil;
 import com.drzk.utils.LoggerUntils;
 
 @Component
-@Scope("singleton")
+@Scope("prototype")
 public class OnlineDataReplayTask implements Runnable
 {
 
@@ -39,8 +39,8 @@ public class OnlineDataReplayTask implements Runnable
 //			classMethod.getName().replace("/v1", "");
 //			classMethod.invoke(onlineDSReplaySever, json);
 			
-		} catch (Exception e) {
-			LoggerUntils.error(logger, e);
+		} catch (Exception ex) {
+			logger.error("OnlineDataReplayTask:",ex);
 		}
 
 	}

@@ -36,162 +36,172 @@ public class ConversionParameterClass {
 	@Autowired
 	ParkChannelSetMapper parkChannelSetMapper;
 	@Autowired
-	private ParkOverTimeSetMapper parkOverTimeSetMapper;
-	@Autowired
 	private ParkAccountTypeMapper parkAccountTypeMapper;
 	
 	static String parkNo = GlobalPark.properties.getProperty("PARK_NUM");
+	static String parkName=GlobalPark.properties.getProperty("PROJECT_NAME");
 	static String dataOrign="线下";
 	
 	
-	public  ParkCarInVO getParkCarIn(ParkCarIn in) {
+	public  ParkCarInVO getParkCarIn(BackUpParkCarIn in) {
 		try {
-		if(in == null)
-			return null;
-		
-		ParkCarInVO retIn = new ParkCarInVO();		
-		retIn.setObjectId(in.getGuid());
-		if(in.getMachNo() != null)
-			retIn.setEntranceId(in.getMachNo().toString());
-		ParkChannelSet channel = new ParkChannelSet();
-		channel.setMachNo(in.getMachNo());
-		List<ParkChannelSet> channels  = parkChannelSetMapper.selectByCondition(channel);
-		 		
-		if(channels.get(0) != null)
-		{
-			retIn.setEntranceName(channel.getChannelName());
-			retIn.setControlIp(channel.getChannelIp());
+			if(in == null||in.getGuid()==null){
+				return null;
+			}
+
+			ParkCarInVO retIn = new ParkCarInVO();
+			retIn.setObjectId(in.getGuid());
+			if(in.getMachNo() != null) {
+				retIn.setEntranceId(in.getMachNo().toString());
+			}
+
+			ParkChannelSet channel = parkChannelSetMapper.selectByMachNo(in.getMachNo());
+			if(channel != null) {
+				retIn.setEntranceName(channel.getChannelName());
+				retIn.setControlIp(channel.getChannelIp());
+			}
+
+			retIn.setEntranceUserName(in.getInUserName());
+			retIn.setCardId(in.getCardId());
+			retIn.setCarNo(in.getCarNo());
+			retIn.setNextCarNo(in.getAssistantCarNo());
+			retIn.setCorrectCarNo(in.getModifyCarNo());
+			List<VwParkCarIn> vwParkCarInList = vwParkCarInMapper.GetByCarNo(in.getCarNo());
+			if(vwParkCarInList != null && vwParkCarInList.size()>0) {
+				retIn.setContactName(vwParkCarInList.get(0).getEmpName());
+			}else {
+				retIn.setContactName("临时用户");
+			}
+			ParkAccountType cardType = ParkMethod.ParkAccountTypeByType(in.getCardType());
+			if(cardType != null) {
+				retIn.setCardTypeName(cardType.getaName());
+			}
+			retIn.setCarTypeId(in.getCardType());
+			if(in.getCarNoType()!= null) {
+				retIn.setCarNoType(in.getCarNoType().toString());
+			}
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			retIn.setInTime(sdf.format(in.getInTime()));
+			if(in.getInPic()!=null) {
+				retIn.setInPic("/" + parkNo + in.getInPic());
+			}
+
+			if(in.getInWay() != null) {
+				retIn.setInWay(in.getInWay().toString());
+				retIn.setInWayName(ParkMethod.GetInWayName(in.getInWay()));
+			}
+			if(in.getSmall() != null) {
+				retIn.setSmall(in.getSmall().toString());
+			}
+			retIn.setDataOrigin(dataOrign);
+			retIn.setCreator(in.getInUserName());
+			retIn.setCreateTime(in.getInTime());
+			retIn.setParkingNo(parkNo);
+			if(in.getIsDelete() != null){
+				retIn.setDeleteCode( in.getIsDelete().intValue());
+			}
+			return retIn;
 		}
-		retIn.setEntranceUserName(in.getInUserName());
-		retIn.setCardId(in.getCardId());
-		retIn.setCarNo(in.getCarNo());		
-		retIn.setNextCarNo(in.getAssistantCarNo());	
-		retIn.setCorrectCarNo(in.getModifyCarNo());//		
-		List<VwParkCarIn> vwParkCarInList = vwParkCarInMapper.GetByCarNo(in.getCarNo());
-		if(vwParkCarInList != null && vwParkCarInList.size()>0)
-		{
-			retIn.setContactName(vwParkCarInList.get(0).getEmpName());			
-		}
-		else
-			retIn.setContactName("临时用户");
-		ParkAccountType cardType = ParkMethod.ParkAccountTypeByType(in.getCardType());
-		if(cardType != null)
-			retIn.setCardTypeName(cardType.getaName());
-		retIn.setCarTypeId(in.getCardType().toString());
-		if(in.getCarNoType()!= null)
-			retIn.setCarNoType(in.getCarNoType().toString());
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss sss");		
-		retIn.setInTime(sdf.format(in.getInTime()));
-		retIn.setInPic(in.getInPic());
-		if(in.getInWay() != null)
-		{
-			retIn.setInWay(in.getInWay().toString());
-			retIn.setInWayName(ParkMethod.GetInWayName(in.getInWay()));
-		}
-		if(in.getSmall() != null)
-			retIn.setSmall(in.getSmall().toString());
-		retIn.setDataOrigin(dataOrign);
-		retIn.setCreator(in.getInUserName());
-		retIn.setCreateTime(in.getInTime());
-		retIn.setParkingNo(parkNo);
-		if(in.getIsDelete() != null)
-			retIn.setDeleteCode( in.getIsDelete().intValue());
-		return retIn;
-		}
-		catch(Exception ex)
-		{
+		catch(Exception ex) {
 			return null;
 		}
 	}
 	
-	public ParkCarOutVO getParkCarOutModel(ParkCarOut out)
-	{
-		try
-		{
-		if(out == null)
-			return null;
-		ParkCarOutVO retOut = new ParkCarOutVO();
-		retOut.setObjectId(out.getGuid());
-		retOut.setEntranceId(out.getInMachNo().toString());
-		ParkChannelSet channel = new ParkChannelSet();
-		channel.setMachNo(out.getInMachNo().intValue());
-		List<ParkChannelSet> channels  = parkChannelSetMapper.selectByCondition(channel);
-		if(channels.get(0) != null)
-		{
-			retOut.setEntranceName(channel.getChannelName());
-			retOut.setInControlIp(channel.getChannelIp());
-		}
-		retOut.setEntranceName(out.getInUserName());
-		retOut.setAppearancesId(out.getOutMachNo().toString());
-//		channel = ParkMethod.getChannelSetByControlIndex(out.getOutMachNo());
-		ParkChannelSet channelout = new ParkChannelSet();
-		channelout.setMachNo(out.getOutMachNo().intValue());
-		List<ParkChannelSet> channelouts  = parkChannelSetMapper.selectByCondition(channelout);
-		if(channelouts != null && channelouts.size()>0)
-		{
-			retOut.setAppearancesName(channelouts.get(0).getChannelName());
-			retOut.setOutCcontrolIp(channelouts.get(0).getChannelIp());
-		}
-		retOut.setAppearancesUserName(out.getOutUserName());
-		retOut.setCardId(out.getCardId());
-		retOut.setCarNo(out.getOutCarNo());
-		retOut.setNextCarNo(out.getBackOutCarNo());
-		retOut.setCorrectCarNo(null);
-		VwParkCarIsuse carIssue = new VwParkCarIsuse();
-		carIssue.setCarNo(out.getOutCarNo());
-		VwParkCarIsuse vwParkCarIsuse = vwParkCarIsuseMapper.selectMonthCar(carIssue);
-		if(vwParkCarIsuse != null)
-		{
-			retOut.setContactName(vwParkCarIsuse.getPerName());			
-		}
-		else
-			retOut.setContactName("临时用户");
-		retOut.setCarTypeId(out.getCardType().toString());
-		ParkAccountType cardType = ParkMethod.ParkAccountTypeByType(out.getCardType());
-		if(cardType != null)
-			retOut.setCardTypeName(cardType.getaName());	
-		if(out.getCarNoType() != null)
-			retOut.setCarNoType(out.getCarNoType().toString());
-		if(out.getFreeType() != null)
-			retOut.setFreeType(out.getFreeType().toString());
-		retOut.setInTime(out.getInTime());
-//		retOut.setInWay(out.getinw().toString());
-//		retOut.setInWayName(ParkMethod.GetInWayName(out.getInWay()));
-		retOut.setInPic(out.getInPic());
-		retOut.setCentralTime(out.getCentrialTime());
-		retOut.setOutTime(out.getOutTime());
-		retOut.setOutPic(out.getOutPic());
-		if(out.getPayType() != null)
-			retOut.setPayType(out.getPayType().toString());
-		if(out.getPayCharge() != null)
-			retOut.setPayCharge(Double.parseDouble(out.getPayCharge().toString()));
-		if(out.getBalanceMoney() != null)
-			retOut.setBalanceMoney(Double.parseDouble(out.getBalanceMoney().toString()));
-		if(out.getDiscountNo() != null)
-			retOut.setDiscountNo(out.getDiscountNo().toString());
-		if(out.getTypeId() != null)
-			retOut.setTypeId(out.getTypeId().toString());
-		retOut.setDiscountTime(out.getDiscountTime());
-		if(out.getDisAmount() != null)
-			retOut.setDisAmount(Double.parseDouble(out.getDisAmount().toString()));
-		if(out.getAccountCharge() != null)
-			retOut.setAccountCharge(Double.parseDouble(out.getAccountCharge().toString()));
-		if(out.getIsOut() != null)
-			retOut.setIsOut(out.getIsOut().toString());
-		retOut.setUnusualMemo(out.getMemo());
-		if(out.getOutWay() != null)
-		{
-		retOut.setOutWay(out.getOutWay().toString());
-		retOut.setOutWayName(ParkMethod.GetOutWayName(out.getOutWay()));
-		}
-		retOut.setDataOrigin(dataOrign);	
-		retOut.setCreator("system");
-		retOut.setCreateTime(out.getOutTime());
-		retOut.setParkingNo(parkNo);
-		return retOut;	
-		}
-		catch(Exception ex)
-		{
+	public ParkCarOutVO getParkCarOutModel(ParkCarOut out) {
+		try {
+			if(out == null||out.getGuid()==null){
+				return null;
+			}
+
+			ParkCarOutVO retOut = new ParkCarOutVO();
+			retOut.setObjectId(out.getGuid());
+			retOut.setEntranceId(out.getInMachNo().toString());
+			ParkChannelSet channel = parkChannelSetMapper.selectByMachNo(out.getInMachNo());
+
+			if(channel != null) {
+				retOut.setEntranceName(channel.getChannelName());
+				retOut.setInControlIp(channel.getChannelIp());
+			}
+			retOut.setEntranceName(out.getInUserName());
+			retOut.setAppearancesId(out.getOutMachNo().toString());
+
+			ParkChannelSet channelout = parkChannelSetMapper.selectByMachNo(out.getOutMachNo());
+			if(channelout!=null) {
+				retOut.setAppearancesName(channelout.getChannelName());
+				retOut.setOutCcontrolIp(channelout.getChannelIp());
+			}
+
+			retOut.setAppearancesUserName(out.getOutUserName());
+			retOut.setCardId(out.getCardId());
+			retOut.setCarNo(out.getOutCarNo());
+			retOut.setNextCarNo(out.getBackOutCarNo());
+			retOut.setCorrectCarNo(null);
+			VwParkCarIsuse carIssue = new VwParkCarIsuse();
+			carIssue.setCarNo(out.getOutCarNo());
+			VwParkCarIsuse vwParkCarIsuse = vwParkCarIsuseMapper.selectMonthCar(carIssue);
+			if(vwParkCarIsuse != null){
+				retOut.setContactName(vwParkCarIsuse.getPerName());
+			}else{
+				retOut.setContactName("临时用户");
+			}
+			retOut.setCarTypeId(out.getCardType());
+			ParkAccountType cardType = ParkMethod.ParkAccountTypeByType(out.getCardType());
+			if(cardType != null) {
+				retOut.setCardTypeName(cardType.getaName());
+			}
+			if(out.getCarNoType() != null) {
+				retOut.setCarNoType(out.getCarNoType().toString());
+			}
+			if(out.getFreeType() != null) {
+				retOut.setFreeType(out.getFreeType().toString());
+			}
+			retOut.setInTime(out.getInTime());
+	//		retOut.setInWay(out.getinw().toString());
+	//		retOut.setInWayName(ParkMethod.GetInWayName(out.getInWay()));
+			if(out.getInPic()!=null) {
+				retOut.setInPic("/" + parkNo + out.getInPic());
+			}
+			retOut.setCentralTime(out.getCentrialTime());
+			retOut.setOutTime(out.getOutTime());
+			if(out.getOutPic()!=null) {
+				retOut.setOutPic("/" + parkNo + out.getOutPic());
+			}
+			if(out.getPayType() != null) {
+				retOut.setPayType(out.getPayType().toString());
+			}
+			if(out.getPayCharge() != null) {
+				retOut.setPayCharge(Double.parseDouble(out.getPayCharge().toString()));
+			}
+			if(out.getBalanceMoney() != null) {
+				retOut.setBalanceMoney(Double.parseDouble(out.getBalanceMoney().toString()));
+			}
+			if(out.getDiscountNo() != null) {
+				retOut.setDiscountNo(out.getDiscountNo().toString());
+			}
+			if(out.getTypeId() != null) {
+				retOut.setTypeId(out.getTypeId().toString());
+				retOut.setDiscountTime(out.getDiscountTime());
+			}
+			if(out.getDisAmount() != null) {
+				retOut.setDisAmount(Double.parseDouble(out.getDisAmount().toString()));
+			}
+			if(out.getAccountCharge() != null) {
+				retOut.setAccountCharge(Double.parseDouble(out.getAccountCharge().toString()));
+			}
+			if(out.getIsOut() != null) {
+				retOut.setIsOut(out.getIsOut().toString());
+			}
+			retOut.setUnusualMemo(out.getMemo());
+			if(out.getOutWay() != null) {
+				retOut.setOutWay(out.getOutWay().toString());
+				retOut.setOutWayName(ParkMethod.GetOutWayName(out.getOutWay()));
+			}
+			retOut.setDataOrigin(dataOrign);
+			retOut.setCreator("system");
+			retOut.setCreateTime(out.getOutTime());
+			retOut.setParkingNo(parkNo);
+			return retOut;
+		}catch(Exception ex) {
 			return null;
 		}
 	}
@@ -264,8 +274,8 @@ public class ConversionParameterClass {
 		else
 			VO.setRechargeCar(1);
 		}
-		if(model.getStrobeNo() != null)
-			VO.setOpenMacNum(model.getStrobeNo().toString());
+		if(model.getMachNo() != null)
+			VO.setOpenMacNum(model.getMachNo().toString());
 		
 		VO.setMac(model.getDsn());
 		if(model.getInOut() != null)
@@ -429,21 +439,24 @@ public class ConversionParameterClass {
 			VO.setFrontDate(model.getFrontDate());
 			VO.setStartTime(model.getStartDate());
 			VO.setEndTime(model.getEndDate());
-			if(model.getBeforeMoney() !=  null)
-				VO.setRechargeMoney(model.getBeforeMoney().doubleValue());
-			if(model.getBalanceMoney() != null)
-				VO.setBalanceMoney(model.getBalanceMoney().doubleValue());
+			if(model.getBalanceMoney() !=  null)
+				VO.setRechargeMoney(model.getBalanceMoney().doubleValue());
+			if(model.getBeforeMoney() != null)
+				VO.setBalanceMoney(model.getBeforeMoney().doubleValue());
 			if(model.getForegift() != null)
 				VO.setDeposit(model.getForegift().doubleValue());
 			if(model.getPayType() != null)
 				VO.setPayType(model.getPayType().intValue());
 			VO.setTransactionNumber(model.getOrderNo());
-			if(model.getOperType() != null)
+			if(model.getOperType() != null){
 				VO.setOperationType(model.getOperType());
+			}
+
 			VO.setDataOrigin(dataOrign);
 			VO.setCreateTime(model.getCreateDate());
 			VO.setCreator("system");
 			VO.setParkingNo(parkNo);
+			VO.setParkingName(parkName);
 			return VO;
 		}
 		catch(Exception ex)
@@ -496,7 +509,7 @@ public class ConversionParameterClass {
 	
 	public ParkCenterPayment getParkCenterPayment(ParkCentralCharge model)
 	{
-		if(model == null) return null;
+		if(model == null||model.getPuid()==null) return null;
 		ParkCenterPayment Vo =null;
 		try
 		{
@@ -505,25 +518,14 @@ public class ConversionParameterClass {
 			Vo.setInMachNo(model.getInMachNo());
 //			ParkChannelSet channel = ParkMethod.getChannelSetByControlIndex(model.getInMachNo());
 			ParkChannelSet channelout = new ParkChannelSet();
-			channelout.setMachNo(model.getInMachNo().intValue());
-			List<ParkChannelSet> channelouts  = parkChannelSetMapper.selectByCondition(channelout);
-			if(channelouts != null && channelouts.size()>0)
-				Vo.setEntrance(channelouts.get(0).getChannelName());
+			channelout.setMachNo(model.getInMachNo().intValue());			
 			Vo.setCarNo(model.getCarNo());
 			Vo.setCardId(model.getCardId());
 			Vo.setCardNo(model.getCardNo());
 			Vo.setcFlag(model.getcFlag().intValue());
-			Vo.setCardType(model.getCardType().toString());
-			ParkAccountType cardType = ParkMethod.ParkAccountTypeByType(model.getCardType());
-			if(cardType != null)
-				Vo.setCardTypeName(cardType.getaName());
+			Vo.setCardType(model.getCardType());
 			Vo.setFreeType(model.getFreeType());
-			Vo.setInTime(model.getInTime());
-			ParkCarIn carIn= parkCarInMapper.selectByPrimaryKey(Integer.parseInt(model.getInId()));
-			if(carIn != null)
-			{
-				Vo.setInUserName(carIn.getInUserName());
-			}
+			Vo.setInTime(model.getInTime());			
 			Vo.setOverTimeS(model.getOverTime());
 			Vo.setPayChargeTime(model.getPayChargeTime());
 			Vo.setPayType(model.getPayType().intValue());
@@ -546,6 +548,17 @@ public class ConversionParameterClass {
 			Vo.setCreator("system");
 			Vo.setCreateTime(model.getPayChargeTime());
 			Vo.setParkingNo(parkNo);
+			List<ParkChannelSet> channelouts  = parkChannelSetMapper.selectByCondition(channelout);
+			if(channelouts != null && channelouts.size()>0)
+				Vo.setEntrance(channelouts.get(0).getChannelName());
+			ParkAccountType cardType = ParkMethod.ParkAccountTypeByType(model.getCardType());
+			if(cardType != null)
+				Vo.setCardTypeName(cardType.getaName());			
+			ParkCarIn carIn= parkCarInMapper.selectByGuid(model.getInId());
+			if(carIn != null)
+			{
+				Vo.setInUserName(carIn.getInUserName());
+			}
 		}
 		catch(Exception ex)
 		{}
@@ -767,8 +780,10 @@ public class ConversionParameterClass {
 			vo = new CouPonEqInfo();
 			vo.setBusinessName(model.getEqName());
 			vo.setRemark(model.getMemo());
-			if(model.getDelFrag() != null)
-				vo.setDeleteCode(model.getDelFrag().intValue());
+			if(model.getDelFrag() != null) {
+                vo.setDeleteCode(model.getDelFrag().intValue());
+            }
+            vo.setStatus(0);
 			vo.setDataOrigin(dataOrign);
 			vo.setObjectId(model.getEuid());
 		}
@@ -786,10 +801,7 @@ public class ConversionParameterClass {
 			vo = new CouponRules();
 			vo.setDataOrigin(dataOrign);
 			vo.setObjectId(model.getPuid());
-			vo.setBusinessId(model.getDiscountId());
-
-//			vo.setDiscountID(model.getDiscountId());
-
+			vo.setDiscountId(model.getDiscountId());
 			vo.setDiscountName(model.getDiscountName());
 			if(model.getDiscountType() != null)
 				vo.setDisType(model.getDiscountType().intValue());
@@ -804,6 +816,7 @@ public class ConversionParameterClass {
 			vo.setLastUpdateTime(model.getModifyDate());
 			ParkEquipments eqModel = parkEquipmentsMapper.selectByPrimaryKey(model.getEqid());
 			vo.setBusinessName(eqModel.getEqName());
+			vo.setBusinessId(eqModel.getEuid());
 		}
 		catch(Exception ex)
 		{}
@@ -938,12 +951,27 @@ public class ConversionParameterClass {
 		timeoutFeeVO.setTimeoutFee(parkOverTimeSet.getOverTimeAmount());
 		timeoutFeeVO.setTimeout(parkOverTimeSet.getOverTimeMinute());
 		timeoutFeeVO.setIsfree(parkOverTimeSet.getFreeInclude());
-//		timeoutFeeVO.setCreateTime(new Date());
-//		timeoutFeeVO.setCreator("system");
-//		timeoutFeeVO.setLastUpdateName("system");
-//		timeoutFeeVO.setLastUpdateTime(new Date());
 		timeoutFeeVO.setParkingNo(parkNo);
 		timeoutFeeVO.setDataOrigin(dataOrign);
 		return timeoutFeeVO;
 	}
+
+    /**
+     * 车场授权数据的上传
+     * @return
+     */
+	public ServerInfoVo convertServerInfo(){
+		this.parkName=GlobalPark.properties.getProperty("PROJECT_NAME");
+	    ServerInfoVo serverInfoVo=new ServerInfoVo();
+	    serverInfoVo.setObjectId(GlobalPark.sysMap.get("cpuid")+GlobalPark.sysMap.get("mac"));
+        serverInfoVo.setCpuId(GlobalPark.sysMap.get("cpuid"));
+        serverInfoVo.setIpAddress(GlobalPark.sysMap.get("ip"));
+        serverInfoVo.setMacAddress(GlobalPark.sysMap.get("mac"));
+        serverInfoVo.setRunType("1");
+        serverInfoVo.setParkingNo("");
+        serverInfoVo.setParkingName(parkName);
+        serverInfoVo.setDataOrigin(dataOrign);
+        serverInfoVo.setDeleteCode(0);
+        return serverInfoVo;
+    }
 }

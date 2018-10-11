@@ -1,6 +1,8 @@
 
 package com.drzk.offline.vo;
 
+import java.io.Serializable;
+
 /**
  * 岗亭登录 <br>
  * Date: 2018年7月30日 上午9:23:13 <br>
@@ -10,7 +12,12 @@ package com.drzk.offline.vo;
  * @since JDK 1.8
  * @see
  */
-public class BoxLoginBody extends SuperBody {
+public class BoxLoginBody implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5825752634032499312L;
+	private String uId;
 	private String boxIP; // 岗亭Ip
 	private String equipmentMac; // 设备编号
 	private String loginType; // 登入类型 0-用户，1，扫码
@@ -136,6 +143,14 @@ public class BoxLoginBody extends SuperBody {
 	*/
 	public void setqRCode(String qRCode) {
 		this.qRCode = qRCode;
+	}
+
+	public String getuId() {
+		return uId;
+	}
+
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	
 	

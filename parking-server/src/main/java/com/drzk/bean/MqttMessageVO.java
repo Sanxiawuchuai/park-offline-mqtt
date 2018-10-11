@@ -1,6 +1,8 @@
 
 package com.drzk.bean;
 
+import java.io.Serializable;
+
 /**
  * ClassName:MqttMessageVO <br>
  * Date: 2018年6月21日 下午6:17:27 <br>
@@ -10,7 +12,8 @@ package com.drzk.bean;
  * @since JDK 1.8
  * @see
  */
-public class MqttMessageVO {
+public class MqttMessageVO implements Serializable {
+	private static final long serialVersionUID = -3916032265621812778L;
 	
 	private int status;
 	private String topic;

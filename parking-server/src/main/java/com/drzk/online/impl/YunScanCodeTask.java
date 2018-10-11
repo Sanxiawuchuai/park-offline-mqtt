@@ -1,4 +1,4 @@
-package com.drzk.online.impl;
+/*package com.drzk.online.impl;
 
 import com.drzk.online.service.YunEventSever;
 import com.drzk.utils.JsonUtil;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 
-/**
+*//**
  * 扫码出入场、云端缴费处理
  * @author yxf
  *
- */
+ *//*
 @Component
 @Scope("prototype")
 public class YunScanCodeTask implements Runnable
@@ -52,8 +52,9 @@ public class YunScanCodeTask implements Runnable
 		try {
 			Method classMethod = clazz.getMethod(method, String.class);			
 			classMethod.invoke(yunEventSever, json);
-		} catch (Exception e) {
-			LoggerUntils.error(logger, e);
+		} catch (Exception ex) {
+			logger.error("获取大小车场:",ex);
 		}
 	}
 }
+*/

@@ -10,7 +10,7 @@ package com.drzk.service.entity;
  * @see
  */
 public class SuperBody {
-	
+
 	private String uId;
 
 	

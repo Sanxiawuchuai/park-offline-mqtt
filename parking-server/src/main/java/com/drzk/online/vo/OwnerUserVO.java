@@ -1,11 +1,17 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf
  * 车主用户
  */
-public class OwnerUserVO {
-	 private Integer perId ; //人员表编号
+public class OwnerUserVO implements Serializable {
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8033796599805144753L;
+	private Integer perId ; //人员表编号
      private String carNo ;//车牌号码
      private String tel ; //手机号
      private Integer cardTypeId ;//卡类型

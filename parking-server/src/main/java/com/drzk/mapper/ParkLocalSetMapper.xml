@@ -319,7 +319,7 @@
     <select id="selectByUuid" parameterType="java.lang.String" resultType="java.lang.Integer">
         select box_id
         from park_local_set
-         where luid =#{luid}
+         where del_frag =0 and luid =#{luid}
     </select>
 
 </mapper>

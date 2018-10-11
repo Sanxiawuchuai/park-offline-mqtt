@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class PerCompany {
-    private Integer id;
+public class PerCompany implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2218719710230913564L;
+
+	private Integer id;
 
     private String cuid;
 

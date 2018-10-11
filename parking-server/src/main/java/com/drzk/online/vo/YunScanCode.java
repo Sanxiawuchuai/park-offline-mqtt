@@ -3,6 +3,7 @@ package com.drzk.online.vo;
 
 public class YunScanCode<H,B>
 {
+
 	private H head;
 	
 	private B body;

@@ -2,9 +2,8 @@ package com.drzk.online.vo;
 
 import java.util.Date;
 
-public class ParkUnusualCarOutVO extends SuperBody
+public class ParkUnusualCarOutVO extends OnlineBody
 {
-
 	private String carNo;
 	private String contactName;
 	private Integer carTypeId;

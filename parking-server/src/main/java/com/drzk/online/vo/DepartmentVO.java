@@ -1,11 +1,17 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf
  * 部门信息
  */
-public class DepartmentVO{
-	 private Integer organizeId;//部门编号
+public class DepartmentVO implements Serializable{
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5968577149100489524L;
+	private Integer organizeId;//部门编号
 	 private Integer  parentId;//上级部门编号
 	 private String organizeName; //部门名称
 	 private String categoryCode;//类型

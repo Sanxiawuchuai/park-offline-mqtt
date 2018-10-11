@@ -3,20 +3,18 @@ package com.drzk.timer;
 
 import com.drzk.common.ParkMethod;
 import com.drzk.mapper.ParkStandardChargeMapper;
-import com.drzk.mapper.SysParametersMapper;
-import com.drzk.mapper.VwParkCarIsuseMapper;
-import com.drzk.mapper.YktCardIssueRelMapper;
 import com.drzk.offline.vo.CenterUpdateVO;
 import com.drzk.online.service.OnlineDSScanSever;
+import com.drzk.online.service.ParkConfigService;
 import com.drzk.parklib.load.LoadChannelPara;
-import com.drzk.parklib.send.MainBoardSdk;
 import com.drzk.service.ILoadDeviceListService;
-import com.drzk.service.entity.*;
+import com.drzk.service.entity.Head;
+import com.drzk.service.entity.MainBoardMessage;
+import com.drzk.service.impl.ClientMQTT;
+import com.drzk.utils.CompUtils;
 import com.drzk.utils.GlobalPark;
 import com.drzk.utils.JsonUtil;
-import com.drzk.utils.LoggerUntils;
-import com.drzk.utils.StringUtils;
-import com.drzk.vo.*;
+import com.drzk.vo.ParkStandardCharge;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -35,10 +33,10 @@ import java.util.List;
  */
 
 @Component
-@Scope("singleton")
+@Scope("prototype")
 public class CenterUpdateTask implements Runnable {
 	@Autowired
-	private SysParametersMapper sysParametersMapper;
+	private ParkConfigService parkConfigService;
 	@Autowired
 	private ILoadDeviceListService loadDeviceService;
 	@Autowired
@@ -76,27 +74,28 @@ public class CenterUpdateTask implements Runnable {
 			 */
 
 			switch (type) {
-			case 1:
+			case 1://车牌授权
 				loadDeviceService.loadUserInfo();
 				onlineDSScanSever.parkcaruser();
 				onlineDSScanSever.parkcaroperation();
 				break;
-			case 2:
+			case 2://人员档案信息
 				onlineDSScanSever.personnelinfo();
 				break;
-			case 3:
-				reloadSysPara(VO);
+			case 3: //车场系统更改
+				reloadSysPara();
 				onlineDSScanSever.parksetting();
 				//推送车场参数到岗亭
 				ParkMethod.pushToBoxs();
 				break;
-			case 4:
+			case 4://岗亭设置
 				reloadBoxSet(VO);
 				onlineDSScanSever.boxinfo();
 				//推送车场参数到岗亭
 				ParkMethod.pushToBoxs();
 				break;
-			case 5:
+			case 5: //控制器设置
+				GlobalPark.parkDeviceStatus.clear();//控制有变化清空状态
 				reloadChannelSet(VO);
 				onlineDSScanSever.controllerinfo();
 				//推送车场参数到岗亭
@@ -108,74 +107,79 @@ public class CenterUpdateTask implements Runnable {
 				//推送车场参数到岗亭
 				ParkMethod.pushToBoxs();
 				break;
-			case 7:
+			case 7: //收费设置
 				reloadChargeStandard(VO);
 				onlineDSScanSever.feescale();
 				break;
-			case 8:
+			case 8://黑白单设置
 				onlineDSScanSever.parkblackcar();
 				break;
-			case 9:
+			case 9://月租费率设置
 				onlineDSScanSever.parkmonthlyfeetype();
 				break;
-			case 10:
+			case 10://车位组设置
 				onlineDSScanSever.carGroupInfo();
 				break;
-			case 11:
+			case 11://部门设置
 				onlineDSScanSever.departmentinfo();
 				break;
-			case 12:
+			case 12://打折模式设置
+				reloadDisInfo();
 				onlineDSScanSever.couponrule();
 				//推送车场参数到岗亭
 				ParkMethod.pushToBoxs();
 				break;
-				case 13:
+			case 13: //打折商家设置
+				reloadEquipmentsInfo();
 				onlineDSScanSever.couponeqinfo();
-				//推送车场参数到岗亭
+				// 推送车场参数到岗亭
 				ParkMethod.pushToBoxs();
 				break;
-			case 14:
+			case 14://车牌授权
 				loadDeviceService.loadUserInfo();
 				onlineDSScanSever.parkcaruser();				//同步车主信息
 				onlineDSScanSever.parkcaroperation();
 				break;
 				//---------------------------以下只限调试 
-			case 15:
+			case 15://车场级别重授权下发硬件
 				onlineDSScanSever.parkcarin();
 				break;
-			case 16:
-				onlineDSScanSever.companyinfo();;
+			case 16://公司信息设置
+				onlineDSScanSever.companyinfo();
 				break;
-			case 17:
+			case 17://免费车设置
 				reloadFreeInfo();
                 ParkMethod.pushToBoxs();
 				break;
-			case 18:
+			case 18://超时收费设置
 				onlineDSScanSever.pushOverTimes();
+				break;
+			case 20://车场编号授权
+				parkConfigService.reloadSysParams();			//重新加载参数
+				onlineDSScanSever.reportAuth();
 				break;
 			default:
 				break;
 			}
-		} catch (Exception e) {
-			LoggerUntils.error(logger, e);
+		} catch (Exception ex) {
+			logger.error("后台管理数据发送线程:", ex);
 		}
-
 	}
 
 	/** 重新加载系统参数 
 	 * @throws Exception */
-	private void reloadSysPara(CenterUpdateVO VO) throws Exception {
-		List<SysParameters> sysPara = sysParametersMapper.selectAll();
+	private void reloadSysPara() throws Exception {
+		parkConfigService.reloadSysParams();
 
-		// 服务器内存更新
-		for (SysParameters sysParameters : sysPara) {
-			String key = sysParameters.getParameterCode();
-			String value = sysParameters.getParameterValue();
-			//System.out.println("key:"+ key);
-			if(GlobalPark.properties.containsKey(key) && !StringUtils.isNullOrEempty(value)) {
-				GlobalPark.properties.setProperty(key, value);
-			}
-		}
+		//重新启动与云端之间的通讯
+		if("1".equals(GlobalPark.properties.getProperty("UPLOAD_DATA_CLOUD"))&&"1".equals(GlobalPark.properties.getProperty("CLOUD_STATUS"))) {
+			//加载服务器相关的参数
+			CompUtils.getAllSn();
+			ClientMQTT.start();
+		}else{
+            ClientMQTT.unScribe();         //取消相关的订阅
+        }
+
 		// 车场参数加载到主板
 		LoadChannelPara.loadPara();
 	}
@@ -183,7 +187,7 @@ public class CenterUpdateTask implements Runnable {
 	/** 重新加载岗亭设置 */
 	private void reloadBoxSet(CenterUpdateVO VO) {
 		// 内存更新
-		GlobalPark.parkLocalSet.clear();
+//		GlobalPark.parkLocalSet.clear();
 		loadDeviceService.getWorkStation();
 	}
 
@@ -217,5 +221,15 @@ public class CenterUpdateTask implements Runnable {
 	private void reloadFreeInfo(){
 		GlobalPark.parkFreeType.clear();		//清除免费类型
 		loadDeviceService.getFreeTypeInfo();
+	}
+	/**加载优惠模式*/
+	private void reloadDisInfo(){
+		GlobalPark.parkDisInfo.clear();		//清除优惠模式
+		loadDeviceService.getDisInfo();
+	}
+	/**加载优惠模式*/
+	private void reloadEquipmentsInfo(){
+		GlobalPark.parkEquipments.clear();		//清除优惠模式
+		loadDeviceService.getEquipmentsInfo();
 	}
 }

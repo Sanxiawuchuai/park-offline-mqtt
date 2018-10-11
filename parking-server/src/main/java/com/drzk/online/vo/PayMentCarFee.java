@@ -1,7 +1,13 @@
 package com.drzk.online.vo;
 
-public class PayMentCarFee
+import java.io.Serializable;
+
+public class PayMentCarFee implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2416267793531765987L;
 	private String carNo;
 	private String entryTime;
 	private String payTime;
@@ -11,8 +17,9 @@ public class PayMentCarFee
 	private float couponAmount;
 	private Integer paymentType;
 	private String paymentTnx;
-	private Integer channelId;
+//	private Integer channelId;
 	private Integer payType;
+	private String dsn;
 	
 	/** 支付类型0，现金支付，1微信支付,2，支付宝支付,3,银联闪付，4，交通卡支付，5,自助缴费机,6，其它 */
 	public Integer getPayType()
@@ -108,15 +115,14 @@ public class PayMentCarFee
 	{
 		this.paymentTnx = paymentTnx;
 	}
-	/** 可为空 通道编号 */
-	public Integer getChannelId()
+	public String getDsn()
 	{
-		return channelId;
+		return dsn;
 	}
-	/** 可为空 通道编号 */
-	public void setChannelId(Integer channelId)
+	public void setDsn(String dsn)
 	{
-		this.channelId = channelId;
+		this.dsn = dsn;
 	}
+	 
 	
 }

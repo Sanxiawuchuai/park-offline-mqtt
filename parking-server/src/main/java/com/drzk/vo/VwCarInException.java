@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class VwCarInException {
+public class VwCarInException implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -354775834373611920L;
+
+	/**
      * 自增长id
      */
     private Integer id;

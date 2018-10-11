@@ -116,7 +116,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from park_effet_times
-		where card_type = #{cardType,jdbcType=INTEGER}
+		where s_type >0 and card_type = #{cardType,jdbcType=INTEGER}
 	</select>
 
 </mapper>

@@ -1,9 +1,8 @@
 package com.drzk.online.vo;
 
 
-public class ParkDepartmentVO extends SuperBody
+public class ParkDepartmentVO extends OnlineBody
 {
-
 	private String companyId;
 	private String companyName;
 	private String departmentName;	

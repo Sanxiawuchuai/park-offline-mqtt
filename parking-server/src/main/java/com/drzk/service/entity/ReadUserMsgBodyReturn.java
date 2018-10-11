@@ -1,6 +1,15 @@
 package com.drzk.service.entity;
+
+import java.io.Serializable;
+
 //读取用户信息返回实体
-public class ReadUserMsgBodyReturn  extends SuperBody{
+public class ReadUserMsgBodyReturn implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6313751981374376681L;
+	private String uId;
 	//车辆类型 
 	private String carType;
 	//储值车工作模式 00-自动，01-确认
@@ -60,6 +69,12 @@ public class ReadUserMsgBodyReturn  extends SuperBody{
 	}
 	public void setListType(String listType) {
 		this.listType = listType;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	//储值金额，单位为分
 	private String storedValue;

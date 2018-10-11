@@ -1,7 +1,15 @@
 package com.drzk.service.entity;
 
-public class ParkCarPlaceBody extends SuperBody
+import java.io.Serializable;
+
+public class ParkCarPlaceBody implements Serializable
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8736230942136391716L;
+	private String uId;
 	private String placeNumSum;	
 	private String overPlusNum;
 	private String monSumNum;
@@ -107,5 +115,11 @@ public class ParkCarPlaceBody extends SuperBody
 	public String getPlaceNumSum()
 	{
 		return placeNumSum;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 }

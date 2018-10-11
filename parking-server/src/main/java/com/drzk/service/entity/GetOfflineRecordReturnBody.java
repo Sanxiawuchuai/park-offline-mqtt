@@ -1,10 +1,23 @@
 package com.drzk.service.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 //2.15. 获取车场记录返回实体
-public class GetOfflineRecordReturnBody extends SuperBody {
+public class GetOfflineRecordReturnBody implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1891855123668170542L;
 	private String parkingNo; //车场编号
+	private String uId;
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
+	}
 	public String getParkingNo() {
 		return parkingNo;
 	}

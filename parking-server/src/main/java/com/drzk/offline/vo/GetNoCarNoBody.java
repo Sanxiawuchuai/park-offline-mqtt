@@ -1,9 +1,14 @@
 package com.drzk.offline.vo;
 
-public class GetNoCarNoBody extends SuperBody
+import java.io.Serializable;
+
+public class GetNoCarNoBody implements Serializable
 {
-
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7982234009514245497L;
+	private String uId;
 	private String controlIP;//控制器IP
 	private String equipmentID;//硬件设备编号
 	private String nopCarNo;//无牌车车牌
@@ -54,6 +59,12 @@ public class GetNoCarNoBody extends SuperBody
 	 */
 	public void setNopCarNo(String nopCarNo) {
 		this.nopCarNo = nopCarNo;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 	
 	

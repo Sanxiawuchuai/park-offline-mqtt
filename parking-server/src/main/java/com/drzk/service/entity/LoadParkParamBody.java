@@ -1,12 +1,19 @@
 package com.drzk.service.entity;
 
-import java.util.Date;
-
 import org.joda.time.DateTime;
 
-//加载车场系统参数实体
-public class LoadParkParamBody  extends SuperBody{
+import java.io.Serializable;
+import java.util.Date;
 
+//加载车场系统参数实体
+public class LoadParkParamBody implements Serializable{
+
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -405970756686450707L;
+	private String uId;
 	private String temporaryCarWorkingModel = "0";
 	private String monthlyCarWorkingModel = "0";
 	private String storedValueCarWorkingModel = "0";
@@ -239,6 +246,16 @@ public class LoadParkParamBody  extends SuperBody{
 
 	public String getFtpPassWord() {
 		return ftpPassWord;
+	}
+
+
+	public String getuId() {
+		return uId;
+	}
+
+
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 
 }

@@ -1,10 +1,16 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf 
  * 车主开户
  */
-public class AccountOpening {
+public class AccountOpening implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1686068516099866240L;
 	private Integer cardOperationId; // 编号
 	private String carNo;// 车牌号码
 	private String cardNo; // 卡号

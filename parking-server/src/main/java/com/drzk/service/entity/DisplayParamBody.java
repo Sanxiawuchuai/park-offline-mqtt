@@ -1,6 +1,14 @@
 package com.drzk.service.entity;
+
+import java.io.Serializable;
+
 //显示屏参数实体
-public class DisplayParamBody  extends SuperBody{
+public class DisplayParamBody  implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6523708409427163434L;
 	//显示模式 0-单层显示屏，1-又层显示屏,2-三层显示屏,3余位屏
 	private String disPalyType;
 	//时钟显示模式，0-现时:2015年12月10日10时50分星期三,1-20YY-MM_DD HH:MM 周 02：“20YY-MM-DD HH:MM ”03：“MM-DD HH:MM ”04：“HH:MM ”
@@ -15,6 +23,13 @@ public class DisplayParamBody  extends SuperBody{
 	private String outVoiceType;
 	//广告屏参数
 	private Advertisement advertisement;
+	private String uId;
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
+	}
 	public String getDisPalyType() {
 		return disPalyType;
 	}

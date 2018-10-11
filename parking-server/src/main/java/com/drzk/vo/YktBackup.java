@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class YktBackup {
+public class YktBackup implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2063735587471837361L;
+
+	/**
      * 
      */
     private Integer id;

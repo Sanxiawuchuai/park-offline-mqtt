@@ -14,7 +14,7 @@ import java.io.*;
  */
 public class FtpUtil {
 
-    private static Logger log = LoggerFactory.getLogger( FtpUtil.class );
+    private static Logger log = LoggerFactory.getLogger(FtpUtil.class);
     private static String SEPARATOR = "/";
 
     /**
@@ -26,64 +26,65 @@ public class FtpUtil {
      * @param password  FTP登录密码
      * @param basePath  FTP服务器基础目录
      * @param parkingNo 车场编号
-     * @param storePath FTP服务器文件存放路径
      * @param filePath  本地图片路径
-     * @param filename  上传到FTP服务器上的文件名
      * @return 成功返回服务器存储路径，否则返回null
      */
-    public static String uploadFile(String host, int port, String username, String password, String basePath,
-                                    String storePath, String filename, String filePath, String parkingNo) {
+    public static String uploadFile(String host, String port, String username, String password, String basePath, String localPath, String filePath, String parkingNo) {
+        String result=null;
         FTPClient ftp = new FTPClient();
         InputStream input = null;
+        int vsftpPort = port == null ? 21 : Integer.parseInt(port);
+
         try {
-            ftp.connect( host, port );// 连接FTP服务器
+            ftp.connect(host, vsftpPort);// 连接FTP服务器
             // 如果采用默认端口，可以使用ftp.connect(host)的方式直接连接FTP服务器
-            ftp.login( username, password );// 登录
+            ftp.login(username, password);// 登录
             int reply = ftp.getReplyCode();
-            if (!FTPReply.isPositiveCompletion( reply )) {
-                return null;
+            if (!FTPReply.isPositiveCompletion(reply)) {
+                return result;
             }
+            if (filePath == null || filePath.equals("")) return null;
+            int lastIndex = filePath.lastIndexOf(SEPARATOR);
+            String filename = filePath.substring(lastIndex + 1);
+            String storePath = filePath.substring(0, lastIndex);
             //切换目录
-            if (!createDirectory( basePath, parkingNo, storePath, ftp )) {
+            if (!createDirectory(basePath, parkingNo, storePath, ftp)) {
                 return null;
             }
             // 设置上传文件的类型为二进制类型
-            ftp.setFileType( FTP.BINARY_FILE_TYPE );
+            ftp.setFileType(FTP.BINARY_FILE_TYPE);
             // 上传文件
-            ftp.enterLocalPassiveMode();
+            //ftp.enterLocalPassiveMode();
             //加载图片
-            input = new FileInputStream( new File( filePath ) );
+            input = new FileInputStream(new File(localPath + filePath));
             // 上传文件
-            if (ftp.storeFile( filename, input )) {
-                return basePath + SEPARATOR + parkingNo + SEPARATOR + storePath + SEPARATOR + filename;
+            if (ftp.storeFile(filename, input)) {
+                result=basePath + SEPARATOR + parkingNo + storePath + SEPARATOR + filename;
             }
-            return null;
         } catch (IOException e) {
-            log.error( "上传图片文件异常：{}", e.getMessage(), e );
-            return null;
+            log.error("上传图片文件异常：",e);
         } finally {
             if (input != null) {
                 try {
                     input.close();
                 } catch (IOException e) {
-                    log.error( "上传图片关闭文件流异常：{}", e.getMessage(), e );
+                    log.error("上传图片关闭文件流异常：", e);
                 }
             }
             if (ftp.isConnected()) {
                 try {
                     ftp.logout();
                 } catch (IOException e) {
-                    log.error( "上传图片关闭ftp client异常：{}", e.getMessage(), e );
+                    log.error("上传图片关闭ftp client异常：", e);
                 }
                 try {
                     ftp.disconnect();
                 } catch (IOException e) {
-                    log.error( "上传图片断开ftp client异常：{}", e.getMessage(), e );
+                    log.error("上传图片断开ftp client异常：", e);
                 }
             }
-
+            return result;
         }
-
     }
 
     /**
@@ -96,18 +97,24 @@ public class FtpUtil {
      * @return 目录是否创建成功
      */
     private static boolean createDirectory(String basePath, String parkingNo, String filePath, FTPClient ftpClient) {
-        boolean bool = false;
         try {
-            String serverPath =basePath + SEPARATOR +  parkingNo + SEPARATOR + filePath;
+            String serverPath = basePath + SEPARATOR + parkingNo + filePath;
             // 一天只创建一次目录
-            boolean result = ftpClient.changeWorkingDirectory( serverPath );
+            boolean result = ftpClient.changeWorkingDirectory(serverPath);
             if (!result) {
-                String[] dirs = (parkingNo + SEPARATOR + filePath).split( SEPARATOR );
+                String[] dirs = (parkingNo + filePath).split(SEPARATOR);
+                result = ftpClient.changeWorkingDirectory(basePath);
+                if (!result) {
+                    return false;
+                }
                 //按顺序检查目录是否存在，不存在则创建目录
                 for (String dir : dirs) {
-                    if (!ftpClient.changeWorkingDirectory( dir )) {
-                        if (ftpClient.makeDirectory( dir )) {
-                            if (!ftpClient.changeWorkingDirectory( dir )) {
+                    if (dir == null || dir.equals("")) {
+                        continue;
+                    }
+                    if (!ftpClient.changeWorkingDirectory(dir)) {
+                        if (ftpClient.makeDirectory(dir)) {
+                            if (!ftpClient.changeWorkingDirectory(dir)) {
                                 return false;
                             }
                         } else {
@@ -115,10 +122,11 @@ public class FtpUtil {
                         }
                     }
                 }
+                result = ftpClient.changeWorkingDirectory(serverPath);
             }
-            return true;
+            return result;
         } catch (IOException e) {
-            log.error( "上传图片文件异常：{}", e.getMessage(), e );
+            log.error("上传图片文件异常：{}", e.getMessage(), e);
             return false;
         }
     }
@@ -142,11 +150,11 @@ public class FtpUtil {
         FTPClient ftp = new FTPClient();
         try {
             int reply;
-            ftp.connect( host, port );// 连接FTP服务器
+            ftp.connect(host, port);// 连接FTP服务器
             // 如果采用默认端口，可以使用ftp.connect(host)的方式直接连接FTP服务器
-            ftp.login( username, password );// 登录
+            ftp.login(username, password);// 登录
             reply = ftp.getReplyCode();
-            if (!FTPReply.isPositiveCompletion( reply )) {
+            if (!FTPReply.isPositiveCompletion(reply)) {
                 ftp.disconnect();
                 return result;
             }
@@ -171,13 +179,13 @@ public class FtpUtil {
             // }
             // }
             // }
-            createMultiDirectory( basePath, filePath, ftp );
+            createMultiDirectory(basePath, filePath, ftp);
 
             // 设置上传文件的类型为二进制类型
-            ftp.setFileType( FTP.BINARY_FILE_TYPE );
+            ftp.setFileType(FTP.BINARY_FILE_TYPE);
             // 上传文件
             ftp.enterLocalPassiveMode();
-            if (!ftp.storeFile( filename, input )) {
+            if (!ftp.storeFile(filename, input)) {
                 return result;
             }
             input.close();
@@ -199,14 +207,14 @@ public class FtpUtil {
     public static boolean createMultiDirectory(String basePath, String filePath, FTPClient ftpClient) {
         boolean bool = false;
         try {
-            String[] dirs = filePath.split( File.separator );
-            boolean flag = ftpClient.changeWorkingDirectory( basePath );
+            String[] dirs = filePath.split(File.separator);
+            boolean flag = ftpClient.changeWorkingDirectory(basePath);
 
             // 按顺序检查目录是否存在，不存在则创建目录
             for (int i = 0; dirs != null && i < dirs.length; i++) {
-                if (!ftpClient.changeWorkingDirectory( dirs[i] )) {
-                    if (ftpClient.makeDirectory( dirs[i] )) {
-                        if (!ftpClient.changeWorkingDirectory( dirs[i] )) {
+                if (!ftpClient.changeWorkingDirectory(dirs[i])) {
+                    if (ftpClient.makeDirectory(dirs[i])) {
+                        if (!ftpClient.changeWorkingDirectory(dirs[i])) {
                             return false;
                         }
                     } else {
@@ -241,22 +249,22 @@ public class FtpUtil {
         FTPClient ftp = new FTPClient();
         try {
             int reply;
-            ftp.connect( host, port );
+            ftp.connect(host, port);
             // 如果采用默认端口，可以使用ftp.connect(host)的方式直接连接FTP服务器
-            ftp.login( username, password );// 登录
+            ftp.login(username, password);// 登录
             reply = ftp.getReplyCode();
-            if (!FTPReply.isPositiveCompletion( reply )) {
+            if (!FTPReply.isPositiveCompletion(reply)) {
                 ftp.disconnect();
                 return result;
             }
-            ftp.changeWorkingDirectory( remotePath );// 转移到FTP服务器目录
+            ftp.changeWorkingDirectory(remotePath);// 转移到FTP服务器目录
             FTPFile[] fs = ftp.listFiles();
             for (FTPFile ff : fs) {
-                if (ff.getName().equals( fileName )) {
-                    File localFile = new File( localPath + "/" + ff.getName() );
+                if (ff.getName().equals(fileName)) {
+                    File localFile = new File(localPath + "/" + ff.getName());
 
-                    OutputStream is = new FileOutputStream( localFile );
-                    ftp.retrieveFile( ff.getName(), is );
+                    OutputStream is = new FileOutputStream(localFile);
+                    ftp.retrieveFile(ff.getName(), is);
                     is.close();
                 }
             }
@@ -279,22 +287,33 @@ public class FtpUtil {
     // ftp上传文件测试main函数
     public static void main(String[] args) {
         try {
-            //FileInputStream in = new FileInputStream( new File( "E:\\testUdp.dll" ) );
+           /* String filePath="/img/2018/09/12/bac/dfd.jpg";
+            int lastIndex=filePath.lastIndexOf( SEPARATOR );
+            String filename=filePath.substring( lastIndex+1);
+            String storePath=filePath.substring( 0,lastIndex );
+            System.out.println(storePath);
+            //FileInputStream in = new FileInputStream( new File( "E:\\testUdp.dll" ) );*/
             String path = uploadFile(
-                    "192.168.8.89",
-                    21,
-                    "vsftp",
-                    "test123456",
-                    "/home/vsftp",
-                    "2018/09/17",
-                    "timg4.jpg",
-                    "D:\\images\\timg5.jpg",
-                    "X251200121"
+                    "119.23.25.246",
+                    "21",
+                    "ftptem",
+                    "abc123456",
+                    "/tmp/uploudImg",
+                    "D:\\images\\342_2018-09-30_002330_big.jpg",
+                    "/2018/09/26/36_2018-09-26_173942_big.jpg",
+                    "image"
             );
-            System.out.println( path );
+            System.out.println(path);
+
+            //  /img/image/2018/09/26/23_2018-09-26_173629_big.jpg
             //"/home/vsftp",
             // "vsftp",
             //   "test123456",
+           /*
+           ftptem  ftp123456  /tmp/uploudImg
+            nasdir nasdir123456  /nasdir/gimage
+            vsftpd abc123456  /home/vsftpd
+            */
 
 //			String host = "192.168.1.41";
 //			int port = 2121;

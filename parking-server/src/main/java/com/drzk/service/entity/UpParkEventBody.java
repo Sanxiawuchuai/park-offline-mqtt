@@ -1,6 +1,15 @@
 package com.drzk.service.entity;
+
+import java.io.Serializable;
+
 //3.3. 上传车场事件(服务器订阅)实体
-public class UpParkEventBody  extends SuperBody{
+public class UpParkEventBody implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2987038369509319247L;
+	private String uId;
 	private String parkingNo;//车场编号
 	private String equipmentID;//设备编号
 	private String conIp;//控制器IP
@@ -112,5 +121,11 @@ public class UpParkEventBody  extends SuperBody{
 	}
 	public void setSmallBackPic(String smallBackPic) {
 		this.smallBackPic = smallBackPic;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 }

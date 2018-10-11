@@ -1,12 +1,14 @@
 package com.drzk.online.vo;
 
+
+
 /**
  * @author tf
  * 优惠券使用明细
  */
-public class CouponUseDetailsVO extends SuperBody
+public class CouponUseDetailsVO extends OnlineBody
 {
-	 private String objectId; //编号
+	private String objectId; //编号
      private String openId;//微信的openId
      private String discountID;//折扣ID
      private String discountTime;//打折时间

@@ -1,7 +1,13 @@
 package com.drzk.service.entity;
 
-public class HeadReturn {
-	 /// <summary>
+import java.io.Serializable;
+
+public class HeadReturn implements Serializable {
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8632007317797544L;
+	/// <summary>
     /// 0 成功 1失败
     /// </summary>
     private int status ;

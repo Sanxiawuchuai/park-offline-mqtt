@@ -1,11 +1,17 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf
  * 中央缴费记录
  */
-public class PaymentRecordVO {
-	 private Integer centerPaymentId;//中央缴费编号
+public class PaymentRecordVO implements Serializable {
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6333888502845933314L;
+	private Integer centerPaymentId;//中央缴费编号
 	 private Integer inMachNo;//入口机号
 	 private String entrance;//入口名称
 	 private String cardId;//卡ID（7Byte）

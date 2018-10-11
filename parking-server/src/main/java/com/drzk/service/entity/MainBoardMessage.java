@@ -1,7 +1,6 @@
 
 package com.drzk.service.entity;
 
-
 /**
  * 与主板通信消息的封装 <br>
  * 包含head 与 body,body是
@@ -12,7 +11,8 @@ package com.drzk.service.entity;
  * @since JDK 1.8
  * @see
  */
-public class MainBoardMessage<H,B> {
+public class MainBoardMessage<H,B>{
+
 	private H head;
 	private B body;
 	

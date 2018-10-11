@@ -22,6 +22,7 @@ public interface PerPersonsMapper {
 
     int updateStatus(@Param("status") Integer status,@Param("list") List<String> list);
 
+    PerPersons selectByUuid(@Param("puid")String puid);
 
     int insertOnline(PerPersons record);
 

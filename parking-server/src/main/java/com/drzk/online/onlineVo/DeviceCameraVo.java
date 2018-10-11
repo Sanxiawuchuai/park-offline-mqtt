@@ -12,7 +12,11 @@ import java.util.Map;
  */
 public class DeviceCameraVo implements Serializable {
 
-    public static Map<String,String> map=new HashMap<>(  );
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8654712354347582558L;
+	public static Map<String,String> map=new HashMap<>(  );
     static {
         map.put( "objectId","cuid" );
         map.put( "cameIp","camIp" );

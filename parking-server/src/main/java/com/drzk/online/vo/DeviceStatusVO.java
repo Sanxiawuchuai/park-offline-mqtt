@@ -1,10 +1,16 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf
  * 设备状态信息
  */
-public class DeviceStatusVO {
+public class DeviceStatusVO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -714157528364610143L;
 	private Integer plControllerId;//控制器机号(1-255)
     private String controllerName;//控制器名称
     private String boxName;//岗亭名称

@@ -12,7 +12,11 @@ import java.util.Map;
  */
 public class DeviceBoxVo implements Serializable {
 
-    public static Map<String,String> map=new HashMap<>(  );
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4102609320245736568L;
+	public static Map<String,String> map=new HashMap<>(  );
     static {
         map.put( "boxIp","boxIp" );
         map.put( "boxName","boxName" );

@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DownOffEvent {
 
-    private static Logger log = LoggerFactory.getLogger( DownOffEvent.class );
+    private static Logger log = LoggerFactory.getLogger("userLog");
 
     /**
      * 订阅线上的主题，根据方法名不能，存放到不同的表中
@@ -27,9 +27,6 @@ public class DownOffEvent {
         try {
             String method = JsonUtil.getMethodByJsonStr( jsonStr );
             switch (method) {
-               case ConstantUtil.PROJECT_METHOD:    // 基础项目信息同步
-            	   downOfService.syBaseProject(jsonStr);
-            	   break;
                 case ConstantUtil.BLACK_CAR_METHOD:                //特殊车辆同步
                     downOfService.syCarBlackInfo( jsonStr );
                     break;
@@ -70,10 +67,24 @@ public class DownOffEvent {
                 case ConstantUtil.HAIRPIN_METHOD:                   //发行车牌同步(同时保存账户操作记录)
                     downOfService.syncIssueInfo(jsonStr);
                     break;
+                case ConstantUtil.BATCH__RENT_PARKING:                   //发行车牌同步(同时保存账户操作记录)
+                    downOfService.syncBatchRentParking(jsonStr);
+                    break;
+                case ConstantUtil.OPEN_DOOR:                   //远程开闸
+                    downOfService.syncOpenDoor(jsonStr);
+                    break;
             }
         } catch (Exception e) {
-            log.debug( "线上同步数据异常:" + e.getMessage() );
+            log.error( "线上同步数据异常:",e);
         }
     }
 
+    /**
+     * 云端下发车场编号，存放到数据库中
+     * @param json
+     */
+    public static void lowerNum(String json){
+        DownOfService downOfService = SpringUtil.getBean( DownOfService.class );
+        downOfService.lowerNum(json);       //下发车场操作
+    }
 }

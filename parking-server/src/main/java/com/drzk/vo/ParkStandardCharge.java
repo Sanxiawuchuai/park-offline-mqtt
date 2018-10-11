@@ -1,13 +1,18 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 计费规则设置
  */
-public class ParkStandardCharge {
+public class ParkStandardCharge implements Serializable {
 
-    private Integer id;                     //主键id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7329953407961887034L;
+	private Integer id;                     //主键id
     private String puid;                    //uuid
     private Integer cardType;               //卡类型
     private Integer freeTime;               //免费时间

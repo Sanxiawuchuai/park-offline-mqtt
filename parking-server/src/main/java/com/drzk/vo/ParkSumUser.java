@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ParkSumUser {
+public class ParkSumUser implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2431380213068228149L;
+
+	/**
      * 
      */
     private Integer id;
@@ -11,7 +17,7 @@ public class ParkSumUser {
     /**
      * 岗亭编号
      */
-    private Integer boxId;
+    private Integer boxId=0;
 
     /**
      * 登入时间
@@ -36,114 +42,112 @@ public class ParkSumUser {
     /**
      * 手动开闸
      */
-    private Integer handGate;
+    private Integer handGate=0;
 
     /**
      * 计算机开闸
      */
-    private Integer computerGate;
+    private Integer computerGate=0;
 
     /**
      * 临时车入场数
      */
-    private Integer tempCarIn;
+    private Integer tempCarIn=0;
 
     /**
      * 临时车出场数
      */
-    private Integer tempCarOut;
+    private Integer tempCarOut=0;
 
     /**
      * 月租车入场数
      */
-    private Integer monthCarIn;
+    private Integer monthCarIn=0;
 
     /**
      * 月租车出场数
      */
-    private Integer monthCarOut;
+    private Integer monthCarOut=0;
 
     /**
      * 储值卡数
      */
-    private Integer storedCarNum;
+    private Integer storedCarNum=0;
 
     /**
      * 储值车收费金额
      */
-    private Float storedCarMoney;
+    private Float storedCarMoney=0f;
 
     /**
      * 临免卡张数
      */
-    private Integer tempFree;
+    private Integer tempFree=0;
 
     /**
      * 免费卡数
      */
-    private Integer freeCarNo;
+    private Integer freeCarNo=0;
 
     /**
      * 免费金额
      */
-    private Float freeCharge;
+    private Float freeCharge=0f;
 
     /**
      * 折扣张数
      */
-    private Integer disSum;
+    private Integer disSum=0;
 
     /**
      * 折扣金额
      */
-    private Float disCharge;
+    private Float disCharge=0f;
 
     /**
      * 现金收费金额
      */
-    private Float cashCharge;
+    private Float cashCharge=0f;
 
     /**
      * 微信收费金额
      */
-    private Float wechatCharge;
+    private Float wechatCharge=0f;
 
     /**
      * 支付定收费金额
      */
-    private Float alipayCharge;
+    private Float alipayCharge=0f;
 
     /**
      * 银联支付
      */
-    private Float unionpayChagre;
+    private Float unionpayChagre=0f;
 
     /**
      * 第三方支付
      */
-    private Float thirdpayCharge;
+    private Float thirdpayCharge=0f;
 
     /**
      * 应收金额
      */
-    private Float account;
+    private Float account=0f;
     
     
-    private Byte isLoad;
+    private Integer isLoad=0;
     private String puid ;
-    
 
-    public Byte getIsLoad()
-	{
-		return isLoad;
-	}
 
-	public void setIsLoad(Byte isLoad)
-	{
-		this.isLoad = isLoad;
-	}
+    public Integer getIsLoad() {
+        return isLoad;
+    }
 
-	public String getPuid()
+    public void setIsLoad(Integer isLoad) {
+        this.isLoad = isLoad;
+    }
+
+    public String getPuid()
 	{
 		return puid;
 	}

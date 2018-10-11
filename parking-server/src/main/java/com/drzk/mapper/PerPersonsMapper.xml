@@ -63,8 +63,7 @@
 	</select>
 
 	<delete id="delete" parameterType="java.lang.Integer">
-		delete from
-		per_persons
+		delete from per_persons
 		where pid = #{pid,jdbcType=INTEGER}
 	</delete>
 
@@ -312,8 +311,7 @@
 		where car_no = #{carNo,jdbcType=VARCHAR}
 	</select>
 
-	<select id="selectPidByPuid" parameterType="java.util.List"
-		resultType="java.lang.String">
+	<select id="selectPidByPuid" parameterType="java.util.List" resultType="java.lang.String">
 		select pid
 		from per_persons
 		where puid in
@@ -436,4 +434,10 @@
     <update id="deleteByUuid" parameterType="com.drzk.vo.PerPersons">
         update per_persons set del_frag = #{delFrag}  where puid = #{puid}
     </update>
+
+    <select id="selectByUuid" parameterType="java.lang.String" resultType="com.drzk.vo.PerPersons">
+        select puid
+        from per_persons
+        where del_frag=0 and puid =#{puid}
+    </select>
 </mapper>

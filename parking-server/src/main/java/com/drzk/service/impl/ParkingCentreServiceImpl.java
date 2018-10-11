@@ -1,5 +1,6 @@
 package com.drzk.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -52,7 +53,8 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 	
 	@Autowired
 	private ParkFamilyGroupChargeMapper parkFamilyGroupChargeMapper;
-	
+	//时间格式化
+    SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	/**
 	 * 查询是否有入场记录. <br>
 	 * @author wangchengxi
@@ -61,6 +63,7 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 	 * @since JDK 1.8
 	 */
 	public boolean getSimilarCar(CentreRealTimeBase centre) {
+		logger.debug("getSimilarCar:"+centre.getCarNo());
 		boolean isExist=false;
     	try {
     		String carNo = null;
@@ -97,11 +100,8 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 	 * @since JDK 1.8
 	 */
 	private ParkCarIn hasParkInRecord(String carNo) {
-		ParkCarIn inModel = new ParkCarIn();
 		String rCarNo=carNo.trim().substring(1);
-		inModel.setCarNo(rCarNo);
-		inModel.setSmall(0);
-		ParkCarIn inModelGet = parkCarInMapper.selectTop(inModel);
+		ParkCarIn inModelGet = parkCarInMapper.selectTop(rCarNo,0);
 		return inModelGet;
 	}
 	/**
@@ -172,7 +172,6 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 		}
 		fact.setCarRealType(cardType);
 		((CentreRealTimeBase)fact).getPayMentVo().setCarRealType(cardType);
-		logger.debug("getCardTypeInfo:" +fact.getCarNo()+ cardType);
 		return cardType;
 	}
 	
@@ -186,6 +185,7 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 	@Override
 	public Step isCardTypeExpireCentre(CentreRealTimeBase fact) {
 		try {
+			logger.debug("isCardTypeExpireCentre:"+fact.getCarNo());
 			Date inTime = fact.getInRecord().getInTime();// 入场时间
 			Date outTime = fact.getNowDate(); //出场时间
 			Date eTime = fact.getCardInfo().getEndDate(); // 结束有效期
@@ -211,7 +211,7 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 				}
 				//入场时间在有效期内，出场时间在有效期结束之后
 				if(inTime.after(sTime) && !inTime.after(eTime) && outTime.after(eTime)) { 
-					getOutAfterEndDate(fact);
+					return getOutAfterEndDate(fact);
 				}
 			}
 			return Step.EFFECTIVE;
@@ -246,7 +246,8 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 				int carType=setMonthCardType(fact.getCarRealType(),monthTemp);
 				fact.setCarRealType(carType);
 				fact.getPayMentVo().setCarRealType(carType);
-				fact.getPayMentVo().setRemark("月租车过期按月临车计费，计费开始时间:"+eTime+",计费结束时间:"+outTime);
+				fact.getPayMentVo().setRemark("月租车过期按月临车计费，计费开始时间:"
+				+timeFormat.format(eTime)+",计费结束时间:"+timeFormat.format(outTime));
 				fact.getCentreRecord().setCardType(carType-10);
 				fact.setCarBigType(InOutRealTimeBase.MONTH_TEMP_CAR);
 				return Step.UNEFFECTIVE; //不在有效期内
@@ -261,7 +262,8 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 			int carType=fact.getCarRealType();
 			fact.setCarRealType(carType-20);
 			fact.getPayMentVo().setCarRealType(carType-20);
-			fact.getPayMentVo().setRemark("储值车过期按储临车计费，计费开始时间:"+eTime+",计费结束时间:"+outTime);
+			fact.getPayMentVo().setRemark("储值车过期按储临车计费，计费开始时间:"
+			+timeFormat.format(eTime)+",计费结束时间:"+timeFormat.format(outTime));
 			fact.getCentreRecord().setCardType(carType+10);
 			fact.setCarBigType(InOutRealTimeBase.STORED_TEMP_CAR);
 			return Step.UNEFFECTIVE; //不在有效期内
@@ -295,7 +297,8 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 				int carType=setMonthCardType(fact.getCarRealType(),monthTemp);
 				fact.setCarRealType(carType);
 				fact.getPayMentVo().setCarRealType(carType);
-				fact.getPayMentVo().setRemark("月租车过期按月临车计费，计费开始时间:"+inTime+",计费结束时间:"+outTime);
+				fact.getPayMentVo().setRemark("月租车过期按月临车计费，计费开始时间:"
+				+timeFormat.format(inTime)+",计费结束时间:"+timeFormat.format(outTime));
 				fact.getCentreRecord().setCardType(carType-10);
 				fact.setCarBigType(InOutRealTimeBase.MONTH_TEMP_CAR);
 				return Step.UNEFFECTIVE; //不在有效期内
@@ -310,7 +313,8 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 			int carType=fact.getCarRealType();
 			fact.setCarRealType(carType-20);
 			fact.getPayMentVo().setCarRealType(carType-20);
-			fact.getPayMentVo().setRemark("储值车过期按储临车计费，计费开始时间:"+inTime+",计费结束时间:"+outTime);
+			fact.getPayMentVo().setRemark("储值车过期按储临车计费，计费开始时间:"
+			+timeFormat.format(inTime)+",计费结束时间:"+timeFormat.format(outTime));
 			fact.getCentreRecord().setCardType(carType+10);
 			fact.setCarBigType(InOutRealTimeBase.MONTH_TEMP_CAR);
 			return Step.UNEFFECTIVE; //不在有效期内
@@ -338,7 +342,9 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 		case InOutRealTimeBase.STORED_CAR : //储值车
 			fact.setCarRealType(InOutRealTimeBase.TEMP_CAR_A);
 			fact.getPayMentVo().setCarRealType(InOutRealTimeBase.TEMP_CAR_A);
-			fact.getPayMentVo().setRemark("固定车过期按临时车计费，计费开始时间:"+inTime+",计费结束时间:"+fact.getPayMentVo().getPayOutTime());
+			fact.getPayMentVo().setRemark("固定车过期按临时车计费，计费开始时间:"
+			+timeFormat.format(inTime)+",计费结束时间:"
+					+timeFormat.format(fact.getPayMentVo().getPayOutTime()));
 			fact.getCentreRecord().setCardType(InOutRealTimeBase.TEMP_CAR_A);
 			fact.setCarBigType(InOutRealTimeBase.TEMP_CAR);
 		}
@@ -362,7 +368,8 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 		case InOutRealTimeBase.STORED_CAR : //储值车
 			fact.setCarRealType(InOutRealTimeBase.TEMP_CAR_A);
 			fact.getPayMentVo().setCarRealType(InOutRealTimeBase.TEMP_CAR_A);
-			fact.getPayMentVo().setRemark("固定车过期按临时车计费，计费开始时间:"+inTime+",计费结束时间:"+outTime);
+			fact.getPayMentVo().setRemark("固定车过期按临时车计费，计费开始时间:"
+			+timeFormat.format(inTime)+",计费结束时间:"+timeFormat.format(outTime));
 			fact.getCentreRecord().setCardType(InOutRealTimeBase.TEMP_CAR_A);
 			fact.setCarBigType(InOutRealTimeBase.TEMP_CAR);
 		}
@@ -384,7 +391,8 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 		case InOutRealTimeBase.STORED_CAR : //储值车
 			fact.setCarRealType(InOutRealTimeBase.TEMP_CAR_A);
 			fact.getPayMentVo().setCarRealType(InOutRealTimeBase.TEMP_CAR_A);
-			fact.getPayMentVo().setRemark("固定车过期按临时车计费，计费开始时间:"+inTime+",计费结束时间:"+outTime);
+			fact.getPayMentVo().setRemark("固定车过期按临时车计费，计费开始时间:"
+			+timeFormat.format(inTime)+",计费结束时间:"+timeFormat.format(outTime));
 			fact.getCentreRecord().setCardType(InOutRealTimeBase.TEMP_CAR_A);
 			fact.setCarBigType(InOutRealTimeBase.TEMP_CAR);
 		}
@@ -405,7 +413,7 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 			}//&&
 			Date start = parkEffetTimes.getbTime(); //开始时间
 			Date end = parkEffetTimes.geteTime(); //时段结束时间
-			if(parkEffetTimes.getsType()==0) //时间段禁止进入
+			if(parkEffetTimes.getsType()==1) //时间段禁止进入
 			{	
 				if(DateTimeUtils.isEffectiveDate(fact.getNowDate(), start, end))
 					return Step.TIMENOTALLOW; // 时段内禁止入场 ，入场还是月卡处理
@@ -413,18 +421,24 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 			    	return Step.EFFECTIVE; //按有正常车出入场
 			
 			}else { //按对应的卡类收费
-				fact.getPayMentVo().setInTime(inTime); //实际入场时间
-				fact.getPayMentVo().setPayInTime(eTime); //计费开始时间
-				fact.getPayMentVo().setOutTime(outTime); //实际出场时间
-				int effetTime=DateTimeUtils.countEffectMinute(inTime,eTime,start,end);
-				fact.getPayMentVo().setPayOutTime(DateTimeUtils.dateAddMinute(inTime,effetTime)); //计费线束时间
-				fact.getPayMentVo().setRemark("月租出入受限按临时车计费，计费开始时间:"+inTime+",计费结束时间:"+outTime);
-				int carType=setEffeciTiveCardType(fact.getCarRealType(),parkEffetTimes.getsType());
-				fact.setCarRealType(carType);
-				fact.getPayMentVo().setCarRealType(carType);
-				fact.getCentreRecord().setCardType(carType-10);
-				fact.setCarBigType(InOutRealTimeBase.MONTH_TEMP_CAR);
-				return Step.UNEFFECTIVE; //不在有效期内
+				int effetTime = DateTimeUtils.countEffectMinute(inTime, outTime, start, end);
+				if (effetTime == 0) {
+					return Step.EFFECTIVE; // 按有正常车出入场
+				} else {
+					fact.getPayMentVo().setInTime(inTime); // 实际入场时间
+					fact.getPayMentVo().setPayInTime(inTime); // 计费开始时间
+					fact.getPayMentVo().setOutTime(outTime); // 实际出场时间
+					fact.getPayMentVo().setPayOutTime(DateTimeUtils.dateAddMinute(inTime, effetTime)); // 计费线束时间
+					fact.getPayMentVo().setRemark("月租出入受限按临时车计费，计费开始时间:"
+					+ timeFormat.format(inTime) + ",计费结束时间:" + 
+					timeFormat.format(fact.getPayMentVo().getPayOutTime()));
+					int carType = setEffeciTiveCardType(fact.getCarRealType(), parkEffetTimes.getsType());
+					fact.setCarRealType(carType);
+					fact.getPayMentVo().setCarRealType(carType);
+					fact.getCentreRecord().setCardType(carType - 10);
+					fact.setCarBigType(InOutRealTimeBase.MONTH_TEMP_CAR);
+					return Step.UNEFFECTIVE; // 不在有效期内
+				}
 			}
 		}else {
 			return Step.EFFECTIVE;
@@ -439,6 +453,7 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 	 */
 	public boolean centreFamilyTemp(CentreRealTimeBase fact) {
 		try {
+			logger.debug("centreFamilyTemp:"+fact.getCarNo());
 			int monthTemp = Integer.parseInt(GlobalPark.properties.getProperty("CHARGE_TYPE", "0"));//启用月临卡功能 	
 			Date inTime = fact.getInRecord().getInTime();// 入场时间
 			Date outTime = fact.getNowDate(); //缴费时间
@@ -449,6 +464,8 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 				fact.getPayMentVo().setPayInTime(inTime); //计费开始时间
 				fact.getPayMentVo().setOutTime(outTime); //实际出场时间
 				fact.getPayMentVo().setPayOutTime(outTime); //计费线束时间
+				fact.getPayMentVo().setRemark("固定车过期按临时车计费，计费开始时间:"
+						+timeFormat.format(inTime)+",计费结束时间:"+timeFormat.format(outTime));
 				int carType=setMonthCardType(fact.getCarRealType(),monthTemp);
 				fact.setCarRealType(carType);  //计费类型
 				fact.getPayMentVo().setCarRealType(carType);
@@ -473,6 +490,7 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 	 */
     public boolean centreFamilyMonth(CentreRealTimeBase fact) {
     	try {
+    		logger.debug("centreFamilyMonth:"+fact.getCarNo());
     		ParkFamilyGroupCharge payModel=new ParkFamilyGroupCharge();
     		payModel.setCarNo(fact.getCarNo());
     		payModel.setInTime(fact.getInRecord().getInTime());
@@ -485,6 +503,9 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
     			fact.getPayMentVo().setPayInTime(model.getInTime()); //计费开始时间
     			fact.getPayMentVo().setOutTime(outTime); //实际出场时间
     			fact.getPayMentVo().setPayOutTime(model.getEndTime()); //计费线束时间
+    			fact.getPayMentVo().setRemark("家庭组以临时车入场，计费开始时间:"
+						+timeFormat.format(model.getInTime())+",计费结束时间:"
+    					+timeFormat.format(model.getEndTime()));
 				int carType=setMonthCardType(fact.getCarRealType(),monthTemp);
 				fact.setCarRealType(carType);
 				fact.getPayMentVo().setCarRealType(carType);
@@ -505,6 +526,7 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 	public boolean isArrears(CentreRealTimeBase fact) {
 		boolean isArre=false;
     	try {
+    		logger.debug("isArrears:"+fact.getCarNo());
 			Charge charge = SpringUtil.getBean(Charge.class);
 			AbstractChargeStandard mode = SpringUtil.getBean(StandChargeRule.class);
 			PaymentVo vo = charge.getFeeByCarNo(fact.getPayMentVo(), mode, fact.getCarNo()); // 查询是否缴费
@@ -528,6 +550,7 @@ public class ParkingCentreServiceImpl extends AbstractParkingService {
 	 */
 	@Override
 	public boolean storecarCharge(CentreRealTimeBase out) {
+		logger.debug("storecarCharge:"+out.getCarNo());
 		if (out.getCarBigType() != InOutRealTimeBase.STORED_CAR) { // 如果非储值车不需要判断
 			return true;
 		} else {

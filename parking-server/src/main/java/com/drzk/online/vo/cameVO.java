@@ -1,10 +1,16 @@
 package com.drzk.online.vo;
 
+import java.io.Serializable;
+
 /**
  * @author tf
  * 相机信息
  */
-public class cameVO {
+public class cameVO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7208254936117912365L;
 	private String cameIp ; //摄像头IP
 	private String cameName ; //摄像头名称
 	private String camePort ;//设备名端口号卡类ID

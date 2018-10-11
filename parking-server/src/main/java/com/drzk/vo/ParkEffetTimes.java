@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ParkEffetTimes {
-    private Integer id;
+public class ParkEffetTimes implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2041864414413300737L;
+
+	private Integer id;
 
     private Byte cardType;
 

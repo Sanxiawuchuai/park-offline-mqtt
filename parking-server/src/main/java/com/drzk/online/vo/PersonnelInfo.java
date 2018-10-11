@@ -2,7 +2,7 @@ package com.drzk.online.vo;
 
 import java.util.Date;
 
-public class PersonnelInfo extends SuperBody
+public class PersonnelInfo extends OnlineBody
 {
 	private String parentId;
 	private String companyId;

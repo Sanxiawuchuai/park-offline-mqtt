@@ -14,8 +14,23 @@ import java.util.Map;
 
 public class ParkConfigVo implements Serializable {
 
+    //线上vsftp ip
+    public static final String VSFTP_HOST="VSFTP_HOST";
+    //线上vsftp 端口
+    public static final String VSFTP_PORT="VSFTP_PORT";
+    //线上vsftp 用户
+    public static final String VSFTP_USER="VSFTP_USER";
+    //线上vsftp 秘密
+    public static final String VSFTP_PASSPW="VSFTP_PASSPW";
+    //线上vsftp  目录
+    public static final String VSFTP_ONLINE_HOME="VSFTP_ONLINE_HOME";
+    //线下vsftp 目录
+    public static final String VSFTP_OFFLINE_HOME="VSFTP_OFFLINE_HOME";
+    public static final String PARKING_NO="PARK_NUM";
 
-    public static Map<String,String> map=new HashMap<>(  );
+
+	private static final long serialVersionUID = -7674270835827732393L;
+	public static Map<String,String> map=new HashMap<>(  );
     static {
         //map.put( "objectId","FILE_SIZE" );//上传文件大小
         //map.put( "companyName","FILE_PATH" );//上传文件的路径

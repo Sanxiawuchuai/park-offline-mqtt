@@ -1,9 +1,15 @@
 package com.drzk.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class PerPersons {
+public class PerPersons implements Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1407749970537491115L;
+
+	/**
      * 
      */
     private Integer pid;

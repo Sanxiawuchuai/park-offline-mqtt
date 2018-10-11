@@ -1,6 +1,15 @@
 package com.drzk.service.entity;
+
+import java.io.Serializable;
+
 //读取网络参数返回实体
-public class ReadNetWorkBodyReturn  extends SuperBody{
+public class ReadNetWorkBodyReturn  implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7190573741369547828L;
+	private String uId;
 	//--本机IP
 	private String localIp;
 	// --子网掩码
@@ -64,5 +73,11 @@ public class ReadNetWorkBodyReturn  extends SuperBody{
 	}
 	public void setPlatformPort(String platformPort) {
 		this.platformPort = platformPort;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 }

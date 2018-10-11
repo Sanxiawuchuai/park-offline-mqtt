@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class JacksonUtils {
 
-    private static Logger log = LoggerFactory.getLogger( JacksonUtils.class );
+    private static Logger log = LoggerFactory.getLogger( "userLog" );
 
     private static ObjectMapper objectMapper = null;
 

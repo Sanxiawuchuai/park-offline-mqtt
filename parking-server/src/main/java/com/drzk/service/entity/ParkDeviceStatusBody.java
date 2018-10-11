@@ -1,12 +1,19 @@
 package com.drzk.service.entity;
 
-import java.util.List;
-
 import com.drzk.vo.ParkDeviceStatus;
 
-public class ParkDeviceStatusBody extends SuperBody
+import java.io.Serializable;
+import java.util.List;
+
+public class ParkDeviceStatusBody implements Serializable
 {
 
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7906027627817139189L;
+	private String uId;
 	private List<ParkDeviceStatus> deviceStatus;
 	
 	public void setDeviceStatus(List<ParkDeviceStatus> deviceStatus)
@@ -16,5 +23,11 @@ public class ParkDeviceStatusBody extends SuperBody
 	public List<ParkDeviceStatus> getDeviceStatus()
 	{
 		return deviceStatus;
+	}
+	public String getuId() {
+		return uId;
+	}
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
 }

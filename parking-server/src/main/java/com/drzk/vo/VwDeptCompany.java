@@ -1,7 +1,14 @@
 package com.drzk.vo;
 
-public class VwDeptCompany {
-    private Integer deptId;
+import java.io.Serializable;
+
+public class VwDeptCompany implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8947737576056577482L;
+
+	private Integer deptId;
 
     private String deptPuid;
 
